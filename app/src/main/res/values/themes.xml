@@ -2,4 +2,10 @@
 <resources>
 
     <style name="Theme.Energetic" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <style name="Theme.Energetic.SplashScreen" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/orange</item>
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher_adaptive_fore</item>
+        <item name="postSplashScreenTheme">@style/Theme.Energetic</item>
+    </style>
 </resources>
