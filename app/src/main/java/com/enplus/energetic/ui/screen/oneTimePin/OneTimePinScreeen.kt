@@ -1,4 +1,4 @@
-package com.enplus.energetic.ui.screen.otp
+package com.enplus.energetic.ui.screen.oneTimePin
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -18,8 +18,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.enplus.energetic.ui.components.otp.InputOneTimePin
-import com.enplus.energetic.ui.components.otp.NumberPad
+import com.enplus.energetic.ui.components.oneTimePin.InputOneTimePin
+import com.enplus.energetic.ui.components.oneTimePin.NumberPad
 import com.enplus.energetic.ui.theme.EnergeticTheme
 
 @Composable
@@ -55,8 +55,8 @@ fun OneTimePinScreen(
     inputtedPinLength: Int,
     onNumberButtonClick: (Int) -> Unit,
     onBackspaceButtonClick: () -> Unit,
+) {
 
-    ) {
     Column(
         modifier = Modifier
             .fillMaxSize()

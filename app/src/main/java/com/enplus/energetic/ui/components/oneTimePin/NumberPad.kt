@@ -1,4 +1,4 @@
-package com.enplus.energetic.ui.components.otp
+package com.enplus.energetic.ui.components.oneTimePin
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement

@@ -1,4 +1,4 @@
-package com.enplus.energetic.ui.screen.otp
+package com.enplus.energetic.ui.screen.oneTimePin
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
