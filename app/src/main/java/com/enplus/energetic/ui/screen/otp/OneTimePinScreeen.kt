@@ -7,37 +7,49 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.enplus.energetic.ui.components.otp.InputOTP
+import com.enplus.energetic.ui.components.otp.InputOneTimePin
 import com.enplus.energetic.ui.components.otp.NumberPad
 import com.enplus.energetic.ui.theme.EnergeticTheme
 
 @Composable
-fun OTPScreen(
-    viewModel: OTPViewModel = hiltViewModel(),
+fun OneTimePinScreen(
+    viewModel: OneTimePinViewModel = hiltViewModel(),
 ) {
-    val isUserAuthorized by viewModel.isUserAuthorized.observeAsState(initial = false)
-    val pinLength by viewModel.pinLength.observeAsState(initial = 4)
-    val inputtedPinLength by viewModel.inputtedPinLength.observeAsState(initial = 4)
+    val isUserAuthorized = viewModel.isUserAuthorized
 
+    val pinLength by remember { mutableIntStateOf(4) }
+    var inputtedPin by remember { mutableStateOf("") }
 
-    OTPScreen(
+    LaunchedEffect(pinLength == inputtedPin.length) {
+        viewModel.completePinInput(inputtedPin)
+    }
+
+    OneTimePinScreen(
         isUserAuthorized = isUserAuthorized,
         pinLength = pinLength,
-        inputtedPinLength = inputtedPinLength,
-        onNumberButtonClick = { viewModel.onNumberButtonClick(it) },
-        onBackspaceButtonClick = { viewModel.onBackspaceButtonClick() },
+        inputtedPinLength = inputtedPin.length,
+        onNumberButtonClick = {
+            inputtedPin += it.toString()
+        },
+        onBackspaceButtonClick = {
+            inputtedPin = inputtedPin.dropLast(1)
+        },
     )
 }
 
 @Composable
-fun OTPScreen(
+fun OneTimePinScreen(
     isUserAuthorized: Boolean,
     pinLength: Int,
     inputtedPinLength: Int,
@@ -57,7 +69,7 @@ fun OTPScreen(
             style = MaterialTheme.typography.headlineLarge,
         )
 
-        InputOTP(
+        InputOneTimePin(
             modifier = Modifier
                 .padding(horizontal = 80.dp),
             pinLength = pinLength,
@@ -78,9 +90,9 @@ fun OTPScreen(
 
 @Preview(showBackground = true)
 @Composable
-fun OTPScreenPreview() {
+fun OneTimePinScreenPreview() {
     EnergeticTheme {
-        OTPScreen(
+        OneTimePinScreen(
             isUserAuthorized = true,
             pinLength = 4,
             inputtedPinLength = 0,
@@ -92,9 +104,9 @@ fun OTPScreenPreview() {
 
 @Preview(showBackground = true)
 @Composable
-fun OTPScreenInputPreview() {
+fun OneTimePinScreenInputPreview() {
     EnergeticTheme {
-        OTPScreen(
+        OneTimePinScreen(
             isUserAuthorized = true,
             pinLength = 4,
             inputtedPinLength = 3,
@@ -106,8 +118,8 @@ fun OTPScreenInputPreview() {
 
 @Preview(showBackground = true)
 @Composable
-fun OTPScreenWithViewModelPreview() {
+fun OneTimePinScreenWithViewModelPreview() {
     EnergeticTheme {
-        OTPScreen(viewModel = hiltViewModel())
+        OneTimePinScreen(viewModel = hiltViewModel())
     }
 }

@@ -19,7 +19,7 @@ import com.enplus.energetic.ui.theme.EnergeticTheme
 import com.enplus.energetic.ui.theme.Orange
 
 @Composable
-fun InputOTP(
+fun InputOneTimePin(
     modifier: Modifier = Modifier,
     dotDp: Dp = 16.dp,
     dpActiveColor: Color = Orange,
@@ -43,9 +43,9 @@ fun InputOTP(
 
 @Preview(showBackground = true)
 @Composable
-fun InputOTPPreview() {
+fun InputOneTimePinPreview() {
     EnergeticTheme {
-        InputOTP(
+        InputOneTimePin(
             modifier = Modifier.padding(horizontal = 80.dp),
             pinInputtedLength = 0,
         )
@@ -54,9 +54,9 @@ fun InputOTPPreview() {
 
 @Preview(showBackground = true)
 @Composable
-fun InputOTPWithInputtedPinPreview() {
+fun InputOneTimePinWithInputtedPinPreview() {
     EnergeticTheme {
-        InputOTP(
+        InputOneTimePin(
             modifier = Modifier.padding(horizontal = 80.dp),
             pinInputtedLength = 3,
         )
