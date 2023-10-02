@@ -84,6 +84,7 @@ dependencies {
     ksp(libs.dagger.hilt.compiler)
     ksp(libs.room.compiler)
     // test implementations
+    implementation(libs.navigation.compose)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.espresso.core)
