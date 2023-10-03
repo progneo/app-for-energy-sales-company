@@ -15,9 +15,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.enplus.energetic.R
 import com.enplus.energetic.ui.components.oneTimePin.InputOneTimePin
 import com.enplus.energetic.ui.components.oneTimePin.NumberPad
 import com.enplus.energetic.ui.theme.EnergeticTheme
@@ -29,21 +31,12 @@ fun OneTimePinScreen(
     val isUserAuthorized = viewModel.isUserAuthorized
 
     val pinLength by remember { mutableIntStateOf(4) }
-    var inputtedPin by remember { mutableStateOf("") }
-
-    LaunchedEffect(pinLength == inputtedPin.length) {
-        viewModel.completePinInput(inputtedPin)
-    }
 
     OneTimePinScreen(
         isUserAuthorized = isUserAuthorized,
         pinLength = pinLength,
-        inputtedPinLength = inputtedPin.length,
-        onNumberButtonClick = {
-            inputtedPin += it.toString()
-        },
-        onBackspaceButtonClick = {
-            inputtedPin = inputtedPin.dropLast(1)
+        onCompletePinInput = {
+            viewModel.completePinInput(it)
         },
     )
 }
@@ -52,10 +45,13 @@ fun OneTimePinScreen(
 fun OneTimePinScreen(
     isUserAuthorized: Boolean,
     pinLength: Int,
-    inputtedPinLength: Int,
-    onNumberButtonClick: (Int) -> Unit,
-    onBackspaceButtonClick: () -> Unit,
+    onCompletePinInput: (String) -> Unit,
 ) {
+    var inputtedPin by remember { mutableStateOf("") }
+
+    LaunchedEffect(key1 = pinLength == inputtedPin.length) {
+        onCompletePinInput(inputtedPin)
+    }
 
     Column(
         modifier = Modifier
@@ -65,7 +61,7 @@ fun OneTimePinScreen(
         verticalArrangement = Arrangement.SpaceAround,
     ) {
         Text(
-            text = "Something text",
+            text = if (isUserAuthorized) stringResource(R.string.input_pin) else stringResource(R.string.create_pin),
             style = MaterialTheme.typography.headlineLarge,
         )
 
@@ -73,53 +69,41 @@ fun OneTimePinScreen(
             modifier = Modifier
                 .padding(horizontal = 80.dp),
             pinLength = pinLength,
-            pinInputtedLength = inputtedPinLength,
+            pinInputtedLength = inputtedPin.length,
         )
 
         NumberPad(
             modifier = Modifier
                 .padding(horizontal = 70.dp),
-            isShowBackspaceButton = inputtedPinLength > 0,
+            isShowBackspaceButton = inputtedPin.isNotEmpty(),
             isShowLogoutButton = isUserAuthorized,
-            onNumberButtonClick = { onNumberButtonClick(it) },
-            onBackspaceButtonClick = { onBackspaceButtonClick() },
+            onNumberButtonClick = { inputtedPin += it.toString() },
+            onBackspaceButtonClick = { inputtedPin = inputtedPin.dropLast(1) },
             onLogoutButtonClick = { /*TODO*/ },
         )
     }
 }
 
-@Preview(showBackground = true)
+@Preview(name = "OTP screen", showBackground = true)
 @Composable
 fun OneTimePinScreenPreview() {
     EnergeticTheme {
         OneTimePinScreen(
-            isUserAuthorized = true,
+            isUserAuthorized = false,
             pinLength = 4,
-            inputtedPinLength = 0,
-            onNumberButtonClick = { },
-            onBackspaceButtonClick = { },
+            onCompletePinInput = {},
         )
     }
 }
 
-@Preview(showBackground = true)
+@Preview(name = "OTP screen with authorized user", showBackground = true)
 @Composable
-fun OneTimePinScreenInputPreview() {
+fun OneTimePinScreenAuthorizedPreview() {
     EnergeticTheme {
         OneTimePinScreen(
             isUserAuthorized = true,
             pinLength = 4,
-            inputtedPinLength = 3,
-            onNumberButtonClick = { },
-            onBackspaceButtonClick = { },
+            onCompletePinInput = {},
         )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun OneTimePinScreenWithViewModelPreview() {
-    EnergeticTheme {
-        OneTimePinScreen(viewModel = hiltViewModel())
     }
 }
