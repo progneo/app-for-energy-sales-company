@@ -4,8 +4,9 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material3.Surface
-import com.enplus.energetic.ui.screen.main.MainScreen
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.navigation.compose.rememberNavController
+import com.enplus.energetic.ui.components.navigation.NavGraph
 import com.enplus.energetic.ui.theme.EnergeticTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -20,7 +21,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             EnergeticTheme {
                 Surface {
-                    MainScreen()
+                    val navController = rememberNavController()
+                    NavGraph(navController = navController)
                 }
             }
         }

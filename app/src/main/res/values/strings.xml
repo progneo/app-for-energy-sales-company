@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">Energetic</string>
     <string name="logout">ВЫЙТИ</string>
+    <string name="create_pin">Придумайте PIN</string>
+    <string name="input_pin">Введите PIN</string>
+    <string name="data">Данные</string>
+    <string name="account">Личный кабинет</string>
 </resources>

@@ -10,13 +10,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
+import com.enplus.energetic.ui.theme.EnergeticTheme
+import com.enplus.energetic.util.NavDestinations
 
 @Composable
 fun BottomNavigationBar(navController: NavHostController) {
-    val bottomNavigationItems = listOf<BottomNavigationItem>()
+    val bottomNavigationItems = listOf(
+        BottomNavigationItem.Data,
+        BottomNavigationItem.Account,
+    )
+
     val navBackStackEntry by navController.currentBackStackEntryAsState()
 
     NavigationBar {
@@ -50,8 +58,19 @@ fun RowScope.AddItem(
         alwaysShowLabel = true,
         onClick = {
             if (navController.currentDestination?.route != bottomNavigationItem.route) {
-                navController.navigate(bottomNavigationItem.route)
+                navController.navigate(bottomNavigationItem.route) {
+                    launchSingleTop = true
+                    popUpTo(NavDestinations.DATA_SCREEN)
+                }
             }
         },
     )
+}
+
+@Preview(name = "Navigation bar")
+@Composable
+fun BottomNavigationBarPreview() {
+    EnergeticTheme {
+        BottomNavigationBar(navController = rememberNavController())
+    }
 }
