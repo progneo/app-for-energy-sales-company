@@ -86,6 +86,7 @@ dependencies {
     implementation(libs.dagger.hilt.android)
     implementation(libs.hilt.navigation.compose)
     implementation(libs.room.runtime)
+    implementation(libs.androidx.security.crypto.ktx)
     ksp(libs.dagger.hilt.compiler)
     ksp(libs.room.compiler)
     // test implementations
