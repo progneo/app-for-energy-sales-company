@@ -5,4 +5,11 @@
     <string name="input_pin">Введите PIN</string>
     <string name="data">Данные</string>
     <string name="account">Личный кабинет</string>
+    <string name="electrical_energy">Электрическая энергия</string>
+    <string name="thermal_energy">Тепловая энергия</string>
+    <string name="hot_water_supply">Горячее водоснабжение</string>
+    <string name="cold_water_supply">Холодное водоснабжение</string>
+    <string name="close">Закрыть</string>
+    <string name="find">Найти</string>
+    <string name="filter">Фильтр</string>
 </resources>
