@@ -22,6 +22,7 @@ hilt = "1.0.0"
 room = "2.5.2"
 navigation = "2.7.3"
 core-splashscreen = "1.0.1"
+security-crypto = "1.0.0"
 
 [libraries]
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
@@ -69,6 +70,8 @@ hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-com
 # room
 room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
+# encrypted shared preferences
+androidx-security-crypto-ktx = { group = "androidx.security", name = "security-crypto", version.ref = "security-crypto" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

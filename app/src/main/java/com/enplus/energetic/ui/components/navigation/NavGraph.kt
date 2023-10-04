@@ -12,19 +12,24 @@ import com.enplus.energetic.util.NavDestinations
 @Composable
 fun NavGraph(
     navController: NavHostController,
+    isAuthorized: Boolean,
 ) {
     NavHost(
         navController = navController,
-        startDestination = NavDestinations.MAIN_SCREEN,
+        startDestination = if (isAuthorized) {
+            NavDestinations.ONE_TIME_PIN_SCREEN
+        } else {
+            NavDestinations.LOGIN_SCREEN
+        },
     ) {
-        composable(route = NavDestinations.MAIN_SCREEN) {
-            MainScreen()
+        composable(route = NavDestinations.LOGIN_SCREEN) {
+            LoginScreen(navController = navController)
         }
         composable(route = NavDestinations.ONE_TIME_PIN_SCREEN) {
             OneTimePinScreen()
         }
-        composable(route = NavDestinations.LOGIN_SCREEN) {
-            LoginScreen()
+        composable(route = NavDestinations.MAIN_SCREEN) {
+            MainScreen()
         }
     }
 }
