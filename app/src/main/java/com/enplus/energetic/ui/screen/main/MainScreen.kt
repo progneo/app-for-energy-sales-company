@@ -7,8 +7,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
-import com.enplus.energetic.ui.components.navigation.BottomNavGraph
-import com.enplus.energetic.ui.components.navigation.BottomNavigationBar
+import com.enplus.energetic.ui.component.navigation.BottomNavGraph
+import com.enplus.energetic.ui.component.navigation.BottomNavigationBar
 import com.enplus.energetic.ui.theme.EnergeticTheme
 
 @Composable

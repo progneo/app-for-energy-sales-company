@@ -20,8 +20,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.enplus.energetic.R
-import com.enplus.energetic.ui.components.oneTimePin.InputOneTimePin
-import com.enplus.energetic.ui.components.oneTimePin.NumberPad
+import com.enplus.energetic.ui.component.oneTimePin.InputOneTimePin
+import com.enplus.energetic.ui.component.oneTimePin.NumberPad
 import com.enplus.energetic.ui.theme.EnergeticTheme
 
 @Composable

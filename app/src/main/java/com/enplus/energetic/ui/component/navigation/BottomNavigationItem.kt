@@ -1,4 +1,4 @@
-package com.enplus.energetic.ui.components.navigation
+package com.enplus.energetic.ui.component.navigation
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.AccountBox
