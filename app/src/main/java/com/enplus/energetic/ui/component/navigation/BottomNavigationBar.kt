@@ -1,4 +1,4 @@
-package com.enplus.energetic.ui.components.navigation
+package com.enplus.energetic.ui.component.navigation
 
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.navigationBarsPadding

@@ -1,4 +1,4 @@
-package com.enplus.energetic.ui.components.oneTimePin
+package com.enplus.energetic.ui.component.oneTimePin
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

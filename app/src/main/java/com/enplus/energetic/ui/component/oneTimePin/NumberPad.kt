@@ -1,4 +1,4 @@
-package com.enplus.energetic.ui.components.oneTimePin
+package com.enplus.energetic.ui.component.oneTimePin
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -49,14 +49,14 @@ fun NumberPad(
 
                     NumberButton(
                         value = value,
-                        onNumberClick = { onNumberButtonClick(value) }
+                        onNumberClick = { onNumberButtonClick(value) },
                     )
                 }
             }
         }
 
         Box(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         ) {
             val value = 0
 
@@ -78,7 +78,7 @@ fun NumberPad(
             NumberButton(
                 modifier = Modifier.align(Alignment.Center),
                 value = value,
-                onNumberClick = { onNumberButtonClick(value) }
+                onNumberClick = { onNumberButtonClick(value) },
             )
 
             if (isShowBackspaceButton) {

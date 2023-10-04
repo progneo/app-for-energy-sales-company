@@ -1,4 +1,4 @@
-package com.enplus.energetic.ui.components.base
+package com.enplus.energetic.ui.component.base
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
