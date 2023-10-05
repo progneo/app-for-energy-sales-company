@@ -42,14 +42,14 @@ fun DropDownItem(
             modifier = Modifier
                 .fillMaxWidth()
                 .clip(MaterialTheme.shapes.small)
-                .clickable { onExpandRequest() }
+                .clickable { onExpandRequest() },
         ) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(20.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 title()
 
@@ -73,7 +73,7 @@ fun DropDownItem(
     }
 }
 
-@Preview(showBackground = false)
+@Preview(name = "Drop down item")
 @Composable
 fun DropDownItemPreview() {
     var expanded by remember { mutableStateOf(false) }
