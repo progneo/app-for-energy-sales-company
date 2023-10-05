@@ -4,23 +4,30 @@ import android.content.SharedPreferences
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Singleton
-class PasswordManager @Inject constructor(
-    private val _encryptedSharedPreferences: SharedPreferences,
-) {
+interface PasswordManager {
 
-    companion object {
-        const val PASSWORD_KEY = "PASSWORD_KEY"
+    suspend fun save(newPassword: String)
+
+    suspend fun get(): String?
+}
+
+@Singleton
+class PasswordManagerImpl @Inject constructor(
+    private val encryptedSharedPreferences: SharedPreferences,
+) : PasswordManager {
+
+    override suspend fun save(newPassword: String) {
+        with(encryptedSharedPreferences.edit()) {
+            putString(PASSWORD_KEY, newPassword)
+            apply()
+        }
     }
 
-    var password: String?
-        get() {
-            return _encryptedSharedPreferences.getString(PASSWORD_KEY, null)
-        }
-        set(value) {
-            with(_encryptedSharedPreferences.edit()) {
-                putString(PASSWORD_KEY, value)
-                apply()
-            }
-        }
+    override suspend fun get(): String? {
+        return encryptedSharedPreferences.getString(PASSWORD_KEY, null)
+    }
+
+    companion object {
+        private const val PASSWORD_KEY = "PASSWORD_KEY"
+    }
 }

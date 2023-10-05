@@ -14,11 +14,13 @@ import dagger.hilt.components.SingletonComponent
 @InstallIn(SingletonComponent::class)
 object EncryptedSharedPreferencesModule {
 
+    private const val FILE_NAME = "secret_shared_prefs"
+
     @Provides
     fun provideEncryptedSharedPreferences(@ApplicationContext context: Context): SharedPreferences {
         return try {
             EncryptedSharedPreferences.create(
-                "secret_shared_prefs",
+                FILE_NAME,
                 MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC),
                 context,
                 EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,

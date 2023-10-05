@@ -4,23 +4,30 @@ import android.content.SharedPreferences
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Singleton
-class PhoneNumberManager @Inject constructor(
-    private val _encryptedSharedPreferences: SharedPreferences,
-) {
+interface PhoneNumberManager {
 
-    companion object {
-        const val PHONE_NUMBER_KEY = "PHONE_NUMBER_KEY"
+    suspend fun save(newPhoneNumber: String)
+
+    suspend fun get(): String?
+}
+
+@Singleton
+class PhoneNumberManagerImpl @Inject constructor(
+    private val encryptedSharedPreferences: SharedPreferences,
+) : PhoneNumberManager {
+
+    override suspend fun save(newPhoneNumber: String) {
+        with(encryptedSharedPreferences.edit()) {
+            putString(PHONE_NUMBER_KEY, newPhoneNumber)
+            apply()
+        }
     }
 
-    var phoneNumber: String?
-        get() {
-            return _encryptedSharedPreferences.getString(PHONE_NUMBER_KEY, null)
-        }
-        set(value) {
-            with(_encryptedSharedPreferences.edit()) {
-                putString(PHONE_NUMBER_KEY, value)
-                apply()
-            }
-        }
+    override suspend fun get(): String? {
+        return encryptedSharedPreferences.getString(PHONE_NUMBER_KEY, null)
+    }
+
+    companion object {
+        private const val PHONE_NUMBER_KEY = "PHONE_NUMBER_KEY"
+    }
 }
