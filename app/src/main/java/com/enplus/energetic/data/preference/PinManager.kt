@@ -4,23 +4,30 @@ import android.content.SharedPreferences
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Singleton
-class PinManager @Inject constructor(
-    private val _encryptedSharedPreferences: SharedPreferences,
-) {
+interface PinManagerManager {
 
-    companion object {
-        const val PIN_KEY = "PIN_KEY"
+    suspend fun save(newPin: String)
+
+    suspend fun get(): String?
+}
+
+@Singleton
+class PinManagerImpl @Inject constructor(
+    private val encryptedSharedPreferences: SharedPreferences,
+) : PinManagerManager {
+
+    override suspend fun save(newPin: String) {
+        with(encryptedSharedPreferences.edit()) {
+            putString(PIN_KEY, newPin)
+            apply()
+        }
     }
 
-    var pin: String?
-        get() {
-            return _encryptedSharedPreferences.getString(PIN_KEY, null)
-        }
-        set(value) {
-            with(_encryptedSharedPreferences.edit()) {
-                putString(PIN_KEY, value)
-                apply()
-            }
-        }
+    override suspend fun get(): String? {
+        return encryptedSharedPreferences.getString(PIN_KEY, null)
+    }
+
+    companion object {
+        private const val PIN_KEY = "PIN_KEY"
+    }
 }

@@ -1,21 +1,26 @@
 package com.enplus.energetic.ui.screen.login
 
 import androidx.lifecycle.ViewModel
-import com.enplus.energetic.data.preference.AuthStateManager
-import com.enplus.energetic.data.preference.PasswordManager
-import com.enplus.energetic.data.preference.PhoneNumberManager
+import com.enplus.energetic.data.preference.AuthStateManagerImpl
+import com.enplus.energetic.data.preference.PasswordManagerImpl
+import com.enplus.energetic.data.preference.PhoneNumberManagerImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val _authStateManager: AuthStateManager,
-    private val _phoneNumberManager: PhoneNumberManager,
-    private val _passwordManager: PasswordManager,
+    private val authStateManager: AuthStateManagerImpl,
+    private val phoneNumberManager: PhoneNumberManagerImpl,
+    private val passwordManager: PasswordManagerImpl,
 ) : ViewModel() {
 
     /* TODO: when use-case will be created */
     fun authorize() {
-        _authStateManager.authState = true
+        CoroutineScope(Dispatchers.IO).launch {
+            authStateManager.save(true)
+        }
     }
 }
