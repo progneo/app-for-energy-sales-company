@@ -12,7 +12,7 @@ interface PasswordManager {
 }
 
 @Singleton
-class PasswordManagerImpl @Inject constructor(
+internal class PasswordManagerImpl @Inject constructor(
     private val encryptedSharedPreferences: SharedPreferences,
 ) : PasswordManager {
 

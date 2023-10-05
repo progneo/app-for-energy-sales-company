@@ -12,7 +12,7 @@ interface AuthStateManager {
 }
 
 @Singleton
-class AuthStateManagerImpl @Inject constructor(
+internal class AuthStateManagerImpl @Inject constructor(
     private val encryptedSharedPreferences: SharedPreferences,
 ) : AuthStateManager {
 

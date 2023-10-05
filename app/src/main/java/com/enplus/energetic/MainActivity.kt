@@ -4,25 +4,20 @@ import android.os.Bundle
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.getValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.rememberNavController
-import com.enplus.energetic.data.preference.AuthStateManagerImpl
 import com.enplus.energetic.ui.component.navigation.NavGraph
 import com.enplus.energetic.ui.theme.EnergeticTheme
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    @Inject
-    lateinit var authStateManager: AuthStateManagerImpl
+    private val viewModel: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,20 +25,21 @@ class MainActivity : ComponentActivity() {
         setWindowSecurity()
 
         installSplashScreen()
-        CoroutineScope(Dispatchers.IO).launch {
-            val authState = async { authStateManager.get() }.await()
 
-            withContext(Dispatchers.Main) {
-                setContent {
-                    EnergeticTheme {
-                        Surface {
-                            val navController = rememberNavController()
-                            NavGraph(
-                                navController = navController,
-                                isAuthorized = authState,
-                            )
-                        }
-                    }
+        viewModel.getAuthState()
+
+        setContent {
+            val isAuthenticated: Boolean by viewModel.getAuthStateEvent.collectAsStateWithLifecycle(
+                false,
+            )
+
+            EnergeticTheme {
+                Surface {
+                    val navController = rememberNavController()
+                    NavGraph(
+                        navController = navController,
+                        isAuthorized = isAuthenticated,
+                    )
                 }
             }
         }
