@@ -4,7 +4,7 @@ import android.content.SharedPreferences
 import javax.inject.Inject
 import javax.inject.Singleton
 
-interface PinManagerManager {
+interface PinManager {
 
     suspend fun save(newPin: String)
 
@@ -12,9 +12,9 @@ interface PinManagerManager {
 }
 
 @Singleton
-class PinManagerImpl @Inject constructor(
+internal class PinManagerImpl @Inject constructor(
     private val encryptedSharedPreferences: SharedPreferences,
-) : PinManagerManager {
+) : PinManager {
 
     override suspend fun save(newPin: String) {
         with(encryptedSharedPreferences.edit()) {

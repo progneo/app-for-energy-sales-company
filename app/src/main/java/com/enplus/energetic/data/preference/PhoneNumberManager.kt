@@ -12,7 +12,7 @@ interface PhoneNumberManager {
 }
 
 @Singleton
-class PhoneNumberManagerImpl @Inject constructor(
+internal class PhoneNumberManagerImpl @Inject constructor(
     private val encryptedSharedPreferences: SharedPreferences,
 ) : PhoneNumberManager {
 
