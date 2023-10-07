@@ -1,14 +1,13 @@
 package com.enplus.energetic
 
 import android.os.Bundle
-import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.getValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.enplus.energetic.ui.component.navigation.NavGraph
 import com.enplus.energetic.ui.theme.EnergeticTheme
@@ -22,33 +21,23 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setWindowSecurity()
-
-        installSplashScreen()
-
-        viewModel.getAuthState()
+        installSplashScreen().apply {
+            setKeepOnScreenCondition {
+                viewModel.loading.value
+            }
+        }
 
         setContent {
-            val isAuthenticated: Boolean by viewModel.getAuthStateEvent.collectAsStateWithLifecycle(
-                false,
-            )
-
+            val isAuthorized = viewModel.isAuthorized.collectAsStateWithLifecycle()
             EnergeticTheme {
                 Surface {
                     val navController = rememberNavController()
                     NavGraph(
                         navController = navController,
-                        isAuthorized = isAuthenticated,
+                        isAuthorized = isAuthorized.value,
                     )
                 }
             }
         }
-    }
-
-    private fun setWindowSecurity() {
-        window.setFlags(
-            WindowManager.LayoutParams.FLAG_SECURE,
-            WindowManager.LayoutParams.FLAG_SECURE
-        )
     }
 }

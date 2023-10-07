@@ -16,16 +16,20 @@ fun NavGraph(
 ) {
     NavHost(
         navController = navController,
-        startDestination = if (isAuthorized) NavDestinations.ONE_TIME_PIN_SCREEN else NavDestinations.LOGIN_SCREEN,
+        startDestination = if (isAuthorized) {
+            NavDestinations.ONE_TIME_PIN_SCREEN
+        } else {
+            NavDestinations.LOGIN_SCREEN
+        },
     ) {
-        composable(route = NavDestinations.MAIN_SCREEN) {
-            MainScreen()
+        composable(route = NavDestinations.LOGIN_SCREEN) {
+            LoginScreen(navController = navController)
         }
         composable(route = NavDestinations.ONE_TIME_PIN_SCREEN) {
             OneTimePinScreen()
         }
-        composable(route = NavDestinations.LOGIN_SCREEN) {
-            LoginScreen(navController = navController)
+        composable(route = NavDestinations.MAIN_SCREEN) {
+            MainScreen()
         }
     }
 }
