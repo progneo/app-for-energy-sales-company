@@ -22,12 +22,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.enplus.energetic.R
 import com.enplus.energetic.data.model.DataType
 import com.enplus.energetic.data.model.MeterType
-import com.enplus.energetic.ui.components.dropDownItem.DropDownItem
+import com.enplus.energetic.ui.components.base.DropDownItem
 import com.enplus.energetic.ui.theme.EnergeticTheme
 
 @Composable
 fun DataScreen(
-    viewModel: DataViewModel = hiltViewModel()
+    viewModel: DataViewModel = hiltViewModel(),
 ) {
     val metersList = viewModel.meterList
     val dataType = viewModel.dataType
@@ -67,7 +67,6 @@ fun DataScreen(
                 isExpanded = expanded,
                 onExpandRequest = { expanded = !expanded },
                 content = {
-
                     repeat(6) {
                         Row(
                             modifier = Modifier.fillMaxWidth(),

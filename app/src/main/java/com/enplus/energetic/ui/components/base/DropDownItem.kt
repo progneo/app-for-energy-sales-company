@@ -1,4 +1,4 @@
-package com.enplus.energetic.ui.components.dropDownItem
+package com.enplus.energetic.ui.components.base
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -54,8 +54,11 @@ fun DropDownItem(
                 title()
 
                 Icon(
-                    imageVector = if (isExpanded)
-                        Icons.Outlined.ExpandLess else Icons.Outlined.ExpandMore,
+                    imageVector = if (isExpanded) {
+                        Icons.Outlined.ExpandLess
+                    } else {
+                        Icons.Outlined.ExpandMore
+                    },
                     contentDescription = null,
                 )
             }
