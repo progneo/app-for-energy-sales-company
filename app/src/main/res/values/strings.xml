@@ -12,4 +12,8 @@
     <string name="close">Закрыть</string>
     <string name="find">Найти</string>
     <string name="filter">Фильтр</string>
+    <string name="data_on">Данные по</string>
+    <string name="personal_account">Лицевой счёт</string>
+    <string name="address">Адрес</string>
+    <string name="meter_number">Номер счетчика</string>
 </resources>
