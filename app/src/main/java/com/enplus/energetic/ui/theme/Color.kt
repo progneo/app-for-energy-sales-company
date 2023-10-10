@@ -11,3 +11,5 @@ val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
 
 val Orange = Color(0xFFFF8E00)
+val LightGray = Color(0xFFEFEFEF)
+val TextGray = Color.Black.copy(alpha = 0.5f)

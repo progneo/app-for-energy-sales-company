@@ -66,15 +66,11 @@ fun OneTimePinScreen(
         )
 
         InputOneTimePin(
-            modifier = Modifier
-                .padding(horizontal = 80.dp),
             pinLength = pinLength,
             pinInputtedLength = inputtedPin.length,
         )
 
         NumberPad(
-            modifier = Modifier
-                .padding(horizontal = 70.dp),
             isShowBackspaceButton = inputtedPin.isNotEmpty(),
             isShowLogoutButton = isUserAuthorized,
             onNumberButtonClick = { inputtedPin += it.toString() },
