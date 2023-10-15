@@ -3,6 +3,7 @@
     <string name="logout">Выйти</string>
     <string name="create_pin">Придумайте PIN</string>
     <string name="input_pin">Введите PIN</string>
+    <string name="repeat_pin">Повторите PIN</string>
     <string name="data">Данные</string>
     <string name="account">Личный кабинет</string>
     <string name="electrical_energy">Электрическая энергия</string>

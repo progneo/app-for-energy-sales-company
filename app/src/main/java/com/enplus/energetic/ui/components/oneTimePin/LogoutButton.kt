@@ -1,13 +1,15 @@
 package com.enplus.energetic.ui.components.oneTimePin
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -20,21 +22,19 @@ internal fun LogoutButton(
     onLogoutButtonClick: () -> Unit,
 ) {
     Box(
-        modifier = Modifier.height(64.dp),
+        modifier = Modifier
+            .size(80.dp)
+            .clip(CircleShape)
+            .clickable { onLogoutButtonClick() },
     ) {
-        TextButton(
+        Text(
             modifier = Modifier.align(Alignment.Center),
-            onClick = { onLogoutButtonClick() },
-            content = {
-                Text(
-                    text = stringResource(R.string.logout),
-                    style = MaterialTheme.typography.titleMedium.copy(
-                        fontSize = 17.sp,
-                        fontWeight = FontWeight.Normal,
-                        color = TextGray,
-                    ),
-                )
-            },
+            text = stringResource(R.string.logout),
+            style = MaterialTheme.typography.titleMedium.copy(
+                fontSize = 19.sp,
+                fontWeight = FontWeight.Medium,
+                color = TextGray,
+            ),
         )
     }
 }

@@ -24,7 +24,7 @@ internal fun NumberButton(
 ) {
     Box(
         modifier = modifier
-            .size(64.dp)
+            .size(80.dp)
             .clip(CircleShape)
             .background(LightGray)
             .clickable { onNumberClick(value) },
@@ -34,7 +34,7 @@ internal fun NumberButton(
             text = value.toString(),
             style = MaterialTheme.typography.headlineMedium.copy(
                 fontWeight = FontWeight.Medium,
-                fontSize = 30.sp,
+                fontSize = 36.sp,
             ),
         )
     }
