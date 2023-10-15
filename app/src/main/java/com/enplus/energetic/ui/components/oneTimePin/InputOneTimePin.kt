@@ -15,8 +15,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.enplus.energetic.ui.theme.EnColor.Orange
 import com.enplus.energetic.ui.theme.EnergeticTheme
-import com.enplus.energetic.ui.theme.Orange
 
 @Composable
 fun InputOneTimePin(
