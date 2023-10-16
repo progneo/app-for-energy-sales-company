@@ -21,7 +21,7 @@ fun LoginScreen(
     LoginScreen(
         onAuthorizeClick = {
             viewModel.authorize()
-            navController.navigate(NavDestinations.MAIN_SCREEN) { popUpTo(0) }
+            navController.navigate(NavDestinations.ONE_TIME_PIN_SCREEN) { popUpTo(0) }
         },
     )
 }
@@ -38,7 +38,7 @@ fun LoginScreen(
     }
 }
 
-@Preview("Login screen ")
+@Preview(showBackground = true, name = "Login screen")
 @Composable
 fun LoginScreenPreview() {
     EnergeticTheme {
