@@ -57,7 +57,7 @@ fun LoginScreen(
             viewModel.authorize(phoneNumber, password)
         },
         onSignIn = {
-            navController.navigate(NavDestinations.MAIN_SCREEN) { popUpTo(0) }
+            navController.navigate(NavDestinations.ONE_TIME_PIN_SCREEN) { popUpTo(0) }
         },
         uiState = uiState,
     )

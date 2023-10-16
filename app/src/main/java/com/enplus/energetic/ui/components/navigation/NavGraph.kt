@@ -26,7 +26,7 @@ fun NavGraph(
             LoginScreen(navController = navController)
         }
         composable(route = NavDestinations.ONE_TIME_PIN_SCREEN) {
-            OneTimePinScreen()
+            OneTimePinScreen(navController = navController)
         }
         composable(route = NavDestinations.MAIN_SCREEN) {
             MainScreen()
