@@ -14,7 +14,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.enplus.energetic.ui.theme.LightGray
+import com.enplus.energetic.ui.theme.EnColor
 
 @Composable
 internal fun NumberButton(
@@ -26,7 +26,7 @@ internal fun NumberButton(
         modifier = modifier
             .size(80.dp)
             .clip(CircleShape)
-            .background(LightGray)
+            .background(EnColor.LightGray)
             .clickable { onNumberClick(value) },
     ) {
         Text(

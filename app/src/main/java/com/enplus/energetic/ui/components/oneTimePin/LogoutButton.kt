@@ -15,7 +15,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.enplus.energetic.R
-import com.enplus.energetic.ui.theme.TextGray
+import com.enplus.energetic.ui.theme.EnColor
 
 @Composable
 internal fun LogoutButton(
@@ -33,7 +33,7 @@ internal fun LogoutButton(
             style = MaterialTheme.typography.titleMedium.copy(
                 fontSize = 19.sp,
                 fontWeight = FontWeight.Medium,
-                color = TextGray,
+                color = EnColor.TextTitle,
             ),
         )
     }

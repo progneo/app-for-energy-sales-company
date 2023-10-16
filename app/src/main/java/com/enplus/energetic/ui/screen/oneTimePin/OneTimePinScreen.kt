@@ -24,8 +24,8 @@ import androidx.navigation.NavController
 import com.enplus.energetic.R
 import com.enplus.energetic.ui.components.oneTimePin.InputOneTimePin
 import com.enplus.energetic.ui.components.oneTimePin.NumberPad
+import com.enplus.energetic.ui.theme.EnColor
 import com.enplus.energetic.ui.theme.EnergeticTheme
-import com.enplus.energetic.ui.theme.Orange
 import com.enplus.energetic.util.NavDestinations
 
 @Composable
@@ -132,7 +132,7 @@ fun OneTimePinContent(
     ) {
         InputOneTimePin(
             title = title,
-            dpActiveColor = if (isError) Color.Red else Orange,
+            dpActiveColor = if (isError) Color.Red else EnColor.Orange,
             pinInputtedLength = if (isError) pinLength else inputtedPin.length,
         )
 
