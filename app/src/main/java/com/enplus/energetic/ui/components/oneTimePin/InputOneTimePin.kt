@@ -20,14 +20,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.enplus.energetic.R
+import com.enplus.energetic.ui.theme.EnColor
 import com.enplus.energetic.ui.theme.EnergeticTheme
-import com.enplus.energetic.ui.theme.Orange
 
 @Composable
 fun InputOneTimePin(
     modifier: Modifier = Modifier,
     title: String,
-    dpActiveColor: Color = Orange,
+    dpActiveColor: Color = EnColor.Orange,
     pinLength: Int = 4,
     pinInputtedLength: Int,
 ) {
