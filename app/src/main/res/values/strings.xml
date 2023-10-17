@@ -25,4 +25,17 @@
     <string name="hide_password_desc">Hide password</string>
     <string name="show_password_desc">Show password</string>
     <string name="wrong_login_credentials">Неверные данные. Попытайтесь снова или обратитесь в поддержку для восстановления</string>
+    <string name="service_status">Состояние услуги</string>
+    <string name="turned_off">Выключена</string>
+    <string name="turned_on">Включена</string>
+    <string name="meter_factory_number">Заводской номер счетчика</string>
+    <string name="installation_location">Место установки</string>
+    <string name="check_date">Дата поверки</string>
+    <string name="next_check_date">Дата следующей поверки</string>
+    <string name="seal">Опломбирование</string>
+    <string name="meter_readings">Показания прибора учета</string>
+    <string name="exist">Есть</string>
+    <string name="absent">Отсутсвует</string>
+    <string name="last_readings">Последние показания</string>
+    <string name="absents">Отсутсвуют</string>
 </resources>
