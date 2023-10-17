@@ -53,6 +53,9 @@ fun MeterInformation(
         modifier = modifier
             .fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
+        elevation = CardDefaults.elevatedCardElevation(
+            defaultElevation = 2.dp,
+        ),
         colors = CardDefaults.cardColors(
             containerColor = EnColor.Background,
         ),
@@ -61,7 +64,7 @@ fun MeterInformation(
             modifier = modifier.fillMaxWidth(),
         ) {
             HeaderDropDownItem(
-                title = stringResource(id = meter.type.resId),
+                title = stringResource(id = meter.type.meterResId),
                 isExpanded = isExpanded,
                 onExpandRequest = { onExpandRequest() },
             )
@@ -125,7 +128,7 @@ private fun HeaderDropDownItem(
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 private fun InformationContent(
-    meter: Meter
+    meter: Meter,
 ) {
     Column(
         modifier = Modifier
@@ -181,7 +184,7 @@ private fun InformationContent(
             Characteristic(
                 title = stringResource(id = R.string.last_readings),
                 values = meter.lastReadings.map {
-                    it.date.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))
+                    "${it.date.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))} - ${it.value}"
                 },
             )
         } else {
