@@ -20,11 +20,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.enplus.energetic.ui.icons.EnIcons
-import com.enplus.energetic.ui.icons.Loader
+import com.enplus.energetic.ui.icon.EnIcons
+import com.enplus.energetic.ui.icon.Loader
 import com.enplus.energetic.ui.theme.EnColor
 
 @Composable
@@ -63,6 +64,7 @@ fun LoadingButton(
                 Text(
                     text = text,
                     fontSize = 17.sp,
+                    fontWeight = FontWeight(600),
                 )
             }
         }

@@ -1,4 +1,4 @@
-package com.enplus.energetic.ui.icons
+package com.enplus.energetic.ui.icon
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathFillType.Companion.NonZero

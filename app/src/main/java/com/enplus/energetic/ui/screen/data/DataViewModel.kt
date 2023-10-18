@@ -1,7 +1,5 @@
 package com.enplus.energetic.ui.screen.data
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -19,7 +17,6 @@ import javax.inject.Inject
 @HiltViewModel
 class DataViewModel @Inject constructor() : ViewModel() {
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private val _metersList = mutableStateListOf<Meter>().apply {
         addAll(
             listOf(
@@ -92,16 +89,15 @@ class DataViewModel @Inject constructor() : ViewModel() {
                         ),
                     ),
                 ),
-            )
+            ),
         )
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private val _filteredMetersList = mutableStateListOf<Meter>().apply {
         addAll(_metersList)
     }
     val filteredMetersList: SnapshotStateList<Meter>
-        @RequiresApi(Build.VERSION_CODES.O) get() = _filteredMetersList
+        get() = _filteredMetersList
 
     private val _metersTypeList = mutableStateListOf<MeterType>().apply {
         addAll(listOf(MeterType.ELECTRICAL_ENERGY, MeterType.HOT_WATER_SUPPLY))
@@ -111,7 +107,6 @@ class DataViewModel @Inject constructor() : ViewModel() {
     var dataType by mutableStateOf(DataType.PERSONAL_ACCOUNT)
         private set
 
-    @RequiresApi(Build.VERSION_CODES.O)
     fun filterMetersList(meterType: MeterType, isSelected: Boolean) {
         if (isSelected) {
             _filteredMetersList.addAll(_metersList.filter { it.type == meterType })

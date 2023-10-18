@@ -1,7 +1,5 @@
 package com.enplus.energetic.ui.components.meter
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -41,7 +39,6 @@ import com.enplus.energetic.ui.theme.EnergeticTheme
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun MeterInformation(
     modifier: Modifier = Modifier,
@@ -125,7 +122,6 @@ private fun HeaderDropDownItem(
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 private fun InformationContent(
     meter: Meter,
@@ -143,8 +139,11 @@ private fun InformationContent(
         Characteristic(
             title = stringResource(id = R.string.service_status),
             value = stringResource(
-                id = if (meter.state)
-                    R.string.turned_on else R.string.turned_off
+                id = if (meter.state) {
+                    R.string.turned_on
+                } else {
+                    R.string.turned_off
+                },
             ),
         )
 
@@ -161,22 +160,25 @@ private fun InformationContent(
         Characteristic(
             title = stringResource(id = R.string.check_date),
             value = meter.checkDate.format(
-                DateTimeFormatter.ofPattern("dd MMMM yyyy")
+                DateTimeFormatter.ofPattern("dd MMMM yyyy"),
             ),
         )
 
         Characteristic(
             title = stringResource(id = R.string.next_check_date),
             value = meter.lastCheckDate.format(
-                DateTimeFormatter.ofPattern("dd MMMM yyyy")
+                DateTimeFormatter.ofPattern("dd MMMM yyyy"),
             ),
         )
 
         Characteristic(
             title = stringResource(id = R.string.seal),
             value = stringResource(
-                id = if (meter.sealState)
-                    R.string.exist else R.string.absent
+                id = if (meter.sealState) {
+                    R.string.exist
+                } else {
+                    R.string.absent
+                },
             ),
         )
 
@@ -254,7 +256,6 @@ private fun Characteristic(
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Preview(name = "Information about meter")
 @Composable
 fun MeterInformationPreview() {
@@ -278,7 +279,6 @@ fun MeterInformationPreview() {
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Preview(name = "Expanded information about meter")
 @Composable
 fun ExpandedMeterInformationPreview() {

@@ -21,7 +21,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.text.PlatformTextStyle
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -49,10 +52,15 @@ fun TextField(
             modifier = modifier
                 .clip(RoundedCornerShape(16.dp))
                 .background(EnColor.LightGray)
-                .height(64.dp)
+                .height(56.dp)
                 .padding(vertical = 18.dp, horizontal = 12.dp)
                 .fillMaxWidth(),
-            textStyle = MaterialTheme.typography.bodyMedium.copy(fontSize = 17.sp),
+            textStyle = TextStyle(
+                platformStyle = PlatformTextStyle(
+                    includeFontPadding = false,
+                ),
+                fontSize = 17.sp,
+            ),
             value = value,
             enabled = enabled,
             onValueChange = {
@@ -69,14 +77,21 @@ fun TextField(
                     horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
                     Box(
-                        modifier = Modifier.defaultMinSize(minHeight = 25.dp),
+                        modifier = Modifier.defaultMinSize(minHeight = 20.dp),
                         contentAlignment = Alignment.CenterStart,
+
                     ) {
                         if (value.isEmpty()) {
                             Text(
+                                modifier = Modifier.height(20.dp),
                                 text = placeholder,
                                 fontSize = 17.sp,
-                                style = MaterialTheme.typography.bodyMedium,
+                                style = TextStyle(
+                                    platformStyle = PlatformTextStyle(
+                                        includeFontPadding = false,
+                                    ),
+                                ),
+                                overflow = TextOverflow.Ellipsis,
                                 color = EnColor.LightBlack,
                             )
                         }

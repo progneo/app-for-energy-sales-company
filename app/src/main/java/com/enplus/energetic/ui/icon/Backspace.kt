@@ -1,6 +1,5 @@
 package com.enplus.energetic.ui.icon
 
-import androidx.compose.material.icons.Icons
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathFillType.Companion.NonZero
 import androidx.compose.ui.graphics.SolidColor
@@ -11,16 +10,28 @@ import androidx.compose.ui.graphics.vector.ImageVector.Builder
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
-public val Icons.Backspace: ImageVector
+val EnIcons.Backspace: ImageVector
     get() {
         if (_backspace != null) {
             return _backspace!!
         }
-        _backspace = Builder(name = "Backspace", defaultWidth = 32.0.dp, defaultHeight = 32.0.dp,
-                viewportWidth = 32.0f, viewportHeight = 32.0f).apply {
-            path(fill = SolidColor(Color(0xFF000000)), stroke = null, fillAlpha = 0.5f,
-                    strokeLineWidth = 0.0f, strokeLineCap = Butt, strokeLineJoin = Miter,
-                    strokeLineMiter = 4.0f, pathFillType = NonZero) {
+        _backspace = Builder(
+            name = "Backspace",
+            defaultWidth = 32.0.dp,
+            defaultHeight = 32.0.dp,
+            viewportWidth = 32.0f,
+            viewportHeight = 32.0f,
+        ).apply {
+            path(
+                fill = SolidColor(Color(0xFF000000)),
+                stroke = null,
+                fillAlpha = 0.5f,
+                strokeLineWidth = 0.0f,
+                strokeLineCap = Butt,
+                strokeLineJoin = Miter,
+                strokeLineMiter = 4.0f,
+                pathFillType = NonZero,
+            ) {
                 moveTo(21.8854f, 16.0001f)
                 lineTo(23.7707f, 14.1147f)
                 curveTo(24.0136f, 13.8633f, 24.148f, 13.5265f, 24.1449f, 13.1769f)
@@ -76,7 +87,7 @@ public val Icons.Backspace: ImageVector
                 close()
             }
         }
-        .build()
+            .build()
         return _backspace!!
     }
 
