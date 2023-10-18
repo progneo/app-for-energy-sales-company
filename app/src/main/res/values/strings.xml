@@ -6,10 +6,14 @@
     <string name="repeat_pin">Повторите PIN</string>
     <string name="data">Данные</string>
     <string name="account">Личный кабинет</string>
-    <string name="electrical_energy">Электрическая энергия</string>
-    <string name="thermal_energy">Тепловая энергия</string>
-    <string name="hot_water_supply">Горячее водоснабжение</string>
-    <string name="cold_water_supply">Холодное водоснабжение</string>
+    <string name="electrical_energy">Электоэнергия</string>
+    <string name="electrical_energy_meter">Счётчик электоэнергии</string>
+    <string name="thermal_energy">Теплоэнергия</string>
+    <string name="thermal_energy_meter">Счётчик теплоэнергии</string>
+    <string name="hot_water">Горячая вода</string>
+    <string name="hot_water_meter">Счётчик горячей воды</string>
+    <string name="cold_water">Холодная вода</string>
+    <string name="cold_water_meter">Счётчик холодной воды</string>
     <string name="close">Закрыть</string>
     <string name="find">Найти</string>
     <string name="filter">Фильтр</string>
@@ -25,4 +29,17 @@
     <string name="hide_password_desc">Hide password</string>
     <string name="show_password_desc">Show password</string>
     <string name="wrong_login_credentials">Неверные данные. Попытайтесь снова или обратитесь в поддержку для восстановления</string>
+    <string name="service_status">Состояние услуги</string>
+    <string name="turned_off">Выключена</string>
+    <string name="turned_on">Включена</string>
+    <string name="meter_factory_number">Заводской номер счетчика</string>
+    <string name="installation_location">Место установки</string>
+    <string name="check_date">Дата поверки</string>
+    <string name="next_check_date">Дата следующей поверки</string>
+    <string name="seal">Опломбирование</string>
+    <string name="meter_readings">Показания прибора учета</string>
+    <string name="exist">Есть</string>
+    <string name="absent">Отсутсвует</string>
+    <string name="last_readings">Последние показания</string>
+    <string name="absents">Отсутсвуют</string>
 </resources>
