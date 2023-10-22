@@ -32,6 +32,7 @@ fun InputOneTimePin(
     pinInputtedLength: Int,
 ) {
     Column(
+        modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
@@ -44,7 +45,6 @@ fun InputOneTimePin(
         )
 
         Row(
-            modifier = modifier,
             horizontalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             repeat(pinLength) {
