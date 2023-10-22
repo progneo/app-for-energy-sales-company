@@ -1,7 +1,5 @@
 package com.enplus.energetic.ui.components.navigation
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -10,7 +8,6 @@ import com.enplus.energetic.ui.screen.account.AccountScreen
 import com.enplus.energetic.ui.screen.data.DataScreen
 import com.enplus.energetic.util.NavDestinations
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun BottomNavGraph(
     navController: NavHostController,

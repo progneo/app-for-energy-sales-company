@@ -1,7 +1,5 @@
 package com.enplus.energetic.ui.screen.data
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -54,7 +52,6 @@ import com.enplus.energetic.ui.theme.EnColor
 import com.enplus.energetic.ui.theme.EnergeticTheme
 import java.time.LocalDate
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun DataScreen(
     navController: NavController,
@@ -75,7 +72,6 @@ fun DataScreen(
     )
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DataScreen(
@@ -217,7 +213,6 @@ private fun ChipsRow(
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Preview(showSystemUi = true, showBackground = true, name = "Data screen")
 @Composable
 fun DataScreenPreview() {
@@ -280,7 +275,6 @@ fun DataScreenPreview() {
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Preview(showSystemUi = true, showBackground = true, name = "Data screen with view model")
 @Composable
 fun DataScreenViewModelPreview() {

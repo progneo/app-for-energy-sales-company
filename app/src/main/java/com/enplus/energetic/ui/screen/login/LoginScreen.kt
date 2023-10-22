@@ -37,9 +37,9 @@ import androidx.navigation.NavController
 import com.enplus.energetic.R
 import com.enplus.energetic.ui.components.base.LoadingButton
 import com.enplus.energetic.ui.components.base.TextField
-import com.enplus.energetic.ui.icons.EnIcons
-import com.enplus.energetic.ui.icons.Visibility
-import com.enplus.energetic.ui.icons.VisibilityOff
+import com.enplus.energetic.ui.icon.EnIcons
+import com.enplus.energetic.ui.icon.Visibility
+import com.enplus.energetic.ui.icon.VisibilityOff
 import com.enplus.energetic.ui.theme.EnColor
 import com.enplus.energetic.ui.theme.EnergeticTheme
 import com.enplus.energetic.ui.util.PhoneVisualTransformation

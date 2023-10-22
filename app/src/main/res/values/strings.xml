@@ -42,4 +42,8 @@
     <string name="absent">Отсутсвует</string>
     <string name="last_readings">Последние показания</string>
     <string name="absents">Отсутсвуют</string>
+    <string name="search_title">Поиск данных</string>
+    <string name="search_description">Чтобы получить данные счетчиков, введите информацию вручную или отсканируйте квитанцию</string>
+    <string name="main_search_placeholder">Лицевой счет, адрес или номер счетчика</string>
+    <string name="scan">Отсканировать</string>
 </resources>
