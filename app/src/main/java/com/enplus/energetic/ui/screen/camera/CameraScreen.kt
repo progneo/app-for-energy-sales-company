@@ -2,7 +2,6 @@ package com.enplus.energetic.ui.screen.camera
 
 import android.Manifest
 import android.content.Context
-import android.graphics.Color
 import android.util.Log
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.widget.LinearLayout
@@ -32,6 +31,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
@@ -117,7 +117,11 @@ fun CameraScreen(
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
-            TopBarWithReturn(onBackClick = onBackClick, arrowColor = EnColor.Background)
+            TopBarWithReturn(
+                onBackClick = onBackClick,
+                arrowColor = EnColor.Background,
+                backgroundColor = Color.Transparent,
+            )
         },
         bottomBar = {
             BottomBar(
@@ -141,7 +145,7 @@ fun CameraScreen(
                 factory = { context ->
                     PreviewView(context).apply {
                         layoutParams = LinearLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT)
-                        setBackgroundColor(Color.BLACK)
+                        setBackgroundColor(android.graphics.Color.BLACK)
                         implementationMode = PreviewView.ImplementationMode.COMPATIBLE
                         scaleType = PreviewView.ScaleType.FILL_CENTER
                     }.also { previewView ->

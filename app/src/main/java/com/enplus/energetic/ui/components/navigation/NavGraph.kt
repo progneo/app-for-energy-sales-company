@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.enplus.energetic.ui.screen.addressData.AddressDataScreen
 import com.enplus.energetic.ui.screen.camera.CameraScreen
 import com.enplus.energetic.ui.screen.camera.confirmation.ConfirmationScreen
 import com.enplus.energetic.ui.screen.data.DataScreen
@@ -39,6 +40,9 @@ fun NavGraph(
         }
         composable(route = NavDestinations.CAMERA_SCREEN) {
             CameraScreen(navController = navController)
+        }
+        composable(route = NavDestinations.ADDRESS_DATA_SCREEN) {
+            AddressDataScreen(navController = navController)
         }
         composable(route = "${NavDestinations.CONFIRMATION_SCREEN}/{id}") {
             val id = it.arguments?.getString("id") ?: ""

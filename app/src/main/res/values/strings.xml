@@ -19,8 +19,11 @@
     <string name="filter">Фильтр</string>
     <string name="data_on">Данные по</string>
     <string name="personal_account">Лицевой счёт</string>
+    <string name="personal_accounts_counter">Лицевых счётов: %s</string>
     <string name="address">Адрес</string>
     <string name="meter_number">Номер счетчика</string>
+    <string name="meters_count">Расчетных приборов: %s</string>
+    <string name="address_data_card_title">Кв. %s - %s</string>
     <string name="login_page_title">Вход в аккаунт</string>
     <string name="login_page_subtitle">Введите корпоративный номер телефона и пароль</string>
     <string name="password_hint">Пароль</string>

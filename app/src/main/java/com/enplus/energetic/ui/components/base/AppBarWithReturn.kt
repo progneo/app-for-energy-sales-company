@@ -1,15 +1,12 @@
 package com.enplus.energetic.ui.components.base
 
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
@@ -19,31 +16,32 @@ import com.enplus.energetic.ui.icon.EnIcons
 import com.enplus.energetic.ui.theme.EnColor
 import com.enplus.energetic.ui.theme.EnergeticTheme
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopBarWithReturn(
     onBackClick: () -> Unit,
     arrowColor: Color = EnColor.Orange,
+    backgroundColor: Color = Color.White,
 ) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .statusBarsPadding()
-            .padding(horizontal = 16.dp)
-            .height(64.dp),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        IconButton(
-            modifier = Modifier.size(48.dp),
-            onClick = onBackClick,
-        ) {
-            Icon(
-                modifier = Modifier.size(24.dp),
-                imageVector = EnIcons.ArrowLeft,
-                contentDescription = null,
-                tint = arrowColor,
+    TopAppBar(
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = backgroundColor,
+        ),
+        title = { },
+        navigationIcon = {
+            IconButton(
+                onClick = { onBackClick() },
+                content = {
+                    Icon(
+                        modifier = Modifier.size(24.dp),
+                        imageVector = EnIcons.ArrowLeft,
+                        contentDescription = "Назад",
+                        tint = arrowColor,
+                    )
+                },
             )
-        }
-    }
+        },
+    )
 }
 
 @Preview(name = "Top Bar")
