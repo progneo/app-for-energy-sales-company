@@ -80,7 +80,6 @@ dependencies {
     implementation(libs.androidx.camera.lifecycle)
     implementation(libs.androidx.camera.core)
     implementation(libs.androidx.camera.view)
-    implementation(libs.play.services.mlkit.text.recognition.common)
     implementation(libs.play.services.mlkit.text.recognition)
     implementation(libs.accompanist.permissions)
     implementation(libs.dagger.hilt.android)

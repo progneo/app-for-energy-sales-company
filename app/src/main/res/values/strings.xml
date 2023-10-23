@@ -46,4 +46,12 @@
     <string name="search_description">Чтобы получить данные счетчиков, введите информацию вручную или отсканируйте квитанцию</string>
     <string name="main_search_placeholder">Лицевой счет, адрес или номер счетчика</string>
     <string name="scan">Отсканировать</string>
+    <string name="scan_description">Отсканируйте лицевой счет или номер</string>
+    <string name="confirm_data">Проверьте данные</string>
+    <string name="enter_account_number_hint">Лицевой счёт или номер</string>
+    <string name="scan_again">Сканировать снова</string>
+    <string name="no_permission_desc">Для сканирования небходимо предоставить доступ к камере</string>
+    <string name="provide_permisson">Предоставить доступ</string>
+    <string name="no_permisson">Нет доступа</string>
+    <string name="try_again">Попробуйте снова</string>
 </resources>

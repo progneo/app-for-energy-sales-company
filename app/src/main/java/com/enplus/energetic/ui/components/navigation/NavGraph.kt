@@ -4,6 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.enplus.energetic.ui.screen.camera.CameraScreen
+import com.enplus.energetic.ui.screen.camera.confirmation.ConfirmationScreen
 import com.enplus.energetic.ui.screen.data.DataScreen
 import com.enplus.energetic.ui.screen.login.LoginScreen
 import com.enplus.energetic.ui.screen.main.MainScreen
@@ -34,6 +36,13 @@ fun NavGraph(
         }
         composable(route = NavDestinations.DATA_SCREEN) {
             DataScreen(navController = navController)
+        }
+        composable(route = NavDestinations.CAMERA_SCREEN) {
+            CameraScreen(navController = navController)
+        }
+        composable(route = "${NavDestinations.CONFIRMATION_SCREEN}/{id}") {
+            val id = it.arguments?.getString("id") ?: ""
+            ConfirmationScreen(navController = navController, accountNumber = id)
         }
     }
 }

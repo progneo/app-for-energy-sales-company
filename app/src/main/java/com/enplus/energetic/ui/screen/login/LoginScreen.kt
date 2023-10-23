@@ -35,7 +35,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.enplus.energetic.R
-import com.enplus.energetic.ui.components.base.LoadingButton
+import com.enplus.energetic.ui.components.base.MainButton
 import com.enplus.energetic.ui.components.base.TextField
 import com.enplus.energetic.ui.icon.EnIcons
 import com.enplus.energetic.ui.icon.Visibility
@@ -57,7 +57,10 @@ fun LoginScreen(
             viewModel.authorize(phoneNumber, password)
         },
         onSignIn = {
-            navController.navigate(NavDestinations.ONE_TIME_PIN_SCREEN) { popUpTo(0) }
+            navController.navigate(NavDestinations.ONE_TIME_PIN_SCREEN) {
+                launchSingleTop = true
+                popUpTo(0)
+            }
         },
         uiState = uiState,
     )
@@ -96,18 +99,14 @@ fun LoginScreen(
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     Text(
                         text = stringResource(R.string.login_page_title),
-                        style = TextStyle(
-                            fontSize = 30.sp,
-                            fontWeight = FontWeight(700),
-                            color = EnColor.TextTitle,
-                        ),
+                        fontSize = 30.sp,
+                        fontWeight = FontWeight(700),
+                        color = EnColor.TextTitle,
                     )
                     Text(
                         text = stringResource(R.string.login_page_subtitle),
-                        style = TextStyle(
-                            fontSize = 17.sp,
-                            color = EnColor.TextSubtitle,
-                        ),
+                        fontSize = 17.sp,
+                        color = EnColor.TextSubtitle,
                     )
                 }
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -167,7 +166,7 @@ fun LoginScreen(
                     }
                 }
             }
-            LoadingButton(
+            MainButton(
                 text = stringResource(R.string.login),
                 onClick = { onAuthorizeClick(phoneNumber, password) },
                 isEnabled = phoneNumber.length == 10 && password.isNotEmpty(),

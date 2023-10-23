@@ -39,17 +39,26 @@ import com.enplus.energetic.ui.icon.Logout
 import com.enplus.energetic.ui.icon.Scan
 import com.enplus.energetic.ui.theme.EnColor
 import com.enplus.energetic.ui.theme.EnergeticTheme
+import com.enplus.energetic.util.NavDestinations
 
 @Composable
 fun MainScreen(
     navController: NavController,
     viewModel: MainViewModel = hiltViewModel(),
 ) {
-    MainScreen("Ирина А.")
+    MainScreen(
+        username = "Ирина А.",
+        onScanClick = {
+            navController.navigate(NavDestinations.CAMERA_SCREEN)
+        },
+    )
 }
 
 @Composable
-fun MainScreen(username: String) {
+fun MainScreen(
+    username: String,
+    onScanClick: () -> Unit,
+) {
     var searchValue by rememberSaveable { mutableStateOf("") }
 
     Scaffold(
@@ -78,18 +87,14 @@ fun MainScreen(username: String) {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 Text(
                     text = stringResource(R.string.search_title),
-                    style = TextStyle(
-                        fontSize = 30.sp,
-                        fontWeight = FontWeight(700),
-                        color = EnColor.TextTitle,
-                    ),
+                    fontSize = 30.sp,
+                    fontWeight = FontWeight(700),
+                    color = EnColor.TextTitle,
                 )
                 Text(
                     text = stringResource(R.string.search_description),
-                    style = TextStyle(
-                        fontSize = 17.sp,
-                        color = EnColor.TextSubtitle,
-                    ),
+                    fontSize = 17.sp,
+                    color = EnColor.TextSubtitle,
                 )
             }
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -100,7 +105,7 @@ fun MainScreen(username: String) {
                 )
                 MainButton(
                     text = stringResource(R.string.find),
-                    onClick = { /*TODO*/ },
+                    onClick = { },
                 )
             }
             MainButton(
@@ -110,7 +115,7 @@ fun MainScreen(username: String) {
                     containerColor = EnColor.OrangeContainer,
                     contentColor = EnColor.Orange,
                 ),
-                onClick = { /*TODO*/ },
+                onClick = onScanClick,
             )
         }
     }
@@ -153,6 +158,9 @@ private fun AppBar(title: String, itemsColor: Color, onIconClick: () -> Unit) {
 @Composable
 fun MainScreenPreview() {
     EnergeticTheme {
-        MainScreen(username = "Ирина А.")
+        MainScreen(
+            username = "Ирина А.",
+            onScanClick = {},
+        )
     }
 }
