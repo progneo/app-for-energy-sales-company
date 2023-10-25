@@ -1,6 +1,12 @@
 package com.enplus.energetic.ui.components.base
 
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -12,9 +18,11 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.text.TextStyle
@@ -24,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.enplus.energetic.ui.icon.EnIcons
 import com.enplus.energetic.ui.icon.House
+import com.enplus.energetic.ui.icon.Loader
 import com.enplus.energetic.ui.theme.EnColor
 
 @Composable
@@ -33,6 +42,7 @@ fun MainButton(
     modifier: Modifier = Modifier,
     icon: ImageVector? = null,
     isEnabled: Boolean = true,
+    isLoading: Boolean = false,
     colors: ButtonColors = ButtonDefaults.buttonColors(
         containerColor = EnColor.Orange,
         contentColor = Color.White,
@@ -44,38 +54,68 @@ fun MainButton(
         modifier = modifier
             .fillMaxWidth()
             .height(56.dp),
-        onClick = { onClick() },
+        onClick = {
+            if (!isLoading) {
+                onClick()
+            }
+        },
         shape = RoundedCornerShape(16.dp),
         enabled = isEnabled,
         colors = colors,
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(
-                space = 6.dp,
-                alignment = Alignment.CenterHorizontally,
-            ),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            icon?.let {
-                Icon(
-                    modifier = Modifier.requiredSize(24.dp),
-                    imageVector = it,
-                    contentDescription = null,
-                )
-            }
-            Text(
-                text = text,
-                fontSize = 17.sp,
-                fontWeight = FontWeight(600),
-                style = TextStyle(
-                    platformStyle = PlatformTextStyle(
-                        includeFontPadding = false,
+        Box(contentAlignment = Alignment.Center) {
+            if (isLoading) {
+                LoadingIndicator()
+            } else {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(
+                        space = 6.dp,
+                        alignment = Alignment.CenterHorizontally,
                     ),
-                ),
-            )
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    icon?.let {
+                        Icon(
+                            modifier = Modifier.requiredSize(24.dp),
+                            imageVector = it,
+                            contentDescription = null,
+                        )
+                    }
+                    Text(
+                        text = text,
+                        fontSize = 17.sp,
+                        fontWeight = FontWeight(600),
+                        style = TextStyle(
+                            platformStyle = PlatformTextStyle(
+                                includeFontPadding = false,
+                            ),
+                        ),
+                    )
+                }
+            }
         }
     }
+}
+
+@Composable
+private fun LoadingIndicator() {
+    val infiniteTransition = rememberInfiniteTransition(label = "Button loading indicator")
+    val angle by infiniteTransition.animateFloat(
+        initialValue = 0F,
+        targetValue = 360F,
+        animationSpec = infiniteRepeatable(
+            animation = tween(1000, easing = LinearEasing),
+        ),
+        label = "Button loading indicator",
+    )
+    Icon(
+        modifier = Modifier.graphicsLayer {
+            rotationZ = angle
+        },
+        imageVector = EnIcons.Loader,
+        contentDescription = "Loading icon",
+    )
 }
 
 @Preview(name = "Enabled button with text")
@@ -104,5 +144,15 @@ fun DisabledButtonPreview() {
         text = "Войти",
         onClick = {},
         isEnabled = false,
+    )
+}
+
+@Preview(name = "Loading button with text")
+@Composable
+fun LoadingButtonPreview() {
+    MainButton(
+        text = "Войти",
+        onClick = {},
+        isLoading = true,
     )
 }
