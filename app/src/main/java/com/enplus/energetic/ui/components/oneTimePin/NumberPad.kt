@@ -5,12 +5,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.enplus.energetic.ui.theme.EnergeticTheme
 
 @Composable
 fun NumberPad(
+    modifier: Modifier = Modifier,
     isShowBackspaceButton: Boolean,
     isShowLogoutButton: Boolean,
     onNumberButtonClick: (Int) -> Unit,
@@ -18,6 +20,7 @@ fun NumberPad(
     onLogoutButtonClick: () -> Unit,
 ) {
     Row(
+        modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(20.dp),
     ) {
         ButtonsColumn(
