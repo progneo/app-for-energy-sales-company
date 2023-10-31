@@ -51,6 +51,10 @@ fun MainScreen(
         onScanClick = {
             navController.navigate(NavDestinations.CAMERA_SCREEN)
         },
+        onSearchClick = { searchValue ->
+            val screenKey = viewModel.getDataScreenKey(searchValue)
+            navController.navigate(screenKey)
+        },
     )
 }
 
@@ -58,6 +62,7 @@ fun MainScreen(
 fun MainScreen(
     username: String,
     onScanClick: () -> Unit,
+    onSearchClick: (searchValue: String) -> Unit,
 ) {
     var searchValue by rememberSaveable { mutableStateOf("") }
 
@@ -105,7 +110,9 @@ fun MainScreen(
                 )
                 MainButton(
                     text = stringResource(R.string.find),
-                    onClick = { },
+                    onClick = {
+                        onSearchClick(searchValue)
+                    },
                 )
             }
             MainButton(
@@ -161,6 +168,7 @@ fun MainScreenPreview() {
         MainScreen(
             username = "Ирина А.",
             onScanClick = {},
+            onSearchClick = {},
         )
     }
 }

@@ -1,5 +1,7 @@
 package com.enplus.energetic.di
 
+import com.enplus.energetic.domain.usecase.GetAddressDataUseCase
+import com.enplus.energetic.domain.usecase.GetAddressDataUseCaseImpl
 import com.enplus.energetic.domain.usecase.GetPersonDataUseCase
 import com.enplus.energetic.domain.usecase.GetPersonDataUseCaseImpl
 import dagger.Binds
@@ -17,4 +19,10 @@ abstract class UseCaseModule {
     internal abstract fun bindGetPersonDataUseCase(
         getPersonDataUseCaseImpl: GetPersonDataUseCaseImpl,
     ): GetPersonDataUseCase
+
+    @Binds
+    @Singleton
+    internal abstract fun bindGetAddressDataUseCase(
+        getAddressDataUseCaseImpl: GetAddressDataUseCaseImpl,
+    ): GetAddressDataUseCase
 }
