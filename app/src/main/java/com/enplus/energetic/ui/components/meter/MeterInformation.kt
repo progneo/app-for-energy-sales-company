@@ -1,5 +1,10 @@
 package com.enplus.energetic.ui.components.meter
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -11,6 +16,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -39,6 +45,7 @@ import com.enplus.energetic.ui.theme.EnergeticTheme
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MeterInformation(
     modifier: Modifier = Modifier,
@@ -50,15 +57,20 @@ fun MeterInformation(
         modifier = modifier
             .fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
-        elevation = CardDefaults.elevatedCardElevation(
-            defaultElevation = 2.dp,
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 10.dp,
         ),
         colors = CardDefaults.cardColors(
             containerColor = EnColor.Background,
         ),
+        onClick = {
+            onExpandRequest()
+        },
     ) {
         Column(
-            modifier = modifier.fillMaxWidth(),
+            modifier = modifier
+                .fillMaxWidth()
+                .animateContentSize(),
         ) {
             HeaderDropDownItem(
                 title = stringResource(id = meter.type.meterResId),
@@ -66,8 +78,12 @@ fun MeterInformation(
                 onExpandRequest = { onExpandRequest() },
             )
 
-            if (isExpanded) {
-                InformationContent(meter)
+            AnimatedVisibility(
+                visible = isExpanded,
+                enter = fadeIn(),
+                exit = fadeOut(),
+            ) {
+                InformationContent(meter = meter)
             }
         }
     }
@@ -107,27 +123,50 @@ private fun HeaderDropDownItem(
                 .clip(CircleShape)
                 .clickable { onExpandRequest() },
         ) {
-            Icon(
-                modifier = Modifier
-                    .align(Alignment.Center),
-                imageVector = if (isExpanded) {
-                    EnIcons.ChevronUp
-                } else {
-                    EnIcons.ChevronDown
-                },
-                contentDescription = null,
-                tint = EnColor.Orange,
+            ToggleButton(
+                modifier = Modifier.align(Alignment.Center),
+                isExpanded = isExpanded,
             )
         }
     }
 }
 
 @Composable
+private fun ToggleButton(
+    modifier: Modifier = Modifier,
+    isExpanded: Boolean,
+) {
+    AnimatedContent(
+        modifier = modifier,
+        targetState = isExpanded,
+        label = "toggle button",
+    ) { expanded ->
+        when (expanded) {
+            true -> {
+                Icon(
+                    imageVector = EnIcons.ChevronUp,
+                    contentDescription = null,
+                    tint = EnColor.Orange,
+                )
+            }
+            false -> {
+                Icon(
+                    imageVector = EnIcons.ChevronDown,
+                    contentDescription = null,
+                    tint = EnColor.Orange,
+                )
+            }
+        }
+    }
+}
+
+@Composable
 private fun InformationContent(
+    modifier: Modifier = Modifier,
     meter: Meter,
 ) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(
                 start = 20.dp,

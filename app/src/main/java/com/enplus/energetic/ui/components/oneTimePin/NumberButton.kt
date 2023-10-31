@@ -26,7 +26,7 @@ internal fun NumberButton(
         modifier = modifier
             .size(80.dp)
             .clip(CircleShape)
-            .background(EnColor.LightGray)
+            .background(EnColor.LightGray_Dark)
             .clickable { onNumberClick(value) },
     ) {
         Text(

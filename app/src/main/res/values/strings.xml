@@ -1,9 +1,9 @@
 <resources>
     <string name="app_name">Energetic</string>
     <string name="logout">Выйти</string>
-    <string name="create_pin">Придумайте PIN</string>
-    <string name="input_pin">Введите PIN</string>
-    <string name="repeat_pin">Повторите PIN</string>
+    <string name="create_pin">Придумайте код для входа в приложение</string>
+    <string name="input_pin">Введите код</string>
+    <string name="repeat_pin">Введите код ещё раз</string>
     <string name="data">Данные</string>
     <string name="account">Личный кабинет</string>
     <string name="electrical_energy">Электоэнергия</string>

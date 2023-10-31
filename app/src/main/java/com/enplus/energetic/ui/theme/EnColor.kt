@@ -16,7 +16,14 @@ object EnColor {
     val CharacteristicTitle = Color(0xFF9299A2)
     val TextOnDark = Color(0xFFFFFFFF)
 
-    val Red = Color(0xFFFF2E00)
+    val LightGray_Light = Color(0xFFD9D9D9)
+    val LightGray_Dark = Color(0xFFEFEFEF)
     val LightGray = Color(0x0A000000)
     val LightBlack = Color(0x80000000)
+
+    val Green = Color(0xFF72BF6A)
+    val Red = Color(0xFFFF2E00)
+
+    val Success = Green
+    val Error = Red
 }

@@ -32,6 +32,7 @@ import com.enplus.energetic.ui.components.data.DataScreenHeader
 import com.enplus.energetic.ui.components.meter.MeterInformation
 import com.enplus.energetic.ui.icon.EnIcons
 import com.enplus.energetic.ui.icon.House
+import com.enplus.energetic.ui.theme.EnColor
 import com.enplus.energetic.ui.theme.EnergeticTheme
 import java.time.LocalDate
 
@@ -65,6 +66,7 @@ fun DataScreen(
     onBackClick: () -> Unit,
 ) {
     Scaffold(
+        containerColor = EnColor.Background,
         topBar = { TopBarWithReturn(onBackClick) },
         content = {
             LazyColumn(
