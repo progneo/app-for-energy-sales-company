@@ -10,7 +10,7 @@ class MainViewModel @Inject constructor() : ViewModel() {
 
 
     //TODO add string pattern check
-    fun getDataScreenKey(searchValue: String): String {
+    fun getDataScreenKey(searchValue: String): String? {
         return when (searchValue) {
             "1" -> {
                 NavDestinations.ADDRESS_DATA_SCREEN
@@ -20,7 +20,7 @@ class MainViewModel @Inject constructor() : ViewModel() {
                 NavDestinations.DATA_SCREEN
             }
 
-            else -> ""
+            else -> null
         }
     }
 }

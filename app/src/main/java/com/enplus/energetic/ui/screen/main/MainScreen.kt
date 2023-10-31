@@ -53,7 +53,7 @@ fun MainScreen(
         },
         onSearchClick = { searchValue ->
             val screenKey = viewModel.getDataScreenKey(searchValue)
-            navController.navigate(screenKey)
+            screenKey?.let { navController.navigate(screenKey) }
         },
     )
 }
