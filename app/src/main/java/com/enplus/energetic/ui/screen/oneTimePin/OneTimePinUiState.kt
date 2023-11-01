@@ -11,6 +11,10 @@ sealed class OneTimePinUiState {
 
     data object RepeatPin: OneTimePinUiState()
 
+    data class Success(
+        val previousState: OneTimePinUiState,
+    ): OneTimePinUiState()
+
     data class Error(
         val previousState: OneTimePinUiState,
     ): OneTimePinUiState()

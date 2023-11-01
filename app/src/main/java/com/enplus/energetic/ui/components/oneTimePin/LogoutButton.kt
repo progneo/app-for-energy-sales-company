@@ -32,7 +32,7 @@ internal fun LogoutButton(
             text = stringResource(R.string.logout),
             style = MaterialTheme.typography.titleMedium.copy(
                 fontSize = 19.sp,
-                fontWeight = FontWeight.Medium,
+                fontWeight = FontWeight.Normal,
                 color = EnColor.TextTitle,
             ),
         )

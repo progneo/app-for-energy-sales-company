@@ -1,5 +1,10 @@
-package com.enplus.energetic.ui.components.meter
+package com.enplus.energetic.ui.components.data
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -8,9 +13,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -31,6 +33,7 @@ import com.enplus.energetic.R
 import com.enplus.energetic.data.model.Meter
 import com.enplus.energetic.data.model.MeterType
 import com.enplus.energetic.data.model.Reading
+import com.enplus.energetic.ui.components.base.Card
 import com.enplus.energetic.ui.icon.ChevronDown
 import com.enplus.energetic.ui.icon.ChevronUp
 import com.enplus.energetic.ui.icon.EnIcons
@@ -40,25 +43,20 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 @Composable
-fun MeterInformation(
+fun MeterInformationCard(
     modifier: Modifier = Modifier,
     meter: Meter,
     isExpanded: Boolean = false,
     onExpandRequest: () -> Unit,
 ) {
     Card(
-        modifier = modifier
-            .fillMaxWidth(),
-        shape = RoundedCornerShape(16.dp),
-        elevation = CardDefaults.elevatedCardElevation(
-            defaultElevation = 2.dp,
-        ),
-        colors = CardDefaults.cardColors(
-            containerColor = EnColor.Background,
-        ),
+        modifier = modifier,
+        onClick = onExpandRequest,
     ) {
         Column(
-            modifier = modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .animateContentSize(),
         ) {
             HeaderDropDownItem(
                 title = stringResource(id = meter.type.meterResId),
@@ -66,8 +64,12 @@ fun MeterInformation(
                 onExpandRequest = { onExpandRequest() },
             )
 
-            if (isExpanded) {
-                InformationContent(meter)
+            AnimatedVisibility(
+                visible = isExpanded,
+                enter = fadeIn(),
+                exit = fadeOut(),
+            ) {
+                InformationContent(meter = meter)
             }
         }
     }
@@ -107,27 +109,50 @@ private fun HeaderDropDownItem(
                 .clip(CircleShape)
                 .clickable { onExpandRequest() },
         ) {
-            Icon(
-                modifier = Modifier
-                    .align(Alignment.Center),
-                imageVector = if (isExpanded) {
-                    EnIcons.ChevronUp
-                } else {
-                    EnIcons.ChevronDown
-                },
-                contentDescription = null,
-                tint = EnColor.Orange,
+            ToggleButton(
+                modifier = Modifier.align(Alignment.Center),
+                isExpanded = isExpanded,
             )
         }
     }
 }
 
 @Composable
+private fun ToggleButton(
+    modifier: Modifier = Modifier,
+    isExpanded: Boolean,
+) {
+    AnimatedContent(
+        modifier = modifier,
+        targetState = isExpanded,
+        label = "toggle button",
+    ) { expanded ->
+        when (expanded) {
+            true -> {
+                Icon(
+                    imageVector = EnIcons.ChevronUp,
+                    contentDescription = null,
+                    tint = EnColor.Orange,
+                )
+            }
+            false -> {
+                Icon(
+                    imageVector = EnIcons.ChevronDown,
+                    contentDescription = null,
+                    tint = EnColor.Orange,
+                )
+            }
+        }
+    }
+}
+
+@Composable
 private fun InformationContent(
+    modifier: Modifier = Modifier,
     meter: Meter,
 ) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(
                 start = 20.dp,
@@ -258,11 +283,11 @@ private fun Characteristic(
 
 @Preview(name = "Information about meter")
 @Composable
-fun MeterInformationPreview() {
+fun MeterInformationCardPreview() {
     var expanded by remember { mutableStateOf(false) }
 
     EnergeticTheme {
-        MeterInformation(
+        MeterInformationCard(
             meter = Meter(
                 type = MeterType.ELECTRICAL_ENERGY,
                 state = true,
@@ -281,11 +306,11 @@ fun MeterInformationPreview() {
 
 @Preview(name = "Expanded information about meter")
 @Composable
-fun ExpandedMeterInformationPreview() {
+fun ExpandedMeterInformationCardPreview() {
     var expanded by remember { mutableStateOf(true) }
 
     EnergeticTheme {
-        MeterInformation(
+        MeterInformationCard(
             meter = Meter(
                 type = MeterType.ELECTRICAL_ENERGY,
                 state = true,

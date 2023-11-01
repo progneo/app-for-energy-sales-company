@@ -1,10 +1,15 @@
 package com.enplus.energetic.ui.screen.oneTimePin
 
-import androidx.compose.foundation.layout.Arrangement
+import android.annotation.SuppressLint
+import android.content.Context
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -14,18 +19,21 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.enplus.energetic.R
+import com.enplus.energetic.data.model.PinState
 import com.enplus.energetic.ui.components.oneTimePin.InputOneTimePin
 import com.enplus.energetic.ui.components.oneTimePin.NumberPad
 import com.enplus.energetic.ui.theme.EnColor
 import com.enplus.energetic.ui.theme.EnergeticTheme
 import com.enplus.energetic.util.NavDestinations
+import com.enplus.energetic.util.VibrationEffects
 
 @Composable
 fun OneTimePinScreen(
@@ -33,127 +41,148 @@ fun OneTimePinScreen(
     viewModel: OneTimePinViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val inputtedPin = viewModel.inputtedPin
 
     OneTimePinScreen(
+        inputtedPin = inputtedPin,
         uiState = uiState,
-        onEqualPin = { viewModel.equalPin(it) },
-        onCreatePin = { viewModel.createPin(it) },
-        onSavePin = { viewModel.savePin(it) },
+        onInputtingPin = { viewModel.inputtingPin(it) },
+        onEqualPin = viewModel::equalPin,
+        onCreatePin = viewModel::createPin,
+        onSavePin = viewModel::savePin,
         onCompleted = { navController.navigate(NavDestinations.MAIN_SCREEN) { popUpTo(0) } },
-    )
-}
-
-@Composable
-fun OneTimePinScreen(
-    uiState: OneTimePinUiState,
-    onEqualPin: (String) -> Unit,
-    onCreatePin: (String) -> Unit,
-    onSavePin: (String) -> Unit,
-    onCompleted: () -> Unit,
-) {
-    Scaffold(
-        content = { paddingValues ->
-            when (uiState) {
-                OneTimePinUiState.Completed -> {
-                    LaunchedEffect(Unit) {
-                        onCompleted()
-                    }
-                }
-                OneTimePinUiState.InProcessing -> {
-                    /*TODO*/
-                }
-                OneTimePinUiState.InputtingPin -> {
-                    OneTimePinContent(
-                        paddingValues = paddingValues,
-                        title = stringResource(id = R.string.input_pin),
-                        onLogoutButtonClick = { /*TODO*/ },
-                        onInputComplete = { onEqualPin(it) },
-                    )
-                }
-                OneTimePinUiState.CreatePin -> {
-                    OneTimePinContent(
-                        paddingValues = paddingValues,
-                        title = stringResource(id = R.string.create_pin),
-                        onLogoutButtonClick = { /*TODO*/ },
-                        onInputComplete = { onCreatePin(it) },
-                    )
-                }
-                OneTimePinUiState.RepeatPin -> {
-                    OneTimePinContent(
-                        paddingValues = paddingValues,
-                        title = stringResource(id = R.string.repeat_pin),
-                        onLogoutButtonClick = { /*TODO*/ },
-                        onInputComplete = { onSavePin(it) },
-                    )
-                }
-                is OneTimePinUiState.Error -> {
-                    OneTimePinContent(
-                        paddingValues = paddingValues,
-                        title = when (uiState.previousState) {
-                            OneTimePinUiState.InputtingPin -> stringResource(id = R.string.input_pin)
-                            OneTimePinUiState.RepeatPin -> stringResource(id = R.string.repeat_pin)
-                            else -> ""
-                        },
-                        isError = true,
-                        onLogoutButtonClick = { /*TODO*/ },
-                        onInputComplete = { },
-                    )
-                }
-            }
+        onLogoutButtonClick = {
+            navController.navigate(NavDestinations.LOGIN_SCREEN) { popUpTo(0) }
+            //TODO the logout method call from view model
+        },
+        onSuccessVibrate = { context ->
+            viewModel.vibrationManager.vibrate(
+                context = context,
+                effect = VibrationEffects.Success,
+            )
+        },
+        onErrorVibrate = { context ->
+            viewModel.vibrationManager.vibrate(
+                context = context,
+                effect = VibrationEffects.Error,
+            )
         },
     )
 }
 
+@SuppressLint("MissingPermission")
 @Composable
-fun OneTimePinContent(
-    paddingValues: PaddingValues,
-    pinLength: Int = 4,
-    title: String,
-    isError: Boolean = false,
-    isShowLogoutButton: Boolean = true,
+fun OneTimePinScreen(
+    inputtedPin: String,
+    uiState: OneTimePinUiState,
+    onInputtingPin: (String) -> Unit,
+    onEqualPin: () -> Unit,
+    onCreatePin: () -> Unit,
+    onSavePin: () -> Unit,
+    onCompleted: () -> Unit,
     onLogoutButtonClick: () -> Unit,
-    onInputComplete: (String) -> Unit,
+    onSuccessVibrate: (Context) -> Unit,
+    onErrorVibrate: (Context) -> Unit,
 ) {
-    var inputtedPin by remember { mutableStateOf("") }
-
     LaunchedEffect(inputtedPin) {
-        if (inputtedPin.length == pinLength) {
-            onInputComplete(inputtedPin)
+        if (inputtedPin.length == 4) {
+            when (uiState) {
+                OneTimePinUiState.InputtingPin -> onEqualPin()
+                OneTimePinUiState.CreatePin -> onCreatePin()
+                OneTimePinUiState.RepeatPin -> onSavePin()
+                else -> Unit
+            }
         }
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(
-                top = paddingValues.calculateTopPadding(),
-                bottom = paddingValues.calculateBottomPadding()
-            ),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceAround,
-    ) {
-        InputOneTimePin(
-            title = title,
-            dpActiveColor = if (isError) Color.Red else EnColor.Orange,
-            pinInputtedLength = if (isError) pinLength else inputtedPin.length,
-        )
+    Scaffold(
+        containerColor = EnColor.Background,
+        content = { paddingValues ->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(
+                        top = paddingValues.calculateTopPadding(),
+                        bottom = paddingValues.calculateBottomPadding(),
+                    ),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                var title by remember { mutableStateOf<String?>(null) }
+                var state by remember { mutableStateOf(PinState.INPUT_PROCESS) }
 
-        NumberPad(
-            isShowBackspaceButton = if (isError) true else inputtedPin.isNotEmpty(),
-            isShowLogoutButton = isShowLogoutButton,
-            onNumberButtonClick = {
-                if (!isError) {
-                    inputtedPin += it.toString()
+                when (uiState) {
+                    OneTimePinUiState.InputtingPin -> {
+                        title = stringResource(id = R.string.input_pin)
+                        state = PinState.INPUT_PROCESS
+                    }
+                    OneTimePinUiState.CreatePin -> {
+                        title = stringResource(id = R.string.create_pin)
+                        state = PinState.INPUT_PROCESS
+                    }
+                    OneTimePinUiState.RepeatPin -> {
+                        title = stringResource(id = R.string.repeat_pin)
+                        state = PinState.INPUT_PROCESS
+                    }
+                    OneTimePinUiState.InProcessing -> { /*TODO processing state*/ }
+                    is OneTimePinUiState.Success -> {
+                        title = when (uiState.previousState) {
+                            OneTimePinUiState.InputtingPin -> stringResource(id = R.string.input_pin)
+                            OneTimePinUiState.RepeatPin -> stringResource(id = R.string.repeat_pin)
+                            else -> null
+                        }
+                        state = PinState.SUCCESS
+
+                        onSuccessVibrate(LocalContext.current)
+                    }
+                    is OneTimePinUiState.Error -> {
+                        title = when (uiState.previousState) {
+                            OneTimePinUiState.InputtingPin -> stringResource(id = R.string.input_pin)
+                            OneTimePinUiState.RepeatPin -> stringResource(id = R.string.repeat_pin)
+                            else -> null
+                        }
+                        state = PinState.ERROR
+
+                        onErrorVibrate(LocalContext.current)
+                    }
+                    OneTimePinUiState.Completed -> { onCompleted() }
                 }
-            },
-            onBackspaceButtonClick = {
-                if (!isError) {
-                    inputtedPin = inputtedPin.dropLast(1)
+
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .wrapContentHeight(Alignment.CenterVertically),
+                ) {
+                    InputOneTimePin(
+                        modifier = Modifier.widthIn(max = 280.dp),
+                        title = title ?: "",
+                        pinState = state,
+                        pinInputtedLength = inputtedPin.length,
+                    )
                 }
-            },
-            onLogoutButtonClick = { onLogoutButtonClick() },
-        )
-    }
+
+                Column(
+                    modifier = Modifier
+                        .wrapContentHeight(Alignment.Bottom),
+                ) {
+                    NumberPad(
+                        enabled = when (uiState) {
+                            OneTimePinUiState.InputtingPin,
+                            OneTimePinUiState.CreatePin,
+                            OneTimePinUiState.RepeatPin -> true
+                            else -> false
+                        },
+                        isShowBackspaceButton = inputtedPin.isNotEmpty(),
+                        isShowLogoutButton = true,
+                        onNumberButtonClick = { onInputtingPin(inputtedPin + it.toString()) },
+                        onBackspaceButtonClick = { onInputtingPin(inputtedPin.dropLast(1)) },
+                        onLogoutButtonClick = { onLogoutButtonClick() },
+                    )
+
+                    Spacer(modifier = Modifier.height(32.dp))
+                }
+            }
+        },
+    )
 }
 
 @Preview(name = "Input PIN", group = "Input PIN", showBackground = true, showSystemUi = true)
@@ -161,11 +190,35 @@ fun OneTimePinContent(
 fun InputPinOneTimePinScreenPreview() {
     EnergeticTheme {
         OneTimePinScreen(
+            inputtedPin = "   ",
             uiState = OneTimePinUiState.InputtingPin,
+            onInputtingPin = { },
             onEqualPin = { },
             onCreatePin = { },
             onSavePin = { },
             onCompleted = { },
+            onLogoutButtonClick = { },
+            onSuccessVibrate = { },
+            onErrorVibrate = { },
+        )
+    }
+}
+
+@Preview(name = "Success input PIN", group = "Input PIN", showBackground = true)
+@Composable
+fun SuccessInputPinOneTimePinScreenPreview() {
+    EnergeticTheme {
+        OneTimePinScreen(
+            inputtedPin = "",
+            uiState = OneTimePinUiState.Success(previousState = OneTimePinUiState.InputtingPin),
+            onInputtingPin = { },
+            onEqualPin = { },
+            onCreatePin = { },
+            onSavePin = { },
+            onCompleted = { },
+            onLogoutButtonClick = { },
+            onSuccessVibrate = { },
+            onErrorVibrate = { },
         )
     }
 }
@@ -175,11 +228,16 @@ fun InputPinOneTimePinScreenPreview() {
 fun ErrorInputPinOneTimePinScreenPreview() {
     EnergeticTheme {
         OneTimePinScreen(
+            inputtedPin = "",
             uiState = OneTimePinUiState.Error(previousState = OneTimePinUiState.InputtingPin),
+            onInputtingPin = { },
             onEqualPin = { },
             onCreatePin = { },
             onSavePin = { },
             onCompleted = { },
+            onLogoutButtonClick = { },
+            onSuccessVibrate = { },
+            onErrorVibrate = { },
         )
     }
 }
@@ -189,11 +247,16 @@ fun ErrorInputPinOneTimePinScreenPreview() {
 fun CreatePinOneTimePinScreenPreview() {
     EnergeticTheme {
         OneTimePinScreen(
+            inputtedPin = "",
             uiState = OneTimePinUiState.CreatePin,
+            onInputtingPin = { },
             onEqualPin = { },
             onCreatePin = { },
             onSavePin = { },
             onCompleted = { },
+            onLogoutButtonClick = { },
+            onSuccessVibrate = { },
+            onErrorVibrate = { },
         )
     }
 }
@@ -203,11 +266,35 @@ fun CreatePinOneTimePinScreenPreview() {
 fun RepeatPinOneTimePinScreenPreview() {
     EnergeticTheme {
         OneTimePinScreen(
+            inputtedPin = "",
             uiState = OneTimePinUiState.RepeatPin,
+            onInputtingPin = { },
             onEqualPin = { },
             onCreatePin = { },
             onSavePin = { },
             onCompleted = { },
+            onLogoutButtonClick = { },
+            onSuccessVibrate = { },
+            onErrorVibrate = { },
+        )
+    }
+}
+
+@Preview(name = "Success repeat PIN", group = "Setup PIN", showBackground = true)
+@Composable
+fun SuccessRepeatPinOneTimePinScreenPreview() {
+    EnergeticTheme {
+        OneTimePinScreen(
+            inputtedPin = "",
+            uiState = OneTimePinUiState.Success(previousState = OneTimePinUiState.RepeatPin),
+            onInputtingPin = { },
+            onEqualPin = { },
+            onCreatePin = { },
+            onSavePin = { },
+            onCompleted = { },
+            onLogoutButtonClick = { },
+            onSuccessVibrate = { },
+            onErrorVibrate = { },
         )
     }
 }
@@ -217,11 +304,16 @@ fun RepeatPinOneTimePinScreenPreview() {
 fun ErrorRepeatPinOneTimePinScreenPreview() {
     EnergeticTheme {
         OneTimePinScreen(
+            inputtedPin = "",
             uiState = OneTimePinUiState.Error(previousState = OneTimePinUiState.RepeatPin),
+            onInputtingPin = { },
             onEqualPin = { },
             onCreatePin = { },
             onSavePin = { },
             onCompleted = { },
+            onLogoutButtonClick = { },
+            onSuccessVibrate = { },
+            onErrorVibrate = { },
         )
     }
 }

@@ -1,5 +1,8 @@
 package com.enplus.energetic.ui.components.oneTimePin
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,6 +16,7 @@ import com.enplus.energetic.ui.theme.EnergeticTheme
 @Composable
 fun NumberPad(
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
     isShowBackspaceButton: Boolean,
     isShowLogoutButton: Boolean,
     onNumberButtonClick: (Int) -> Unit,
@@ -25,32 +29,62 @@ fun NumberPad(
     ) {
         ButtonsColumn(
             columnNumber = 1,
-            onNumberButtonClick = { onNumberButtonClick(it) },
+            onNumberButtonClick = {
+                if (enabled) {
+                    onNumberButtonClick(it)
+                }
+            },
             content = {
                 if (isShowLogoutButton) {
-                    LogoutButton(onLogoutButtonClick)
+                    LogoutButton(onLogoutButtonClick = {
+                        if (enabled) {
+                            onLogoutButtonClick()
+                        }
+                    })
                 }
             },
         )
 
         ButtonsColumn(
             columnNumber = 2,
-            onNumberButtonClick = { onNumberButtonClick(it) },
+            onNumberButtonClick = {
+                if (enabled) {
+                    onNumberButtonClick(it)
+                }
+            },
             content = {
                 val value = 0
                 NumberButton(
                     value = value,
-                    onNumberClick = { onNumberButtonClick(value) },
+                    onNumberClick = {
+                        if (enabled) {
+                            onNumberButtonClick(it)
+                        }
+                    },
                 )
             },
         )
 
         ButtonsColumn(
             columnNumber = 3,
-            onNumberButtonClick = { onNumberButtonClick(it) },
+            onNumberButtonClick = {
+                if (enabled) {
+                    onNumberButtonClick(it)
+                }
+            },
             content = {
-                if (isShowBackspaceButton) {
-                    BackspaceButton(onBackspaceButtonClick)
+                AnimatedVisibility(
+                    visible = isShowBackspaceButton,
+                    enter = fadeIn(),
+                    exit = fadeOut(),
+                ) {
+                    BackspaceButton(
+                        onBackspaceButtonClick = {
+                            if (enabled) {
+                                onBackspaceButtonClick()
+                            }
+                        }
+                    )
                 }
             },
         )

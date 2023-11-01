@@ -58,12 +58,20 @@ fun AddressDataScreen(
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = 16.dp),
-                contentPadding = PaddingValues(top = it.calculateTopPadding() + 16.dp),
+                    .padding(
+                        top = it.calculateTopPadding(),
+                        bottom = it.calculateBottomPadding(),
+                    ),
+                contentPadding = PaddingValues(
+                    top = 16.dp,
+                    start = 16.dp,
+                    end = 16.dp,
+                ),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 item {
                     DataScreenHeader(
+                        modifier = Modifier.padding(bottom = 8.dp),
                         title = addressData.address,
                         subtitle = stringResource(
                             id = R.string.personal_accounts_counter,

@@ -29,9 +29,10 @@ import com.enplus.energetic.data.model.Reading
 import com.enplus.energetic.ui.components.base.FilterChip
 import com.enplus.energetic.ui.components.base.TopBarWithReturn
 import com.enplus.energetic.ui.components.data.DataScreenHeader
-import com.enplus.energetic.ui.components.meter.MeterInformation
+import com.enplus.energetic.ui.components.data.MeterInformationCard
 import com.enplus.energetic.ui.icon.EnIcons
 import com.enplus.energetic.ui.icon.House
+import com.enplus.energetic.ui.theme.EnColor
 import com.enplus.energetic.ui.theme.EnergeticTheme
 import java.time.LocalDate
 
@@ -65,17 +66,22 @@ fun DataScreen(
     onBackClick: () -> Unit,
 ) {
     Scaffold(
+        containerColor = EnColor.Background,
         topBar = { TopBarWithReturn(onBackClick) },
         content = {
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = 16.dp),
-                contentPadding = PaddingValues(top = it.calculateTopPadding() + 16.dp),
+                    .padding(
+                        top = it.calculateTopPadding(),
+                        bottom = it.calculateBottomPadding(),
+                    ),
+                contentPadding = PaddingValues(top = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 item {
                     DataScreenHeader(
+                        modifier = Modifier.padding(horizontal = 16.dp),
                         title = title,
                         subtitle = subtitle,
                         icon = EnIcons.House,
@@ -94,7 +100,8 @@ fun DataScreen(
                 items(metersList) { meter ->
                     var expanded by rememberSaveable { mutableStateOf(false) }
 
-                    MeterInformation(
+                    MeterInformationCard(
+                        modifier = Modifier.padding(horizontal = 16.dp),
                         meter = meter,
                         isExpanded = expanded,
                         onExpandRequest = { expanded = !expanded },
@@ -115,6 +122,7 @@ private fun ChipsRow(
     onFilteredListChange: (MeterType, Boolean) -> Unit,
 ) {
     LazyRow(
+        contentPadding = PaddingValues(horizontal = 16.dp),
         horizontalArrangement = Arrangement.spacedBy(6.dp),
     ) {
         items(metersTypeList) {
