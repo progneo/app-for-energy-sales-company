@@ -16,20 +16,23 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.enplus.energetic.R
 import com.enplus.energetic.ui.theme.EnColor
 
 @Composable
 fun DataScreenHeader(
+    modifier: Modifier = Modifier,
     title: String,
     subtitle: String,
     icon: ImageVector,
 ) {
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         Column(
@@ -65,7 +68,7 @@ fun DataScreenHeader(
             Icon(
                 modifier = Modifier.align(Alignment.Center),
                 imageVector = icon,
-                contentDescription = "Лого",
+                contentDescription = stringResource(id = R.string.logo),
                 tint = EnColor.Orange,
             )
         }

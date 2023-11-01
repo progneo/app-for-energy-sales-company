@@ -1,4 +1,4 @@
-package com.enplus.energetic.ui.components.meter
+package com.enplus.energetic.ui.components.data
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
@@ -13,10 +13,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -37,6 +33,7 @@ import com.enplus.energetic.R
 import com.enplus.energetic.data.model.Meter
 import com.enplus.energetic.data.model.MeterType
 import com.enplus.energetic.data.model.Reading
+import com.enplus.energetic.ui.components.base.Card
 import com.enplus.energetic.ui.icon.ChevronDown
 import com.enplus.energetic.ui.icon.ChevronUp
 import com.enplus.energetic.ui.icon.EnIcons
@@ -45,30 +42,19 @@ import com.enplus.energetic.ui.theme.EnergeticTheme
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MeterInformation(
+fun MeterInformationCard(
     modifier: Modifier = Modifier,
     meter: Meter,
     isExpanded: Boolean = false,
     onExpandRequest: () -> Unit,
 ) {
     Card(
-        modifier = modifier
-            .fillMaxWidth(),
-        shape = RoundedCornerShape(16.dp),
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = 10.dp,
-        ),
-        colors = CardDefaults.cardColors(
-            containerColor = EnColor.Background,
-        ),
-        onClick = {
-            onExpandRequest()
-        },
+        modifier = modifier,
+        onClick = onExpandRequest,
     ) {
         Column(
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxWidth()
                 .animateContentSize(),
         ) {
@@ -297,11 +283,11 @@ private fun Characteristic(
 
 @Preview(name = "Information about meter")
 @Composable
-fun MeterInformationPreview() {
+fun MeterInformationCardPreview() {
     var expanded by remember { mutableStateOf(false) }
 
     EnergeticTheme {
-        MeterInformation(
+        MeterInformationCard(
             meter = Meter(
                 type = MeterType.ELECTRICAL_ENERGY,
                 state = true,
@@ -320,11 +306,11 @@ fun MeterInformationPreview() {
 
 @Preview(name = "Expanded information about meter")
 @Composable
-fun ExpandedMeterInformationPreview() {
+fun ExpandedMeterInformationCardPreview() {
     var expanded by remember { mutableStateOf(true) }
 
     EnergeticTheme {
-        MeterInformation(
+        MeterInformationCard(
             meter = Meter(
                 type = MeterType.ELECTRICAL_ENERGY,
                 state = true,

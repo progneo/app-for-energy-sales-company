@@ -57,4 +57,5 @@
     <string name="provide_permisson">Предоставить доступ</string>
     <string name="no_permisson">Нет доступа</string>
     <string name="try_again">Попробуйте снова</string>
+    <string name="logo">logo</string>
 </resources>

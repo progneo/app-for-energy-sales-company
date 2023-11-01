@@ -108,51 +108,48 @@ fun OneTimePinScreen(
                     ),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                var titleResId by remember { mutableStateOf<Int?>(null) }
-
+                var title by remember { mutableStateOf<String?>(null) }
                 var state by remember { mutableStateOf(PinState.INPUT_PROCESS) }
 
-                LaunchedEffect(uiState) {
-                    when (uiState) {
-                        OneTimePinUiState.InputtingPin -> {
-                            titleResId = R.string.input_pin
-                            state = PinState.INPUT_PROCESS
-                        }
-                        OneTimePinUiState.CreatePin -> {
-                            titleResId = R.string.create_pin
-                            state = PinState.INPUT_PROCESS
-                        }
-                        OneTimePinUiState.RepeatPin -> {
-                            titleResId = R.string.repeat_pin
-                            state = PinState.INPUT_PROCESS
-                        }
-                        OneTimePinUiState.InProcessing -> { /*TODO processing state*/ }
-                        is OneTimePinUiState.Success -> {
-                            titleResId = when (uiState.previousState) {
-                                OneTimePinUiState.InputtingPin -> R.string.input_pin
-                                OneTimePinUiState.RepeatPin -> R.string.repeat_pin
-                                else -> 0
-                            }
-                            state = PinState.SUCCESS
-
-                            successVibrationEffect?.let {
-                                vibrator.cancel()
-                                vibrator.vibrate(successVibrationEffect)
-                            }
-                        }
-                        is OneTimePinUiState.Error -> {
-                            titleResId = when (uiState.previousState) {
-                                OneTimePinUiState.InputtingPin -> R.string.input_pin
-                                OneTimePinUiState.RepeatPin -> R.string.repeat_pin
-                                else -> 0
-                            }
-                            state = PinState.ERROR
-
-                            vibrator.cancel()
-                            vibrator.vibrate(errorVibrationEffect)
-                        }
-                        OneTimePinUiState.Completed -> { onCompleted() }
+                when (uiState) {
+                    OneTimePinUiState.InputtingPin -> {
+                        title = stringResource(id = R.string.input_pin)
+                        state = PinState.INPUT_PROCESS
                     }
+                    OneTimePinUiState.CreatePin -> {
+                        title = stringResource(id = R.string.create_pin)
+                        state = PinState.INPUT_PROCESS
+                    }
+                    OneTimePinUiState.RepeatPin -> {
+                        title = stringResource(id = R.string.repeat_pin)
+                        state = PinState.INPUT_PROCESS
+                    }
+                    OneTimePinUiState.InProcessing -> { /*TODO processing state*/ }
+                    is OneTimePinUiState.Success -> {
+                        title = when (uiState.previousState) {
+                            OneTimePinUiState.InputtingPin -> stringResource(id = R.string.input_pin)
+                            OneTimePinUiState.RepeatPin -> stringResource(id = R.string.repeat_pin)
+                            else -> null
+                        }
+                        state = PinState.SUCCESS
+
+                        successVibrationEffect?.let {
+                            vibrator.cancel()
+                            vibrator.vibrate(successVibrationEffect)
+                        }
+                    }
+                    is OneTimePinUiState.Error -> {
+                        title = when (uiState.previousState) {
+                            OneTimePinUiState.InputtingPin -> stringResource(id = R.string.input_pin)
+                            OneTimePinUiState.RepeatPin -> stringResource(id = R.string.repeat_pin)
+                            else -> null
+                        }
+                        state = PinState.ERROR
+
+                        vibrator.cancel()
+                        vibrator.vibrate(errorVibrationEffect)
+                    }
+                    OneTimePinUiState.Completed -> { onCompleted() }
                 }
 
                 Box(
@@ -162,7 +159,7 @@ fun OneTimePinScreen(
                 ) {
                     InputOneTimePin(
                         modifier = Modifier.widthIn(max = 280.dp),
-                        title = stringResource(id = titleResId ?: R.string.input_pin),
+                        title = title ?: "",
                         pinState = state,
                         pinInputtedLength = inputtedPin.length,
                     )
