@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.enplus.energetic.data.preference.PinManager
+import com.enplus.energetic.util.VibrationManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -19,6 +20,7 @@ import javax.inject.Inject
 @HiltViewModel
 class OneTimePinViewModel @Inject constructor(
     private val pinManager: PinManager,
+    val vibrationManager: VibrationManager,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<OneTimePinUiState>(OneTimePinUiState.InProcessing)

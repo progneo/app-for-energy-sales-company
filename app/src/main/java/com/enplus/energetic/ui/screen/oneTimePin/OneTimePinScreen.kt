@@ -2,9 +2,6 @@ package com.enplus.energetic.ui.screen.oneTimePin
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.os.Build
-import android.os.VibrationEffect
-import android.os.Vibrator
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -36,6 +33,7 @@ import com.enplus.energetic.ui.components.oneTimePin.NumberPad
 import com.enplus.energetic.ui.theme.EnColor
 import com.enplus.energetic.ui.theme.EnergeticTheme
 import com.enplus.energetic.util.NavDestinations
+import com.enplus.energetic.util.VibrationEffects
 
 @Composable
 fun OneTimePinScreen(
@@ -57,6 +55,18 @@ fun OneTimePinScreen(
             navController.navigate(NavDestinations.LOGIN_SCREEN) { popUpTo(0) }
             //TODO the logout method call from view model
         },
+        onSuccessVibrate = { context ->
+            viewModel.vibrationManager.vibrate(
+                context = context,
+                effect = VibrationEffects.Success,
+            )
+        },
+        onErrorVibrate = { context ->
+            viewModel.vibrationManager.vibrate(
+                context = context,
+                effect = VibrationEffects.Error,
+            )
+        },
     )
 }
 
@@ -71,6 +81,8 @@ fun OneTimePinScreen(
     onSavePin: () -> Unit,
     onCompleted: () -> Unit,
     onLogoutButtonClick: () -> Unit,
+    onSuccessVibrate: (Context) -> Unit,
+    onErrorVibrate: (Context) -> Unit,
 ) {
     LaunchedEffect(inputtedPin) {
         if (inputtedPin.length == 4) {
@@ -82,19 +94,6 @@ fun OneTimePinScreen(
             }
         }
     }
-
-    @Suppress("DEPRECATION in Java")
-    val vibrator = LocalContext.current.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-
-    val errorVibrationEffect: VibrationEffect =
-        VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE)
-    val successVibrationEffect: VibrationEffect? =
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            VibrationEffect.createPredefined(VibrationEffect.EFFECT_CLICK)
-        } else {
-            /* TODO("VERSION.SDK_INT < Q") */
-            null
-        }
 
     Scaffold(
         containerColor = EnColor.Background,
@@ -133,10 +132,7 @@ fun OneTimePinScreen(
                         }
                         state = PinState.SUCCESS
 
-                        successVibrationEffect?.let {
-                            vibrator.cancel()
-                            vibrator.vibrate(successVibrationEffect)
-                        }
+                        onSuccessVibrate(LocalContext.current)
                     }
                     is OneTimePinUiState.Error -> {
                         title = when (uiState.previousState) {
@@ -146,8 +142,7 @@ fun OneTimePinScreen(
                         }
                         state = PinState.ERROR
 
-                        vibrator.cancel()
-                        vibrator.vibrate(errorVibrationEffect)
+                        onErrorVibrate(LocalContext.current)
                     }
                     OneTimePinUiState.Completed -> { onCompleted() }
                 }
@@ -203,6 +198,8 @@ fun InputPinOneTimePinScreenPreview() {
             onSavePin = { },
             onCompleted = { },
             onLogoutButtonClick = { },
+            onSuccessVibrate = { },
+            onErrorVibrate = { },
         )
     }
 }
@@ -220,6 +217,8 @@ fun SuccessInputPinOneTimePinScreenPreview() {
             onSavePin = { },
             onCompleted = { },
             onLogoutButtonClick = { },
+            onSuccessVibrate = { },
+            onErrorVibrate = { },
         )
     }
 }
@@ -237,6 +236,8 @@ fun ErrorInputPinOneTimePinScreenPreview() {
             onSavePin = { },
             onCompleted = { },
             onLogoutButtonClick = { },
+            onSuccessVibrate = { },
+            onErrorVibrate = { },
         )
     }
 }
@@ -254,6 +255,8 @@ fun CreatePinOneTimePinScreenPreview() {
             onSavePin = { },
             onCompleted = { },
             onLogoutButtonClick = { },
+            onSuccessVibrate = { },
+            onErrorVibrate = { },
         )
     }
 }
@@ -271,6 +274,8 @@ fun RepeatPinOneTimePinScreenPreview() {
             onSavePin = { },
             onCompleted = { },
             onLogoutButtonClick = { },
+            onSuccessVibrate = { },
+            onErrorVibrate = { },
         )
     }
 }
@@ -288,6 +293,8 @@ fun SuccessRepeatPinOneTimePinScreenPreview() {
             onSavePin = { },
             onCompleted = { },
             onLogoutButtonClick = { },
+            onSuccessVibrate = { },
+            onErrorVibrate = { },
         )
     }
 }
@@ -305,6 +312,8 @@ fun ErrorRepeatPinOneTimePinScreenPreview() {
             onSavePin = { },
             onCompleted = { },
             onLogoutButtonClick = { },
+            onSuccessVibrate = { },
+            onErrorVibrate = { },
         )
     }
 }
