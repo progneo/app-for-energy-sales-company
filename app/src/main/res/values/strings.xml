@@ -53,10 +53,12 @@
     <string name="confirm_data">Проверьте данные</string>
     <string name="enter_account_number_hint">Лицевой счёт или номер</string>
     <string name="scan_again">Сканировать снова</string>
-    <string name="no_permission_desc">Для сканирования небходимо предоставить доступ к камере</string>
+    <string name="no_permission_desc">Предоставьте доступ к камере, чтобы воспользоваться сканером</string>
     <string name="provide_permisson">Предоставить доступ</string>
     <string name="no_permisson">Нет доступа</string>
     <string name="try_again">Попробуйте снова</string>
+    <string name="cancel">Отменить</string>
+    <string name="good">Хорошо</string>
     <string name="logo">logo</string>
     <string name="meters_list_not_found">Данные о счетчиках по вашим фильтрам не найдены. Попробуйте выбрать другие параметры фильтрации.</string>
     <string name="not_found">not found</string>
