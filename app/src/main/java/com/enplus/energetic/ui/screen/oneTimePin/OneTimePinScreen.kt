@@ -27,9 +27,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.enplus.energetic.R
-import com.enplus.energetic.data.model.PinState
 import com.enplus.energetic.ui.components.oneTimePin.InputOneTimePin
 import com.enplus.energetic.ui.components.oneTimePin.NumberPad
+import com.enplus.energetic.ui.entities.PinStateUiModel
 import com.enplus.energetic.ui.theme.EnColor
 import com.enplus.energetic.ui.theme.EnergeticTheme
 import com.enplus.energetic.util.NavDestinations
@@ -108,20 +108,20 @@ fun OneTimePinScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 var title by remember { mutableStateOf<String?>(null) }
-                var state by remember { mutableStateOf(PinState.INPUT_PROCESS) }
+                var state by remember { mutableStateOf(PinStateUiModel.INPUT_PROCESS) }
 
                 when (uiState) {
                     OneTimePinUiState.InputtingPin -> {
                         title = stringResource(id = R.string.input_pin)
-                        state = PinState.INPUT_PROCESS
+                        state = PinStateUiModel.INPUT_PROCESS
                     }
                     OneTimePinUiState.CreatePin -> {
                         title = stringResource(id = R.string.create_pin)
-                        state = PinState.INPUT_PROCESS
+                        state = PinStateUiModel.INPUT_PROCESS
                     }
                     OneTimePinUiState.RepeatPin -> {
                         title = stringResource(id = R.string.repeat_pin)
-                        state = PinState.INPUT_PROCESS
+                        state = PinStateUiModel.INPUT_PROCESS
                     }
                     OneTimePinUiState.InProcessing -> { /*TODO processing state*/ }
                     is OneTimePinUiState.Success -> {
@@ -130,7 +130,7 @@ fun OneTimePinScreen(
                             OneTimePinUiState.RepeatPin -> stringResource(id = R.string.repeat_pin)
                             else -> null
                         }
-                        state = PinState.SUCCESS
+                        state = PinStateUiModel.SUCCESS
 
                         onSuccessVibrate(LocalContext.current)
                     }
@@ -140,7 +140,7 @@ fun OneTimePinScreen(
                             OneTimePinUiState.RepeatPin -> stringResource(id = R.string.repeat_pin)
                             else -> null
                         }
-                        state = PinState.ERROR
+                        state = PinStateUiModel.ERROR
 
                         onErrorVibrate(LocalContext.current)
                     }
@@ -155,7 +155,7 @@ fun OneTimePinScreen(
                     InputOneTimePin(
                         modifier = Modifier.widthIn(max = 280.dp),
                         title = title ?: "",
-                        pinState = state,
+                        pinStateUiModel = state,
                         pinInputtedLength = inputtedPin.length,
                     )
                 }

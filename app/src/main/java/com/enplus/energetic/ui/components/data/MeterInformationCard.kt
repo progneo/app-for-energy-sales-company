@@ -30,10 +30,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.enplus.energetic.R
-import com.enplus.energetic.data.model.Meter
-import com.enplus.energetic.data.model.MeterType
-import com.enplus.energetic.data.model.Reading
+import com.enplus.energetic.domain.entities.Meter
 import com.enplus.energetic.ui.components.base.Card
+import com.enplus.energetic.ui.entities.MeterUiModel
 import com.enplus.energetic.ui.icon.ChevronDown
 import com.enplus.energetic.ui.icon.ChevronUp
 import com.enplus.energetic.ui.icon.EnIcons
@@ -45,7 +44,7 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun MeterInformationCard(
     modifier: Modifier = Modifier,
-    meter: Meter,
+    meterUiModel: MeterUiModel,
     isExpanded: Boolean = false,
     onExpandRequest: () -> Unit,
 ) {
@@ -59,7 +58,7 @@ fun MeterInformationCard(
                 .animateContentSize(),
         ) {
             HeaderDropDownItem(
-                title = stringResource(id = meter.type.meterResId),
+                title = stringResource(id = meterUiModel.category.meterResId),
                 isExpanded = isExpanded,
                 onExpandRequest = { onExpandRequest() },
             )
@@ -69,7 +68,7 @@ fun MeterInformationCard(
                 enter = fadeIn(),
                 exit = fadeOut(),
             ) {
-                InformationContent(meter = meter)
+                InformationContent(meterUiModel = meterUiModel)
             }
         }
     }
@@ -135,6 +134,7 @@ private fun ToggleButton(
                     tint = EnColor.Orange,
                 )
             }
+
             false -> {
                 Icon(
                     imageVector = EnIcons.ChevronDown,
@@ -149,7 +149,7 @@ private fun ToggleButton(
 @Composable
 private fun InformationContent(
     modifier: Modifier = Modifier,
-    meter: Meter,
+    meterUiModel: MeterUiModel,
 ) {
     Column(
         modifier = modifier
@@ -164,7 +164,7 @@ private fun InformationContent(
         Characteristic(
             title = stringResource(id = R.string.service_status),
             value = stringResource(
-                id = if (meter.state) {
+                id = if (meterUiModel.state) {
                     R.string.turned_on
                 } else {
                     R.string.turned_off
@@ -174,24 +174,24 @@ private fun InformationContent(
 
         Characteristic(
             title = stringResource(id = R.string.meter_factory_number),
-            value = meter.factoryNumber.toString(),
+            value = meterUiModel.factoryNumber.toString(),
         )
 
         Characteristic(
             title = stringResource(id = R.string.installation_location),
-            value = meter.address,
+            value = meterUiModel.address,
         )
 
         Characteristic(
             title = stringResource(id = R.string.check_date),
-            value = meter.checkDate.format(
+            value = meterUiModel.checkDate.format(
                 DateTimeFormatter.ofPattern("dd MMMM yyyy"),
             ),
         )
 
         Characteristic(
             title = stringResource(id = R.string.next_check_date),
-            value = meter.lastCheckDate.format(
+            value = meterUiModel.lastCheckDate.format(
                 DateTimeFormatter.ofPattern("dd MMMM yyyy"),
             ),
         )
@@ -199,7 +199,7 @@ private fun InformationContent(
         Characteristic(
             title = stringResource(id = R.string.seal),
             value = stringResource(
-                id = if (meter.sealState) {
+                id = if (meterUiModel.sealState) {
                     R.string.exist
                 } else {
                     R.string.absent
@@ -207,10 +207,10 @@ private fun InformationContent(
             ),
         )
 
-        if (meter.lastReadings.any()) {
+        if (meterUiModel.lastReadings.any()) {
             Characteristic(
                 title = stringResource(id = R.string.last_readings),
-                values = meter.lastReadings.map {
+                values = meterUiModel.lastReadings.map {
                     "${it.date.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))} - ${it.value}"
                 },
             )
@@ -288,8 +288,9 @@ fun MeterInformationCardPreview() {
 
     EnergeticTheme {
         MeterInformationCard(
-            meter = Meter(
-                type = MeterType.ELECTRICAL_ENERGY,
+            meterUiModel = MeterUiModel(
+                category = MeterUiModel.CategoryTypeUiModel.ELECTRICAL_ENERGY,
+                type = "SKAT 101M",
                 state = true,
                 factoryNumber = 112280081,
                 address = "КРУ",
@@ -311,8 +312,9 @@ fun ExpandedMeterInformationCardPreview() {
 
     EnergeticTheme {
         MeterInformationCard(
-            meter = Meter(
-                type = MeterType.ELECTRICAL_ENERGY,
+            meterUiModel = MeterUiModel(
+                category = MeterUiModel.CategoryTypeUiModel.ELECTRICAL_ENERGY,
+                type = "SKAT 101M",
                 state = true,
                 factoryNumber = 112280081,
                 address = "КРУ",
@@ -320,15 +322,15 @@ fun ExpandedMeterInformationCardPreview() {
                 lastCheckDate = LocalDate.of(2023, 9, 21),
                 sealState = true,
                 lastReadings = listOf(
-                    Reading(
+                    Meter.Reading(
                         date = LocalDate.of(2023, 9, 20),
                         value = 123123,
                     ),
-                    Reading(
+                    Meter.Reading(
                         date = LocalDate.of(2023, 10, 20),
                         value = 123123,
                     ),
-                    Reading(
+                    Meter.Reading(
                         date = LocalDate.of(2023, 11, 20),
                         value = 123123,
                     ),

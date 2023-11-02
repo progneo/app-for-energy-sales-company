@@ -6,10 +6,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
-import com.enplus.energetic.data.model.DataType
-import com.enplus.energetic.data.model.Meter
-import com.enplus.energetic.data.model.MeterType
-import com.enplus.energetic.data.model.Reading
+import com.enplus.energetic.domain.entities.Meter
+import com.enplus.energetic.ui.entities.DataTypeUiModel
+import com.enplus.energetic.ui.entities.MeterUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.time.LocalDate
 import javax.inject.Inject
@@ -17,11 +16,13 @@ import javax.inject.Inject
 @HiltViewModel
 class DataViewModel @Inject constructor() : ViewModel() {
 
-    private val _metersList = mutableStateListOf<Meter>().apply {
+    //TODO move mock to repo
+    private val _metersLists = mutableStateListOf<MeterUiModel>().apply {
         addAll(
             listOf(
-                Meter(
-                    type = MeterType.ELECTRICAL_ENERGY,
+                MeterUiModel(
+                    category = MeterUiModel.CategoryTypeUiModel.ELECTRICAL_ENERGY,
+                    type = "FBU 11205",
                     state = true,
                     factoryNumber = 112280081,
                     address = "КРУ",
@@ -29,22 +30,23 @@ class DataViewModel @Inject constructor() : ViewModel() {
                     lastCheckDate = LocalDate.of(2023, 9, 21),
                     sealState = true,
                     lastReadings = listOf(
-                        Reading(
+                        Meter.Reading(
                             date = LocalDate.of(2023, 9, 20),
                             value = 123123,
                         ),
-                        Reading(
+                        Meter.Reading(
                             date = LocalDate.of(2023, 10, 20),
                             value = 123123,
                         ),
-                        Reading(
+                        Meter.Reading(
                             date = LocalDate.of(2023, 11, 20),
                             value = 123123,
                         ),
                     ),
                 ),
-                Meter(
-                    type = MeterType.HOT_WATER_SUPPLY,
+                MeterUiModel(
+                    category = MeterUiModel.CategoryTypeUiModel.HOT_WATER_SUPPLY,
+                    type = "DBB 13201",
                     state = true,
                     factoryNumber = 112280081,
                     address = "КРУ",
@@ -52,22 +54,23 @@ class DataViewModel @Inject constructor() : ViewModel() {
                     lastCheckDate = LocalDate.of(2023, 9, 21),
                     sealState = true,
                     lastReadings = listOf(
-                        Reading(
+                        Meter.Reading(
                             date = LocalDate.of(2023, 9, 20),
                             value = 123123,
                         ),
-                        Reading(
+                        Meter.Reading(
                             date = LocalDate.of(2023, 10, 20),
                             value = 123123,
                         ),
-                        Reading(
+                        Meter.Reading(
                             date = LocalDate.of(2023, 11, 20),
                             value = 123123,
                         ),
                     ),
                 ),
-                Meter(
-                    type = MeterType.HOT_WATER_SUPPLY,
+                MeterUiModel(
+                    category = MeterUiModel.CategoryTypeUiModel.HOT_WATER_SUPPLY,
+                    type = "АГАТ 1-1",
                     state = true,
                     factoryNumber = 112280081,
                     address = "КРУ",
@@ -75,15 +78,15 @@ class DataViewModel @Inject constructor() : ViewModel() {
                     lastCheckDate = LocalDate.of(2023, 9, 21),
                     sealState = true,
                     lastReadings = listOf(
-                        Reading(
+                        Meter.Reading(
                             date = LocalDate.of(2023, 9, 20),
                             value = 123123,
                         ),
-                        Reading(
+                        Meter.Reading(
                             date = LocalDate.of(2023, 10, 20),
                             value = 123123,
                         ),
-                        Reading(
+                        Meter.Reading(
                             date = LocalDate.of(2023, 11, 20),
                             value = 123123,
                         ),
@@ -93,25 +96,28 @@ class DataViewModel @Inject constructor() : ViewModel() {
         )
     }
 
-    private val _filteredMetersList = mutableStateListOf<Meter>().apply {
-        addAll(_metersList)
+    private val _filteredMetersList = mutableStateListOf<MeterUiModel>().apply {
+        addAll(_metersLists)
     }
-    val filteredMetersList: SnapshotStateList<Meter>
+    val filteredMetersList: SnapshotStateList<MeterUiModel>
         get() = _filteredMetersList
 
-    private val _metersTypeList = mutableStateListOf<MeterType>().apply {
-        addAll(listOf(MeterType.ELECTRICAL_ENERGY, MeterType.HOT_WATER_SUPPLY))
+    private val _metersTypeList = mutableStateListOf<MeterUiModel.CategoryTypeUiModel>().apply {
+        addAll(listOf(MeterUiModel.CategoryTypeUiModel.ELECTRICAL_ENERGY, MeterUiModel.CategoryTypeUiModel.HOT_WATER_SUPPLY))
     }
-    val metersTypeList: SnapshotStateList<MeterType> get() = _metersTypeList
+    val metersTypeList: SnapshotStateList<MeterUiModel.CategoryTypeUiModel> get() = _metersTypeList
 
-    var dataType by mutableStateOf(DataType.PERSONAL_ACCOUNT)
+    var dataTypeUiModel by mutableStateOf(DataTypeUiModel.PERSONAL_ACCOUNT)
         private set
 
-    fun filterMetersList(meterType: MeterType, isSelected: Boolean) {
+    fun filterMetersList(
+        сategoryTypeUiModel: MeterUiModel.CategoryTypeUiModel,
+        isSelected: Boolean,
+    ) {
         if (isSelected) {
-            _filteredMetersList.addAll(_metersList.filter { it.type == meterType })
+            _filteredMetersList.addAll(_metersLists.filter { it.category == сategoryTypeUiModel })
         } else {
-            _filteredMetersList.removeIf { it.type == meterType }
+            _filteredMetersList.removeIf { it.category == сategoryTypeUiModel }
         }
     }
 }
