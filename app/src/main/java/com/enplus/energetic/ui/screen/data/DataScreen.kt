@@ -23,13 +23,12 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.enplus.energetic.data.model.Meter
-import com.enplus.energetic.data.model.MeterType
-import com.enplus.energetic.data.model.Reading
+import com.enplus.energetic.domain.entities.Meter
 import com.enplus.energetic.ui.components.base.FilterChip
 import com.enplus.energetic.ui.components.base.TopBarWithReturn
 import com.enplus.energetic.ui.components.data.DataScreenHeader
 import com.enplus.energetic.ui.components.data.MeterInformationCard
+import com.enplus.energetic.ui.entities.MeterUiModel
 import com.enplus.energetic.ui.icon.EnIcons
 import com.enplus.energetic.ui.icon.House
 import com.enplus.energetic.ui.theme.EnColor
@@ -60,9 +59,9 @@ fun DataScreen(
 fun DataScreen(
     title: String,
     subtitle: String,
-    metersList: List<Meter>,
-    metersTypeList: List<MeterType>,
-    onChipClick: (MeterType, Boolean) -> Unit,
+    metersList: List<MeterUiModel>,
+    metersTypeList: List<MeterUiModel.CategoryTypeUiModel>,
+    onChipClick: (MeterUiModel.CategoryTypeUiModel, Boolean) -> Unit,
     onBackClick: () -> Unit,
 ) {
     Scaffold(
@@ -102,7 +101,7 @@ fun DataScreen(
 
                     MeterInformationCard(
                         modifier = Modifier.padding(horizontal = 16.dp),
-                        meter = meter,
+                        meterUiModel = meter,
                         isExpanded = expanded,
                         onExpandRequest = { expanded = !expanded },
                     )
@@ -118,8 +117,8 @@ fun DataScreen(
 
 @Composable
 private fun ChipsRow(
-    metersTypeList: List<MeterType>,
-    onFilteredListChange: (MeterType, Boolean) -> Unit,
+    metersTypeList: List<MeterUiModel.CategoryTypeUiModel>,
+    onFilteredListChange: (MeterUiModel.CategoryTypeUiModel, Boolean) -> Unit,
 ) {
     LazyRow(
         contentPadding = PaddingValues(horizontal = 16.dp),
@@ -144,14 +143,14 @@ private fun ChipsRow(
 @Preview(showSystemUi = true, showBackground = true, name = "Data screen")
 @Composable
 fun DataScreenPreview() {
-    //TODO move data mock to repository
     EnergeticTheme {
         DataScreen(
             title = "ул. Южное шоссе д. 2, кв 53",
             subtitle = "Лицевой счет 111209184",
             metersList = listOf(
-                Meter(
-                    type = MeterType.ELECTRICAL_ENERGY,
+                MeterUiModel(
+                    category = MeterUiModel.CategoryTypeUiModel.ELECTRICAL_ENERGY,
+                    type = "FBU 11205",
                     state = true,
                     factoryNumber = 112280081,
                     address = "КРУ",
@@ -159,22 +158,23 @@ fun DataScreenPreview() {
                     lastCheckDate = LocalDate.of(2023, 9, 21),
                     sealState = true,
                     lastReadings = listOf(
-                        Reading(
+                        Meter.Reading(
                             date = LocalDate.of(2023, 9, 20),
                             value = 123123,
                         ),
-                        Reading(
+                        Meter.Reading(
                             date = LocalDate.of(2023, 10, 20),
                             value = 123123,
                         ),
-                        Reading(
+                        Meter.Reading(
                             date = LocalDate.of(2023, 11, 20),
                             value = 123123,
                         ),
                     ),
                 ),
-                Meter(
-                    type = MeterType.HOT_WATER_SUPPLY,
+                MeterUiModel(
+                    category = MeterUiModel.CategoryTypeUiModel.HOT_WATER_SUPPLY,
+                    type = "FBU 11206",
                     state = true,
                     factoryNumber = 112280081,
                     address = "КРУ",
@@ -182,22 +182,22 @@ fun DataScreenPreview() {
                     lastCheckDate = LocalDate.of(2023, 9, 21),
                     sealState = true,
                     lastReadings = listOf(
-                        Reading(
+                        Meter.Reading(
                             date = LocalDate.of(2023, 9, 20),
                             value = 123123,
                         ),
-                        Reading(
+                        Meter.Reading(
                             date = LocalDate.of(2023, 10, 20),
                             value = 123123,
                         ),
-                        Reading(
+                        Meter.Reading(
                             date = LocalDate.of(2023, 11, 20),
                             value = 123123,
                         ),
                     ),
                 ),
             ),
-            metersTypeList = listOf(MeterType.ELECTRICAL_ENERGY, MeterType.HOT_WATER_SUPPLY),
+            metersTypeList = listOf(MeterUiModel.CategoryTypeUiModel.ELECTRICAL_ENERGY, MeterUiModel.CategoryTypeUiModel.HOT_WATER_SUPPLY),
             onChipClick = { _, _ -> },
             onBackClick = { },
         )

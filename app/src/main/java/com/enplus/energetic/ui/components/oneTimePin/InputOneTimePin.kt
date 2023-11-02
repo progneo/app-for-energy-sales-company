@@ -27,7 +27,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.enplus.energetic.R
-import com.enplus.energetic.data.model.PinState
+import com.enplus.energetic.ui.entities.PinStateUiModel
 import com.enplus.energetic.ui.theme.EnColor
 import com.enplus.energetic.ui.theme.EnergeticTheme
 
@@ -35,7 +35,7 @@ import com.enplus.energetic.ui.theme.EnergeticTheme
 fun InputOneTimePin(
     modifier: Modifier = Modifier,
     title: String,
-    pinState: PinState,
+    pinStateUiModel: PinStateUiModel,
     pinLength: Int = 4,
     pinInputtedLength: Int,
 ) {
@@ -54,7 +54,7 @@ fun InputOneTimePin(
         )
 
         AnimatedContent(
-            targetState = pinState,
+            targetState = pinStateUiModel,
             transitionSpec = {
                 fadeIn(
                     animationSpec = tween(1000)
@@ -63,7 +63,7 @@ fun InputOneTimePin(
             label = "animated content",
         ) { state ->
             when (state) {
-                PinState.INPUT_PROCESS -> {
+                PinStateUiModel.INPUT_PROCESS -> {
                     Row(
                         modifier = modifier,
                         horizontalArrangement = Arrangement.spacedBy(16.dp),
@@ -87,7 +87,7 @@ fun InputOneTimePin(
                         }
                     }
                 }
-                PinState.SUCCESS -> {
+                PinStateUiModel.SUCCESS -> {
                     Row(
                         modifier = modifier,
                         horizontalArrangement = Arrangement.spacedBy(16.dp),
@@ -107,7 +107,7 @@ fun InputOneTimePin(
                         }
                     }
                 }
-                PinState.ERROR -> {
+                PinStateUiModel.ERROR -> {
                     Row(
                         modifier = modifier,
                         horizontalArrangement = Arrangement.spacedBy(16.dp),
@@ -139,7 +139,7 @@ fun InputOneTimePinPreview() {
     EnergeticTheme {
         InputOneTimePin(
             title = stringResource(id = R.string.input_pin),
-            pinState = PinState.INPUT_PROCESS,
+            pinStateUiModel = PinStateUiModel.INPUT_PROCESS,
             pinInputtedLength = 0,
         )
     }
@@ -151,7 +151,7 @@ fun InputOneTimePinWithInputtedPinPreview() {
     EnergeticTheme {
         InputOneTimePin(
             title = stringResource(id = R.string.input_pin),
-            pinState = PinState.INPUT_PROCESS,
+            pinStateUiModel = PinStateUiModel.INPUT_PROCESS,
             pinInputtedLength = 3,
         )
     }
@@ -163,7 +163,7 @@ fun CorrectInputPinPreview() {
     EnergeticTheme {
         InputOneTimePin(
             title = stringResource(id = R.string.input_pin),
-            pinState = PinState.SUCCESS,
+            pinStateUiModel = PinStateUiModel.SUCCESS,
             pinInputtedLength = 4,
         )
     }
@@ -175,7 +175,7 @@ fun IncorrectInputPinPreview() {
     EnergeticTheme {
         InputOneTimePin(
             title = stringResource(id = R.string.input_pin),
-            pinState = PinState.ERROR,
+            pinStateUiModel = PinStateUiModel.ERROR,
             pinInputtedLength = 4,
         )
     }

@@ -1,8 +1,8 @@
 package com.enplus.energetic.di
 
+import com.enplus.energetic.data.repository.AddressDataRepositoryImpl
 import com.enplus.energetic.data.repository.PersonDataRepositoryImpl
 import com.enplus.energetic.domain.repository.AddressDataRepository
-import com.enplus.energetic.domain.repository.AddressDataRepositoryImpl
 import com.enplus.energetic.domain.repository.PersonDataRepository
 import dagger.Binds
 import dagger.Module

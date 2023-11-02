@@ -1,14 +1,31 @@
 package com.enplus.energetic.domain.entities
 
-import java.util.Date
+import java.time.LocalDate
 
 data class Meter(
-    val type: MeterType,
+    val category: CategoryType,
+    val type: String,
     val state: Boolean,
     val factoryNumber: Long,
     val address: String,
-    val checkDate: Date,
-    val lastCheckDate: Date,
+    val checkDate: LocalDate,
+    val lastCheckDate: LocalDate,
     val sealState: Boolean,
-    val lastReadings: List<Long>,
-)
+    val lastReadings: List<Reading>,
+) {
+
+    enum class CategoryType {
+        ELECTRICAL_ENERGY,
+
+        COLD_WATER_SUPPLY,
+
+        HOT_WATER_SUPPLY,
+
+        THERMAL_ENERGY,
+    }
+
+    data class Reading(
+        val date: LocalDate,
+        val value: Long,
+    )
+}
