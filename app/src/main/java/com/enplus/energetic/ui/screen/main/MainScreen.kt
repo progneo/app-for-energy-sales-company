@@ -39,7 +39,7 @@ import com.enplus.energetic.ui.icon.Logout
 import com.enplus.energetic.ui.icon.Scan
 import com.enplus.energetic.ui.theme.EnColor
 import com.enplus.energetic.ui.theme.EnergeticTheme
-import com.enplus.energetic.util.NavDestinations
+import com.enplus.energetic.ui.util.NavDestinations
 
 @Composable
 fun MainScreen(

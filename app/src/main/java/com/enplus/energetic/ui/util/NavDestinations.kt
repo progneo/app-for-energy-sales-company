@@ -1,4 +1,4 @@
-package com.enplus.energetic.util
+package com.enplus.energetic.ui.util
 
 object NavDestinations {
     const val MAIN_SCREEN = "MAIN_SCREEN"

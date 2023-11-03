@@ -17,6 +17,7 @@ object EnColor {
     val TextOnDark = Color(0xFFFFFFFF)
 
     val LightGray_Light = Color(0xFFD9D9D9)
+    val LightGray_Medium = Color(0xFFF5F5F5)
     val LightGray_Dark = Color(0xFFEFEFEF)
     val LightGray = Color(0x0A000000)
     val LightBlack = Color(0x80000000)

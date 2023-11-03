@@ -1,28 +1,37 @@
 package com.enplus.energetic.ui.screen.data
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
+import com.enplus.energetic.R
 import com.enplus.energetic.domain.entities.Meter
 import com.enplus.energetic.ui.components.base.FilterChip
 import com.enplus.energetic.ui.components.base.TopBarWithReturn
@@ -31,6 +40,7 @@ import com.enplus.energetic.ui.components.data.MeterInformationCard
 import com.enplus.energetic.ui.entities.MeterUiModel
 import com.enplus.energetic.ui.icon.EnIcons
 import com.enplus.energetic.ui.icon.House
+import com.enplus.energetic.ui.icon.VisibilityOff
 import com.enplus.energetic.ui.theme.EnColor
 import com.enplus.energetic.ui.theme.EnergeticTheme
 import java.time.LocalDate
@@ -41,15 +51,16 @@ fun DataScreen(
     viewModel: DataViewModel = hiltViewModel(),
 ) {
     val metersList = viewModel.filteredMetersList
-    val metersTypeList = viewModel.metersTypeList
+    val filter = viewModel.filter
 
     DataScreen(
         title = "ул. Южное шоссе д. 2, кв 53",
         subtitle = "Лицевой счет 111209184",
         metersList = metersList,
-        metersTypeList = metersTypeList,
+        filter = filter,
         onChipClick = { meterType, isSelected ->
-            viewModel.filterMetersList(meterType, isSelected)
+            viewModel.applyFilter(meterType, isSelected)
+            viewModel.filterMetersList()
         },
         onBackClick = { navController.popBackStack() },
     )
@@ -60,44 +71,47 @@ fun DataScreen(
     title: String,
     subtitle: String,
     metersList: List<MeterUiModel>,
-    metersTypeList: List<MeterUiModel.CategoryTypeUiModel>,
+    filter: Map<MeterUiModel.CategoryTypeUiModel, Boolean>,
     onChipClick: (MeterUiModel.CategoryTypeUiModel, Boolean) -> Unit,
     onBackClick: () -> Unit,
 ) {
     Scaffold(
-        containerColor = EnColor.Background,
         topBar = { TopBarWithReturn(onBackClick) },
         content = {
-            LazyColumn(
+            Column(
                 modifier = Modifier
-                    .fillMaxSize()
+                    .fillMaxHeight()
                     .padding(
                         top = it.calculateTopPadding(),
                         bottom = it.calculateBottomPadding(),
                     ),
-                contentPadding = PaddingValues(top = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
-                item {
-                    DataScreenHeader(
-                        modifier = Modifier.padding(horizontal = 16.dp),
-                        title = title,
-                        subtitle = subtitle,
-                        icon = EnIcons.House,
-                    )
-                }
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    contentPadding = PaddingValues(top = 16.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                ) {
+                    item {
+                        DataScreenHeader(
+                            modifier = Modifier.padding(horizontal = 16.dp),
+                            title = title,
+                            subtitle = subtitle,
+                            icon = EnIcons.House,
+                        )
+                    }
 
-                item {
-                    ChipsRow(
-                        metersTypeList = metersTypeList,
-                        onFilteredListChange = { meterType, isSelected ->
-                            onChipClick(meterType, isSelected)
-                        },
-                    )
-                }
+                    item {
+                        FilterMeterType(
+                            filter = filter,
+                            onFilterChange = { meterType, isSelected ->
+                                onChipClick(meterType, isSelected)
+                            },
+                        )
+                    }
 
-                items(metersList) { meter ->
-                    var expanded by rememberSaveable { mutableStateOf(false) }
+                    items(metersList) { meter ->
+                        var expanded by rememberSaveable { mutableStateOf(false) }
 
                     MeterInformationCard(
                         modifier = Modifier.padding(horizontal = 16.dp),
@@ -107,8 +121,21 @@ fun DataScreen(
                     )
                 }
 
-                item {
-                    Spacer(modifier = Modifier.height(64.dp))
+                    if (metersList.any()) {
+                        item {
+                            Spacer(modifier = Modifier.height(64.dp))
+                        }
+                    }
+                }
+
+                if (metersList.isEmpty()) {
+                    Column(
+                        modifier = Modifier
+                            .weight(1f)
+                            .wrapContentHeight(Alignment.CenterVertically),
+                    ) {
+                        ContentNotFound()
+                    }
                 }
             }
         },
@@ -116,27 +143,50 @@ fun DataScreen(
 }
 
 @Composable
-private fun ChipsRow(
-    metersTypeList: List<MeterUiModel.CategoryTypeUiModel>,
-    onFilteredListChange: (MeterUiModel.CategoryTypeUiModel, Boolean) -> Unit,
+private fun FilterMeterType(
+    filter: Map<MeterUiModel.CategoryTypeUiModel, Boolean>,
+    onFilterChange: (MeterUiModel.CategoryTypeUiModel, Boolean) -> Unit,
 ) {
     LazyRow(
         contentPadding = PaddingValues(horizontal = 16.dp),
         horizontalArrangement = Arrangement.spacedBy(6.dp),
     ) {
-        items(metersTypeList) {
-            var isSelected by remember { mutableStateOf(metersTypeList.contains(it)) }
-
+        items(filter.keys.toList()) {
             FilterChip(
                 label = stringResource(id = it.typeResId),
                 imageVector = it.imageVector,
-                selected = isSelected,
-                onClick = {
-                    isSelected = !isSelected
-                    onFilteredListChange(it, isSelected)
-                },
+                selected = filter.getOrDefault(it, false),
+                onClick = { onFilterChange(it, !filter.getOrDefault(it, false)) },
             )
         }
+    }
+}
+
+@Composable
+private fun ContentNotFound(
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier
+            .padding(horizontal = 34.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(6.dp, Alignment.CenterVertically),
+    ) {
+        Icon(
+            modifier = Modifier.size(24.dp),
+            imageVector = EnIcons.VisibilityOff,
+            contentDescription = stringResource(id = R.string.not_found),
+            tint = EnColor.Orange,
+        )
+
+        Text(
+            textAlign = TextAlign.Center,
+            text = stringResource(id = R.string.meters_list_not_found),
+            style = TextStyle(
+                fontSize = 15.sp,
+                color = EnColor.LightBlack,
+            ),
+        )
     }
 }
 
@@ -197,20 +247,30 @@ fun DataScreenPreview() {
                     ),
                 ),
             ),
-            metersTypeList = listOf(MeterUiModel.CategoryTypeUiModel.ELECTRICAL_ENERGY, MeterUiModel.CategoryTypeUiModel.HOT_WATER_SUPPLY),
+            filter = mapOf(
+                MeterUiModel.CategoryTypeUiModel.ELECTRICAL_ENERGY to true,
+                MeterUiModel.CategoryTypeUiModel.HOT_WATER_SUPPLY to true,
+            ),
             onChipClick = { _, _ -> },
             onBackClick = { },
         )
     }
 }
 
-@Preview(showSystemUi = true, showBackground = true, name = "Data screen with view model")
+@Preview(showBackground = true, name = "Data screen with not found")
 @Composable
-fun DataScreenViewModelPreview() {
+fun DataScreenNotFoundPreview() {
     EnergeticTheme {
         DataScreen(
-            navController = rememberNavController(),
-            viewModel = DataViewModel(),
+            title = "ул. Южное шоссе д. 2, кв 53",
+            subtitle = "Лицевой счет 111209184",
+            metersList = emptyList(),
+            filter = mapOf(
+                MeterUiModel.CategoryTypeUiModel.ELECTRICAL_ENERGY to false,
+                MeterUiModel.CategoryTypeUiModel.HOT_WATER_SUPPLY to false,
+            ),
+            onChipClick = { _, _ -> },
+            onBackClick = { },
         )
     }
 }

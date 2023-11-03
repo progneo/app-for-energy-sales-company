@@ -1,4 +1,4 @@
-package com.enplus.energetic.util
+package com.enplus.energetic.ui.util
 
 import android.content.Context
 import android.os.Build

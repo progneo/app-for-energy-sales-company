@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
@@ -33,11 +32,23 @@ fun DataScreenHeader(
 ) {
     Row(
         modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        Column(
+        Box(
             modifier = Modifier
-                .weight(0.8f, fill = false),
+                .size(48.dp)
+                .clip(CircleShape)
+                .background(EnColor.OrangeBackground),
+        ) {
+            Icon(
+                modifier = Modifier.align(Alignment.Center),
+                imageVector = icon,
+                contentDescription = stringResource(id = R.string.logo),
+                tint = EnColor.Orange,
+            )
+        }
+
+        Column(
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             Text(
@@ -55,21 +66,6 @@ fun DataScreenHeader(
                     fontWeight = FontWeight.Normal,
                     color = EnColor.TextSubtitle,
                 ),
-            )
-        }
-
-        Box(
-            modifier = Modifier
-                .padding(start = 16.dp)
-                .size(48.dp)
-                .clip(CircleShape)
-                .background(EnColor.OrangeBackground),
-        ) {
-            Icon(
-                modifier = Modifier.align(Alignment.Center),
-                imageVector = icon,
-                contentDescription = stringResource(id = R.string.logo),
-                tint = EnColor.Orange,
             )
         }
     }

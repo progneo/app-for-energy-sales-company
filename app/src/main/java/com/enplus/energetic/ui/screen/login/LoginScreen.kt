@@ -43,7 +43,7 @@ import com.enplus.energetic.ui.icon.VisibilityOff
 import com.enplus.energetic.ui.theme.EnColor
 import com.enplus.energetic.ui.theme.EnergeticTheme
 import com.enplus.energetic.ui.util.PhoneVisualTransformation
-import com.enplus.energetic.util.NavDestinations
+import com.enplus.energetic.ui.util.NavDestinations
 
 @Composable
 fun LoginScreen(

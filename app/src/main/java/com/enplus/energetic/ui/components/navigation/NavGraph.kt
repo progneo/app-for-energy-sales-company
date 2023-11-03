@@ -11,7 +11,7 @@ import com.enplus.energetic.ui.screen.data.DataScreen
 import com.enplus.energetic.ui.screen.login.LoginScreen
 import com.enplus.energetic.ui.screen.main.MainScreen
 import com.enplus.energetic.ui.screen.oneTimePin.OneTimePinScreen
-import com.enplus.energetic.util.NavDestinations
+import com.enplus.energetic.ui.util.NavDestinations
 
 @Composable
 fun NavGraph(

@@ -32,8 +32,8 @@ import com.enplus.energetic.ui.components.oneTimePin.NumberPad
 import com.enplus.energetic.ui.entities.PinStateUiModel
 import com.enplus.energetic.ui.theme.EnColor
 import com.enplus.energetic.ui.theme.EnergeticTheme
-import com.enplus.energetic.util.NavDestinations
-import com.enplus.energetic.util.VibrationEffects
+import com.enplus.energetic.ui.util.NavDestinations
+import com.enplus.energetic.ui.util.VibrationEffects
 
 @Composable
 fun OneTimePinScreen(
@@ -96,7 +96,6 @@ fun OneTimePinScreen(
     }
 
     Scaffold(
-        containerColor = EnColor.Background,
         content = { paddingValues ->
             Column(
                 modifier = Modifier
