@@ -13,18 +13,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.enplus.energetic.R
 import com.enplus.energetic.domain.entities.AddressData
-import com.enplus.energetic.ui.components.data.AddressDataCard
 import com.enplus.energetic.ui.components.base.TopBarWithReturn
+import com.enplus.energetic.ui.components.data.AddressDataCard
 import com.enplus.energetic.ui.components.data.DataScreenHeader
 import com.enplus.energetic.ui.icon.EnIcons
 import com.enplus.energetic.ui.icon.Flat
+import com.enplus.energetic.ui.theme.EnergeticTheme
 
 @Composable
 fun AddressDataScreen(
@@ -52,7 +53,6 @@ fun AddressDataScreen(
 ) {
 
     Scaffold(
-        containerColor = Color.White,
         topBar = { TopBarWithReturn(onBackClick) },
         content = {
             LazyColumn(
@@ -97,4 +97,24 @@ fun AddressDataScreen(
             }
         },
     )
+}
+
+@Preview(showBackground = true, name = "Address data screen")
+@Composable
+fun AddressDataScreenPreview() {
+    EnergeticTheme {
+        AddressDataScreen(
+            onBackClick = { },
+            addressData = AddressData(
+                address = "ул. Южное шоссе д. 2",
+                flatDataList = listOf(
+                    AddressData.FlatData(
+                        personId = 111209184,
+                        flatNumber = 53,
+                        metersCount = 3,
+                    ),
+                ),
+            ),
+        )
+    }
 }

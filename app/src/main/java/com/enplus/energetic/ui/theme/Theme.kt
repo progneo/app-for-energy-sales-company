@@ -11,6 +11,7 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
 private val colorScheme = lightColorScheme(
+    background = EnColor.Background,
     /* Other default colors to override
     primary = Purple40,
     secondary = PurpleGrey40,

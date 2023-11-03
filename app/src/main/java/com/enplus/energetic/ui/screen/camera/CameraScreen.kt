@@ -53,7 +53,7 @@ import com.enplus.energetic.ui.icon.EnIcons
 import com.enplus.energetic.ui.icon.Scan
 import com.enplus.energetic.ui.theme.EnColor
 import com.enplus.energetic.ui.theme.EnergeticTheme
-import com.enplus.energetic.util.NavDestinations
+import com.enplus.energetic.ui.util.NavDestinations
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.isGranted

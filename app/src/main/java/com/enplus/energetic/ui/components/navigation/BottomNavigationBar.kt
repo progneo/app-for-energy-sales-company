@@ -16,7 +16,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.enplus.energetic.ui.theme.EnergeticTheme
-import com.enplus.energetic.util.NavDestinations
+import com.enplus.energetic.ui.util.NavDestinations
 
 @Composable
 fun BottomNavigationBar(navController: NavHostController) {

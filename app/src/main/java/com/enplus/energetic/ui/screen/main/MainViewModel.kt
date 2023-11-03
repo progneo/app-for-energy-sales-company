@@ -1,7 +1,7 @@
 package com.enplus.energetic.ui.screen.main
 
 import androidx.lifecycle.ViewModel
-import com.enplus.energetic.util.NavDestinations
+import com.enplus.energetic.ui.util.NavDestinations
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 

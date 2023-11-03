@@ -58,4 +58,6 @@
     <string name="no_permisson">Нет доступа</string>
     <string name="try_again">Попробуйте снова</string>
     <string name="logo">logo</string>
+    <string name="meters_list_not_found">Данные о счетчиках по вашим фильтрам не найдены. Попробуйте выбрать другие параметры фильтрации.</string>
+    <string name="not_found">not found</string>
 </resources>

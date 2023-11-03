@@ -45,6 +45,7 @@ fun FilterChip(
         shape = RoundedCornerShape(1000.dp),
         colors = FilterChipDefaults.filterChipColors(
             selectedContainerColor = EnColor.OrangeBackground,
+            containerColor = EnColor.LightGray_Medium,
         ),
         border = FilterChipDefaults.filterChipBorder(
             borderColor = EnColor.OrangeBackground,

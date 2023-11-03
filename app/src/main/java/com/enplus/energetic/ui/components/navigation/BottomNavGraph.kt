@@ -6,7 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.enplus.energetic.ui.screen.account.AccountScreen
 import com.enplus.energetic.ui.screen.data.DataScreen
-import com.enplus.energetic.util.NavDestinations
+import com.enplus.energetic.ui.util.NavDestinations
 
 @Composable
 fun BottomNavGraph(

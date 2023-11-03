@@ -1,13 +1,11 @@
 package com.enplus.energetic.ui.screen.data
 
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.lifecycle.ViewModel
 import com.enplus.energetic.domain.entities.Meter
-import com.enplus.energetic.ui.entities.DataTypeUiModel
 import com.enplus.energetic.ui.entities.MeterUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.time.LocalDate
@@ -102,22 +100,19 @@ class DataViewModel @Inject constructor() : ViewModel() {
     val filteredMetersList: SnapshotStateList<MeterUiModel>
         get() = _filteredMetersList
 
-    private val _metersTypeList = mutableStateListOf<MeterUiModel.CategoryTypeUiModel>().apply {
-        addAll(listOf(MeterUiModel.CategoryTypeUiModel.ELECTRICAL_ENERGY, MeterUiModel.CategoryTypeUiModel.HOT_WATER_SUPPLY))
+    private val _filter = mutableStateMapOf<MeterUiModel.CategoryTypeUiModel, Boolean>().apply {
+        set(MeterUiModel.CategoryTypeUiModel.ELECTRICAL_ENERGY, true)
+        set(MeterUiModel.CategoryTypeUiModel.HOT_WATER_SUPPLY, true)
     }
-    val metersTypeList: SnapshotStateList<MeterUiModel.CategoryTypeUiModel> get() = _metersTypeList
+    val filter: SnapshotStateMap<MeterUiModel.CategoryTypeUiModel, Boolean>
+        get() = _filter
 
-    var dataTypeUiModel by mutableStateOf(DataTypeUiModel.PERSONAL_ACCOUNT)
-        private set
+    fun applyFilter(сategoryTypeUiModel: MeterUiModel.CategoryTypeUiModel, state: Boolean) {
+        _filter[сategoryTypeUiModel] = state
+    }
 
-    fun filterMetersList(
-        сategoryTypeUiModel: MeterUiModel.CategoryTypeUiModel,
-        isSelected: Boolean,
-    ) {
-        if (isSelected) {
-            _filteredMetersList.addAll(_metersLists.filter { it.category == сategoryTypeUiModel })
-        } else {
-            _filteredMetersList.removeIf { it.category == сategoryTypeUiModel }
-        }
+    fun filterMetersList() {
+        _filteredMetersList.clear()
+        _filteredMetersList.addAll(_metersLists.filter { _filter[it.category] == true })
     }
 }
