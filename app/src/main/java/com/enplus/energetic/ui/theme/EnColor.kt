@@ -24,6 +24,7 @@ object EnColor {
 
     val Green = Color(0xFF72BF6A)
     val Red = Color(0xFFFF2E00)
+    val Blue = Color(0xFF1A73E9)
 
     val Success = Green
     val Error = Red

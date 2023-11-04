@@ -1,6 +1,5 @@
 package com.enplus.energetic.ui.screen.camera
 
-import android.Manifest
 import android.content.Context
 import android.util.Log
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
@@ -19,8 +18,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Camera
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -38,7 +35,6 @@ import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -52,40 +48,26 @@ import com.enplus.energetic.ui.components.base.TopBarWithReturn
 import com.enplus.energetic.ui.icon.EnIcons
 import com.enplus.energetic.ui.icon.Scan
 import com.enplus.energetic.ui.theme.EnColor
-import com.enplus.energetic.ui.theme.EnergeticTheme
 import com.enplus.energetic.ui.util.NavDestinations
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.PermissionState
-import com.google.accompanist.permissions.isGranted
-import com.google.accompanist.permissions.rememberPermissionState
 import java.util.concurrent.Executor
 
-@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun CameraScreen(
     navController: NavController,
     viewModel: CameraViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle(CameraUiState.WaitingForCapture)
-    val cameraPermissionState: PermissionState = rememberPermissionState(Manifest.permission.CAMERA)
 
-    if (cameraPermissionState.status.isGranted) {
-        CameraScreen(
-            uiState = uiState,
-            onBackClick = navController::popBackStack,
-            onScanClick = viewModel::setLoading,
-            onPhotoCaptured = viewModel::recognizeText,
-            onRecognized = { text ->
-                viewModel.resetState()
-                navController.navigate("${NavDestinations.CONFIRMATION_SCREEN}/$text")
-            },
-        )
-    } else {
-        NoPermissionScreen(
-            onBackClick = navController::popBackStack,
-            onRequestPermission = cameraPermissionState::launchPermissionRequest,
-        )
-    }
+    CameraScreen(
+        uiState = uiState,
+        onBackClick = navController::popBackStack,
+        onScanClick = viewModel::setLoading,
+        onPhotoCaptured = viewModel::recognizeText,
+        onRecognized = { text ->
+            viewModel.resetState()
+            navController.navigate("${NavDestinations.CONFIRMATION_SCREEN}/$text")
+        },
+    )
 }
 
 @Composable
@@ -164,47 +146,6 @@ fun CameraScreen(
 }
 
 @Composable
-private fun NoPermissionScreen(
-    onBackClick: () -> Unit,
-    onRequestPermission: () -> Unit,
-) {
-    Scaffold(
-        topBar = {
-            TopBarWithReturn(onBackClick = onBackClick)
-        },
-    ) { scaffoldPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp)
-                .padding(scaffoldPadding),
-            verticalArrangement = Arrangement.SpaceBetween,
-        ) {
-            Column(verticalArrangement = Arrangement.spacedBy(32.dp)) {
-                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                    Text(
-                        text = stringResource(R.string.no_permisson),
-                        fontSize = 30.sp,
-                        fontWeight = FontWeight(700),
-                        color = EnColor.TextTitle,
-                    )
-                    Text(
-                        text = stringResource(R.string.no_permission_desc),
-                        fontSize = 17.sp,
-                        color = EnColor.TextSubtitle,
-                    )
-                }
-                MainButton(
-                    onClick = onRequestPermission,
-                    icon = Icons.Default.Camera,
-                    text = stringResource(R.string.provide_permisson),
-                )
-            }
-        }
-    }
-}
-
-@Composable
 fun BottomBar(
     isLoading: Boolean,
     onClick: () -> Unit,
@@ -253,15 +194,4 @@ private fun capturePhoto(
             }
         },
     )
-}
-
-@Preview(name = "No camera permission screen", showBackground = true)
-@Composable
-fun NoPermissionScreenPreview() {
-    EnergeticTheme {
-        NoPermissionScreen(
-            onBackClick = {},
-            onRequestPermission = {},
-        )
-    }
 }
