@@ -2,24 +2,30 @@ package com.enplus.energetic.ui.entities
 
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.enplus.energetic.R
-import com.enplus.energetic.domain.entities.Meter
 import com.enplus.energetic.ui.icon.ColdWater
 import com.enplus.energetic.ui.icon.ElectricEnergy
 import com.enplus.energetic.ui.icon.EnIcons
 import com.enplus.energetic.ui.icon.HotWater
 import com.enplus.energetic.ui.icon.ThermalEnergy
-import java.time.LocalDate
 
 data class MeterUiModel(
     val category: CategoryTypeUiModel,
-    val type: String,
-    val state: Boolean,
-    val factoryNumber: Long,
-    val address: String,
-    val checkDate: LocalDate,
-    val lastCheckDate: LocalDate,
-    val sealState: Boolean,
-    val lastReadings: List<Meter.Reading>,
+    val typeLabelId: Int,
+    val typeValue: String,
+    val stateLabelId: Int,
+    val stateValue: Int,
+    val factoryNumberLabelId: Int,
+    val factoryNumberValue: String,
+    val placingLabelId: Int,
+    val placingValue: String,
+    val checkDateLabelId: Int,
+    val checkDateValue: String,
+    val lastCheckDateLabelId: Int,
+    val lastCheckDateValue: String,
+    val sealLabelId: Int,
+    val sealStateValue: Int,
+    val lastReadingsLabelId: Int,
+    val lastReadingsValue: List<ReadingUiModel>,
 ) {
     enum class CategoryTypeUiModel(
         val meterResId: Int,
@@ -47,4 +53,8 @@ data class MeterUiModel(
             imageVector = EnIcons.ThermalEnergy,
         ),
     }
+
+    data class ReadingUiModel(
+        val value: String,
+    )
 }

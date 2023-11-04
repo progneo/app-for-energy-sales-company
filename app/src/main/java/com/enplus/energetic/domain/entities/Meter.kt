@@ -7,7 +7,7 @@ data class Meter(
     val type: String,
     val state: Boolean,
     val factoryNumber: Long,
-    val address: String,
+    val placing: String,
     val checkDate: LocalDate,
     val lastCheckDate: LocalDate,
     val sealState: Boolean,

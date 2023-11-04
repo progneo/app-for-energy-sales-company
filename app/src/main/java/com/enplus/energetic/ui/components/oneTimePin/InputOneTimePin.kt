@@ -138,7 +138,7 @@ fun InputOneTimePin(
 fun InputOneTimePinPreview() {
     EnergeticTheme {
         InputOneTimePin(
-            title = stringResource(id = R.string.input_pin),
+            title = stringResource(id = R.string.pin_screen_input_pin_title),
             pinStateUiModel = PinStateUiModel.INPUT_PROCESS,
             pinInputtedLength = 0,
         )
@@ -150,7 +150,7 @@ fun InputOneTimePinPreview() {
 fun InputOneTimePinWithInputtedPinPreview() {
     EnergeticTheme {
         InputOneTimePin(
-            title = stringResource(id = R.string.input_pin),
+            title = stringResource(id = R.string.pin_screen_input_pin_title),
             pinStateUiModel = PinStateUiModel.INPUT_PROCESS,
             pinInputtedLength = 3,
         )
@@ -162,7 +162,7 @@ fun InputOneTimePinWithInputtedPinPreview() {
 fun CorrectInputPinPreview() {
     EnergeticTheme {
         InputOneTimePin(
-            title = stringResource(id = R.string.input_pin),
+            title = stringResource(id = R.string.pin_screen_input_pin_title),
             pinStateUiModel = PinStateUiModel.SUCCESS,
             pinInputtedLength = 4,
         )
@@ -174,7 +174,7 @@ fun CorrectInputPinPreview() {
 fun IncorrectInputPinPreview() {
     EnergeticTheme {
         InputOneTimePin(
-            title = stringResource(id = R.string.input_pin),
+            title = stringResource(id = R.string.pin_screen_input_pin_title),
             pinStateUiModel = PinStateUiModel.ERROR,
             pinInputtedLength = 4,
         )

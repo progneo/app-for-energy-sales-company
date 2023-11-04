@@ -6,12 +6,12 @@ import com.enplus.energetic.data.preference.AuthStateManager
 import com.enplus.energetic.data.preference.PasswordManager
 import com.enplus.energetic.data.preference.PhoneNumberManager
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -41,10 +41,12 @@ class LoginViewModel @Inject constructor(
     }
 
     private fun saveLoginData(phoneNumber: String, password: String) {
-        CoroutineScope(Dispatchers.IO).launch {
-            authStateManager.save(true)
-            phoneNumberManager.save(phoneNumber)
-            passwordManager.save(password)
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                authStateManager.save(true)
+                phoneNumberManager.save(phoneNumber)
+                passwordManager.save(password)
+            }
         }
     }
 }

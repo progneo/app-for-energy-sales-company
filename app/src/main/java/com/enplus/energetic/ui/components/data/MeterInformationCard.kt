@@ -30,7 +30,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.enplus.energetic.R
-import com.enplus.energetic.domain.entities.Meter
 import com.enplus.energetic.ui.components.base.Card
 import com.enplus.energetic.ui.entities.MeterUiModel
 import com.enplus.energetic.ui.icon.ChevronDown
@@ -38,8 +37,6 @@ import com.enplus.energetic.ui.icon.ChevronUp
 import com.enplus.energetic.ui.icon.EnIcons
 import com.enplus.energetic.ui.theme.EnColor
 import com.enplus.energetic.ui.theme.EnergeticTheme
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 
 @Composable
 fun MeterInformationCard(
@@ -162,62 +159,49 @@ private fun InformationContent(
         verticalArrangement = Arrangement.spacedBy(17.dp),
     ) {
         Characteristic(
-            title = stringResource(id = R.string.service_status),
-            value = stringResource(
-                id = if (meterUiModel.state) {
-                    R.string.turned_on
-                } else {
-                    R.string.turned_off
-                },
-            ),
+            title = stringResource(id = meterUiModel.stateLabelId),
+            value = stringResource(meterUiModel.stateValue),
         )
 
         Characteristic(
-            title = stringResource(id = R.string.meter_factory_number),
-            value = meterUiModel.factoryNumber.toString(),
+            title = stringResource(id = meterUiModel.typeLabelId),
+            value = meterUiModel.typeValue,
         )
 
         Characteristic(
-            title = stringResource(id = R.string.installation_location),
-            value = meterUiModel.address,
+            title = stringResource(id = meterUiModel.factoryNumberLabelId),
+            value = meterUiModel.factoryNumberValue,
         )
 
         Characteristic(
-            title = stringResource(id = R.string.check_date),
-            value = meterUiModel.checkDate.format(
-                DateTimeFormatter.ofPattern("dd MMMM yyyy"),
-            ),
+            title = stringResource(id = meterUiModel.placingLabelId),
+            value = meterUiModel.placingValue,
         )
 
         Characteristic(
-            title = stringResource(id = R.string.next_check_date),
-            value = meterUiModel.lastCheckDate.format(
-                DateTimeFormatter.ofPattern("dd MMMM yyyy"),
-            ),
+            title = stringResource(id = meterUiModel.checkDateLabelId),
+            value = meterUiModel.checkDateValue,
         )
 
         Characteristic(
-            title = stringResource(id = R.string.seal),
-            value = stringResource(
-                id = if (meterUiModel.sealState) {
-                    R.string.exist
-                } else {
-                    R.string.absent
-                },
-            ),
+            title = stringResource(id = meterUiModel.lastCheckDateLabelId),
+            value = meterUiModel.lastCheckDateValue,
         )
 
-        if (meterUiModel.lastReadings.any()) {
+        Characteristic(
+            title = stringResource(id = meterUiModel.sealLabelId),
+            value = stringResource(id = meterUiModel.sealStateValue),
+        )
+
+        if (meterUiModel.lastReadingsValue.any()) {
             Characteristic(
-                title = stringResource(id = R.string.last_readings),
-                values = meterUiModel.lastReadings.map {
-                    "${it.date.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))} - ${it.value}"
-                },
+                title = stringResource(id = meterUiModel.lastReadingsLabelId),
+                values = meterUiModel.lastReadingsValue.map { reading -> reading.value },
             )
         } else {
             Characteristic(
-                title = stringResource(id = R.string.meter_readings),
-                value = stringResource(id = R.string.absents),
+                title = stringResource(id = meterUiModel.lastReadingsLabelId),
+                value = stringResource(id = R.string.meter_last_readings_absents),
             )
         }
     }
@@ -234,7 +218,7 @@ private fun Characteristic(
         Text(
             text = title,
             style = TextStyle(
-                fontSize = 13.sp,
+                fontSize = 18.sp,
                 fontWeight = FontWeight.Normal,
                 color = EnColor.CharacteristicTitle,
             ),
@@ -243,7 +227,7 @@ private fun Characteristic(
         Text(
             text = value,
             style = TextStyle(
-                fontSize = 16.sp,
+                fontSize = 20.sp,
                 fontWeight = FontWeight.Normal,
                 color = EnColor.TextTitle,
             ),
@@ -262,17 +246,17 @@ private fun Characteristic(
         Text(
             text = title,
             style = TextStyle(
-                fontSize = 13.sp,
+                fontSize = 18.sp,
                 fontWeight = FontWeight.Normal,
                 color = EnColor.CharacteristicTitle,
             ),
         )
 
-        for (value in values) {
+        values.forEach { value ->
             Text(
                 text = value,
                 style = TextStyle(
-                    fontSize = 16.sp,
+                    fontSize = 20.sp,
                     fontWeight = FontWeight.Normal,
                     color = EnColor.TextTitle,
                 ),
@@ -290,14 +274,22 @@ fun MeterInformationCardPreview() {
         MeterInformationCard(
             meterUiModel = MeterUiModel(
                 category = MeterUiModel.CategoryTypeUiModel.ELECTRICAL_ENERGY,
-                type = "SKAT 101M",
-                state = true,
-                factoryNumber = 112280081,
-                address = "КРУ",
-                checkDate = LocalDate.of(2023, 9, 19),
-                lastCheckDate = LocalDate.of(2023, 9, 21),
-                sealState = true,
-                lastReadings = emptyList(),
+                typeLabelId = R.string.meter_type_label,
+                typeValue = "SKAT 101M",
+                stateLabelId = R.string.meter_service_status_label,
+                stateValue =  R.string.meter_service_status_turned_on,
+                factoryNumberLabelId = R.string.meter_factory_number_label,
+                factoryNumberValue = "1321312",
+                placingLabelId = R.string.meter_installation_location_label,
+                placingValue = "Ломоносова",
+                checkDateLabelId = R.string.meter_check_date_label,
+                checkDateValue = "12.12.2000",
+                lastCheckDateLabelId = R.string.meter_next_check_date_label,
+                lastCheckDateValue = "12.12.2000",
+                sealLabelId = R.string.meter_seal_label,
+                sealStateValue =  R.string.meter_seal_exist_status,
+                lastReadingsLabelId = R.string.meter_last_readings_label,
+                lastReadingsValue = emptyList(),
             ),
             isExpanded = expanded,
             onExpandRequest = { expanded = !expanded },
@@ -314,25 +306,30 @@ fun ExpandedMeterInformationCardPreview() {
         MeterInformationCard(
             meterUiModel = MeterUiModel(
                 category = MeterUiModel.CategoryTypeUiModel.ELECTRICAL_ENERGY,
-                type = "SKAT 101M",
-                state = true,
-                factoryNumber = 112280081,
-                address = "КРУ",
-                checkDate = LocalDate.of(2023, 9, 19),
-                lastCheckDate = LocalDate.of(2023, 9, 21),
-                sealState = true,
-                lastReadings = listOf(
-                    Meter.Reading(
-                        date = LocalDate.of(2023, 9, 20),
-                        value = 123123,
+                typeLabelId = R.string.meter_type_label,
+                typeValue = "SKAT 101M",
+                stateLabelId = R.string.meter_service_status_label,
+                stateValue =  R.string.meter_service_status_turned_on,
+                factoryNumberLabelId = R.string.meter_factory_number_label,
+                factoryNumberValue = "1321312",
+                placingLabelId = R.string.meter_installation_location_label,
+                placingValue = "Ломоносова",
+                checkDateLabelId = R.string.meter_check_date_label,
+                checkDateValue = "12.12.2000",
+                lastCheckDateLabelId = R.string.meter_next_check_date_label,
+                lastCheckDateValue = "12.12.2000",
+                sealLabelId = R.string.meter_seal_label,
+                sealStateValue =  R.string.meter_seal_exist_status,
+                lastReadingsLabelId = R.string.meter_last_readings_label,
+                lastReadingsValue = listOf(
+                    MeterUiModel.ReadingUiModel(
+                        value = "123123",
                     ),
-                    Meter.Reading(
-                        date = LocalDate.of(2023, 10, 20),
-                        value = 123123,
+                    MeterUiModel.ReadingUiModel(
+                        value = "123123",
                     ),
-                    Meter.Reading(
-                        date = LocalDate.of(2023, 11, 20),
-                        value = 123123,
+                    MeterUiModel.ReadingUiModel(
+                        value = "123123",
                     ),
                 ),
             ),

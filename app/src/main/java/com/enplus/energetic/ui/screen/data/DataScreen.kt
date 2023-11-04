@@ -1,7 +1,5 @@
 package com.enplus.energetic.ui.screen.data
 
-import android.content.Context
-import android.hardware.camera2.CameraManager
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -19,13 +17,16 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -43,7 +44,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.enplus.energetic.R
-import com.enplus.energetic.domain.entities.Meter
 import com.enplus.energetic.ui.components.base.FilterChip
 import com.enplus.energetic.ui.components.base.TopBarWithReturn
 import com.enplus.energetic.ui.components.data.DataScreenHeader
@@ -55,25 +55,25 @@ import com.enplus.energetic.ui.icon.House
 import com.enplus.energetic.ui.icon.VisibilityOff
 import com.enplus.energetic.ui.theme.EnColor
 import com.enplus.energetic.ui.theme.EnergeticTheme
-import java.time.LocalDate
 
 @Composable
 fun DataScreen(
     navController: NavController,
     viewModel: DataViewModel = hiltViewModel(),
 ) {
+    val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
-    val cameraManager = context.getSystemService(Context.CAMERA_SERVICE) as CameraManager
-    val cameraID = cameraManager.cameraIdList[0]
 
     val isTorchActive by viewModel.isTorchActive.collectAsStateWithLifecycle()
-    val metersList = viewModel.filteredMetersList
+
+    val metersList = remember { viewModel.filteredMetersList }
     val filter = viewModel.filter
 
     LaunchedEffect(isTorchActive) {
-        cameraManager.setTorchMode(cameraID, isTorchActive)
+        viewModel.flashlightManager.setFlashlightMode(context, isTorchActive)
     }
 
+    //TODO add logic from receive data in useCase
     DataScreen(
         title = "ул. Южное шоссе д. 2, кв 53",
         subtitle = "Лицевой счет 111209184",
@@ -86,6 +86,7 @@ fun DataScreen(
             viewModel.filterMetersList()
         },
         onBackClick = navController::popBackStack,
+        uiState = uiState
     )
 }
 
@@ -99,6 +100,7 @@ fun DataScreen(
     onTorchClick: () -> Unit,
     onChipClick: (MeterUiModel.CategoryTypeUiModel, Boolean) -> Unit,
     onBackClick: () -> Unit,
+    uiState: DataUiState,
 ) {
     Scaffold(
         topBar = {
@@ -159,31 +161,51 @@ fun DataScreen(
                         )
                     }
 
-                    items(metersList) { meter ->
-                        var expanded by rememberSaveable { mutableStateOf(false) }
+                    if (uiState == DataUiState.Content) {
+                        items(metersList) { meter ->
+                            var expanded by rememberSaveable { mutableStateOf(false) }
 
-                        MeterInformationCard(
-                            modifier = Modifier.padding(horizontal = 16.dp),
-                            meterUiModel = meter,
-                            isExpanded = expanded,
-                            onExpandRequest = { expanded = !expanded },
-                        )
-                    }
+                            MeterInformationCard(
+                                modifier = Modifier.padding(horizontal = 16.dp),
+                                meterUiModel = meter,
+                                isExpanded = expanded,
+                                onExpandRequest = { expanded = !expanded },
+                            )
+                        }
 
-                    if (metersList.any()) {
+                        if (metersList.any()) {
+                            item {
+                                Spacer(modifier = Modifier.height(64.dp))
+                            }
+                        }
+
+                    } else if (uiState == DataUiState.Loading) {
                         item {
-                            Spacer(modifier = Modifier.height(64.dp))
+                            //TODO add placeholder
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth(),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                CircularProgressIndicator(
+                                    modifier = Modifier.size(50.dp),
+                                    color = EnColor.Orange,
+                                    strokeWidth = 5.dp,
+                                )
+                            }
                         }
                     }
                 }
 
-                if (metersList.isEmpty()) {
-                    Column(
-                        modifier = Modifier
-                            .weight(1f)
-                            .wrapContentHeight(Alignment.CenterVertically),
-                    ) {
-                        ContentNotFound()
+                if (uiState == DataUiState.Content) {
+                    if (metersList.isEmpty()) {
+                        Column(
+                            modifier = Modifier
+                                .weight(1f)
+                                .wrapContentHeight(Alignment.CenterVertically),
+                        ) {
+                            ContentNotFound()
+                        }
                     }
                 }
             }
@@ -230,7 +252,7 @@ private fun ContentNotFound(
 
         Text(
             textAlign = TextAlign.Center,
-            text = stringResource(id = R.string.meters_list_not_found),
+            text = stringResource(id = R.string.data_screen_meters_list_not_found),
             style = TextStyle(
                 fontSize = 15.sp,
                 color = EnColor.LightBlack,
@@ -249,49 +271,59 @@ fun DataScreenPreview() {
             metersList = listOf(
                 MeterUiModel(
                     category = MeterUiModel.CategoryTypeUiModel.ELECTRICAL_ENERGY,
-                    type = "FBU 11205",
-                    state = true,
-                    factoryNumber = 112280081,
-                    address = "КРУ",
-                    checkDate = LocalDate.of(2023, 9, 19),
-                    lastCheckDate = LocalDate.of(2023, 9, 21),
-                    sealState = true,
-                    lastReadings = listOf(
-                        Meter.Reading(
-                            date = LocalDate.of(2023, 9, 20),
-                            value = 123123,
+                    typeLabelId = R.string.meter_type_label,
+                    typeValue = "SKAT 101M",
+                    stateLabelId = R.string.meter_service_status_label,
+                    stateValue = R.string.meter_service_status_turned_on,
+                    factoryNumberLabelId = R.string.meter_factory_number_label,
+                    factoryNumberValue = "1321312",
+                    placingLabelId = R.string.meter_installation_location_label,
+                    placingValue = "Ломоносова",
+                    checkDateLabelId = R.string.meter_check_date_label,
+                    checkDateValue = "12.12.2000",
+                    lastCheckDateLabelId = R.string.meter_next_check_date_label,
+                    lastCheckDateValue = "12.12.2000",
+                    sealLabelId = R.string.meter_seal_label,
+                    sealStateValue = R.string.meter_seal_exist_status,
+                    lastReadingsLabelId = R.string.meter_last_readings_label,
+                    lastReadingsValue = listOf(
+                        MeterUiModel.ReadingUiModel(
+                            value = "123123",
                         ),
-                        Meter.Reading(
-                            date = LocalDate.of(2023, 10, 20),
-                            value = 123123,
+                        MeterUiModel.ReadingUiModel(
+                            value = "123123",
                         ),
-                        Meter.Reading(
-                            date = LocalDate.of(2023, 11, 20),
-                            value = 123123,
+                        MeterUiModel.ReadingUiModel(
+                            value = "123123",
                         ),
                     ),
                 ),
                 MeterUiModel(
-                    category = MeterUiModel.CategoryTypeUiModel.HOT_WATER_SUPPLY,
-                    type = "FBU 11206",
-                    state = true,
-                    factoryNumber = 112280081,
-                    address = "КРУ",
-                    checkDate = LocalDate.of(2023, 9, 19),
-                    lastCheckDate = LocalDate.of(2023, 9, 21),
-                    sealState = true,
-                    lastReadings = listOf(
-                        Meter.Reading(
-                            date = LocalDate.of(2023, 9, 20),
-                            value = 123123,
+                    category = MeterUiModel.CategoryTypeUiModel.ELECTRICAL_ENERGY,
+                    typeLabelId = R.string.meter_type_label,
+                    typeValue = "SKAT 101M",
+                    stateLabelId = R.string.meter_service_status_label,
+                    stateValue = R.string.meter_service_status_turned_on,
+                    factoryNumberLabelId = R.string.meter_factory_number_label,
+                    factoryNumberValue = "1321312",
+                    placingLabelId = R.string.meter_installation_location_label,
+                    placingValue = "Ломоносова",
+                    checkDateLabelId = R.string.meter_check_date_label,
+                    checkDateValue = "12.12.2000",
+                    lastCheckDateLabelId = R.string.meter_next_check_date_label,
+                    lastCheckDateValue = "12.12.2000",
+                    sealLabelId = R.string.meter_seal_label,
+                    sealStateValue = R.string.meter_seal_exist_status,
+                    lastReadingsLabelId = R.string.meter_last_readings_label,
+                    lastReadingsValue = listOf(
+                        MeterUiModel.ReadingUiModel(
+                            value = "123123",
                         ),
-                        Meter.Reading(
-                            date = LocalDate.of(2023, 10, 20),
-                            value = 123123,
+                        MeterUiModel.ReadingUiModel(
+                            value = "123123",
                         ),
-                        Meter.Reading(
-                            date = LocalDate.of(2023, 11, 20),
-                            value = 123123,
+                        MeterUiModel.ReadingUiModel(
+                            value = "123123",
                         ),
                     ),
                 ),
@@ -304,6 +336,7 @@ fun DataScreenPreview() {
             onTorchClick = { },
             onChipClick = { _, _ -> },
             onBackClick = { },
+            uiState = DataUiState.Content,
         )
     }
 }
@@ -324,6 +357,7 @@ fun DataScreenNotFoundPreview() {
             onTorchClick = { },
             onChipClick = { _, _ -> },
             onBackClick = { },
+            uiState = DataUiState.Content,
         )
     }
 }

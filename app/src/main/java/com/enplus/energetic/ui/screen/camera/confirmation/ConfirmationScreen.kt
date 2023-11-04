@@ -68,7 +68,7 @@ fun ConfirmationScreen(
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
                 MainButton(
-                    text = stringResource(R.string.find),
+                    text = stringResource(R.string.main_page_find_button_text),
                     onClick = { /*TODO*/ },
                 )
                 MainButton(

@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,19 +17,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.enplus.energetic.R
 import com.enplus.energetic.ui.components.base.Card
+import com.enplus.energetic.ui.entities.AddressUiModel
 import com.enplus.energetic.ui.icon.ChevronRight
 import com.enplus.energetic.ui.icon.EnIcons
 import com.enplus.energetic.ui.theme.EnColor.CharacteristicTitle
 import com.enplus.energetic.ui.theme.EnColor.Orange
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddressDataCard(
-    flatNumber: Int,
-    personNumber: Long,
-    metersCounter: Int,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    addressUiModel: AddressUiModel,
 ) {
     Card(
         onClick = onClick,
@@ -51,8 +48,8 @@ fun AddressDataCard(
                 Text(
                     text = stringResource(
                         id = R.string.address_data_card_title,
-                        flatNumber,
-                        personNumber,
+                        addressUiModel.flatNumber,
+                        addressUiModel.personNumber,
                     ),
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
@@ -64,7 +61,10 @@ fun AddressDataCard(
                 )
             }
             Text(
-                text = stringResource(id = R.string.meters_count, metersCounter.toString()),
+                text = stringResource(
+                    id = R.string.address_meters_count,
+                    addressUiModel.metersCounter.toString()
+                ),
                 color = CharacteristicTitle,
                 fontSize = 13.sp,
                 fontWeight = FontWeight.Normal,
@@ -77,9 +77,11 @@ fun AddressDataCard(
 @Composable
 fun AddressDataCardPreview() {
     AddressDataCard(
-        flatNumber = 34,
-        personNumber = 111209184,
-        metersCounter = 3,
         onClick = {},
+        addressUiModel = AddressUiModel(
+            flatNumber = 34,
+            personNumber = 111209184,
+            metersCounter = 3,
+        ),
     )
 }

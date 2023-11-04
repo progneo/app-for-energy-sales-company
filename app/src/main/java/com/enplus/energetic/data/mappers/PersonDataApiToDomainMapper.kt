@@ -5,8 +5,9 @@ import com.enplus.energetic.data.api.entities.MeterApi
 import com.enplus.energetic.data.api.entities.PersonDataResponse
 import com.enplus.energetic.domain.entities.Meter
 import com.enplus.energetic.domain.entities.PersonData
+import javax.inject.Inject
 
-internal class PersonDataApiToDomainMapper : (PersonDataResponse) -> PersonData {
+class PersonDataApiToDomainMapper @Inject constructor() : (PersonDataResponse) -> PersonData {
     override operator fun invoke(from: PersonDataResponse): PersonData {
 
         val metersList = from.metersList?.map { meterApi ->
@@ -37,7 +38,7 @@ internal class PersonDataApiToDomainMapper : (PersonDataResponse) -> PersonData 
             type = this.type,
             state = this.state,
             factoryNumber = this.factoryNumber,
-            address = this.address,
+            placing = this.placing,
             checkDate = this.checkDate,
             lastCheckDate = this.lastCheckDate,
             sealState = this.sealState,

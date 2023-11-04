@@ -1,9 +1,6 @@
 <resources>
     <string name="app_name">Energetic</string>
     <string name="logout">Выйти</string>
-    <string name="create_pin">Придумайте код для входа в приложение</string>
-    <string name="input_pin">Введите код</string>
-    <string name="repeat_pin">Введите код ещё раз</string>
     <string name="data">Данные</string>
     <string name="account">Личный кабинет</string>
     <string name="electrical_energy">Электоэнергия</string>
@@ -15,51 +12,70 @@
     <string name="cold_water">Холодная вода</string>
     <string name="cold_water_meter">Счётчик холодной воды</string>
     <string name="close">Закрыть</string>
-    <string name="find">Найти</string>
     <string name="filter">Фильтр</string>
     <string name="data_on">Данные по</string>
     <string name="personal_account">Лицевой счёт</string>
     <string name="personal_accounts_counter">Лицевых счётов: %s</string>
     <string name="address">Адрес</string>
     <string name="meter_number">Номер счетчика</string>
-    <string name="meters_count">Расчетных приборов: %s</string>
-    <string name="address_data_card_title">Кв. %s - %s</string>
-    <string name="login_page_title">Вход в аккаунт</string>
-    <string name="login_page_subtitle">Введите корпоративный номер телефона и пароль</string>
-    <string name="password_hint">Пароль</string>
-    <string name="phone_number_hint">+7 999 999–00–00</string>
-    <string name="login">Войти</string>
-    <string name="hide_password_desc">Hide password</string>
-    <string name="show_password_desc">Show password</string>
-    <string name="wrong_login_credentials">Неверные данные. Попытайтесь снова или обратитесь в поддержку для восстановления</string>
-    <string name="service_status">Состояние услуги</string>
-    <string name="turned_off">Выключена</string>
-    <string name="turned_on">Включена</string>
-    <string name="meter_factory_number">Заводской номер счетчика</string>
-    <string name="installation_location">Место установки</string>
-    <string name="check_date">Дата поверки</string>
-    <string name="next_check_date">Дата следующей поверки</string>
-    <string name="seal">Опломбирование</string>
     <string name="meter_readings">Показания прибора учета</string>
-    <string name="exist">Есть</string>
-    <string name="absent">Отсутсвует</string>
-    <string name="last_readings">Последние показания</string>
-    <string name="absents">Отсутсвуют</string>
-    <string name="search_title">Поиск данных</string>
-    <string name="search_description">Чтобы получить данные счетчиков, введите информацию вручную или отсканируйте квитанцию</string>
-    <string name="main_search_placeholder">Лицевой счет, адрес или номер счетчика</string>
-    <string name="scan">Отсканировать</string>
     <string name="scan_description">Отсканируйте лицевой счет или номер</string>
     <string name="confirm_data">Проверьте данные</string>
     <string name="enter_account_number_hint">Лицевой счёт или номер</string>
     <string name="scan_again">Сканировать снова</string>
-    <string name="no_permission_desc">Предоставьте доступ к камере, чтобы воспользоваться сканером</string>
     <string name="provide_permisson">Предоставить доступ</string>
-    <string name="no_permisson">Нет доступа</string>
     <string name="try_again">Попробуйте снова</string>
-    <string name="cancel">Отменить</string>
-    <string name="good">Хорошо</string>
     <string name="logo">logo</string>
-    <string name="meters_list_not_found">Данные о счетчиках по вашим фильтрам не найдены. Попробуйте выбрать другие параметры фильтрации.</string>
+
+    <!-- DataScreen strings -->
+    <string name="data_screen_meters_list_not_found">Данные о счетчиках по вашим фильтрам не найдены. Попробуйте выбрать другие параметры фильтрации.</string>
     <string name="not_found">not found</string>
+
+    <!-- LoginScreen strings -->
+    <string name="login_page_title">Вход в аккаунт</string>
+    <string name="login_page_subtitle">Введите корпоративный номер телефона и пароль</string>
+    <string name="login_page_phone_number_hint">+7 999 999–00–00</string>
+    <string name="login_page_password_hint">Пароль</string>
+    <string name="login_page_hide_password_desc">Скрыть пароль</string>
+    <string name="login_page_show_password_desc">Показать пароль</string>
+    <string name="login_page_wrong_login_credentials">Неверные данные. Попытайтесь снова или обратитесь в поддержку для восстановления</string>
+    <string name="login_button_text">Войти</string>
+
+    <!--  PinScreen strings -->
+    <string name="pin_screen_create_pin_title">Придумайте код для входа в приложение</string>
+    <string name="pin_screen_input_pin_title">Введите код</string>
+    <string name="pin_screen_repeat_pin_title">Введите код ещё раз</string>
+
+    <!-- MainScreen strings -->
+    <string name="main_page_search_title">Поиск данных</string>
+    <string name="main_page_search_description">Чтобы получить данные счетчиков, введите информацию вручную или отсканируйте квитанцию</string>
+    <string name="main_page_search_placeholder">Лицевой счет, адрес или номер счетчика</string>
+    <string name="main_page_find_button_text">Найти</string>
+    <string name="main_page_scan_button_text">Отсканировать</string>
+
+    <!-- Permission Alert  -->
+    <string name="no_permission_alert_title">Нет доступа</string>
+    <string name="no_permission_alert_desc">Предоставьте доступ к камере, чтобы воспользоваться сканером</string>
+    <string name="no_permission_alert_cancel_button">Отменить</string>
+    <string name="no_permission_alert_good_button">Хорошо</string>
+
+    <!-- MeterInfoCard strings -->
+    <string name="meter_service_status_label">Состояние услуги</string>
+    <string name="meter_service_status_turned_off">Выключена</string>
+    <string name="meter_service_status_turned_on">Включена</string>
+    <string name="meter_factory_number_label">Заводской номер счетчика</string>
+    <string name="meter_type_label">Тип прибора учета</string>
+    <string name="meter_installation_location_label">Место установки</string>
+    <string name="meter_check_date_label">Дата поверки</string>
+    <string name="meter_next_check_date_label">Дата следующей поверки</string>
+    <string name="meter_seal_label">Опломбирование</string>
+    <string name="meter_seal_exist_status">Есть</string>
+    <string name="meter_seal_absent_status">Отсутсвует</string>
+    <string name="meter_last_readings_label">Последние показания</string>
+    <string name="meter_last_readings_absents">Отсутсвуют</string>
+
+    <!-- AddressDataCard strings -->
+    <string name="address_meters_count">Расчетных приборов: %s</string>
+    <string name="address_data_card_title">Кв. %s - %s</string>
+
 </resources>

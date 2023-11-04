@@ -88,6 +88,7 @@ fun MainScreen(
         )
     }
 
+    //TODO add get name useCase
     MainScreen(
         username = "Ирина А.",
         onScanClick = { cameraPermissionLauncher.launch(Manifest.permission.CAMERA) },
@@ -129,13 +130,13 @@ fun MainScreen(
         ) {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 Text(
-                    text = stringResource(R.string.search_title),
+                    text = stringResource(R.string.main_page_search_title),
                     fontSize = 30.sp,
                     fontWeight = FontWeight(700),
                     color = EnColor.TextTitle,
                 )
                 Text(
-                    text = stringResource(R.string.search_description),
+                    text = stringResource(R.string.main_page_search_description),
                     fontSize = 17.sp,
                     color = EnColor.TextSubtitle,
                 )
@@ -144,17 +145,17 @@ fun MainScreen(
                 TextField(
                     value = searchValue,
                     onValueChange = { searchValue = it },
-                    placeholder = stringResource(R.string.main_search_placeholder),
+                    placeholder = stringResource(R.string.main_page_search_placeholder),
                 )
                 MainButton(
-                    text = stringResource(R.string.find),
+                    text = stringResource(R.string.main_page_find_button_text),
                     onClick = {
                         onSearchClick(searchValue)
                     },
                 )
             }
             MainButton(
-                text = stringResource(R.string.scan),
+                text = stringResource(R.string.main_page_scan_button_text),
                 icon = EnIcons.Scan,
                 colors = ButtonDefaults.buttonColors(
                     containerColor = EnColor.OrangeContainer,
@@ -224,13 +225,13 @@ private fun NoPermissionAlert(
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 Text(
-                    text = stringResource(R.string.no_permisson),
+                    text = stringResource(R.string.no_permission_alert_title),
                     fontSize = 20.sp,
                     fontWeight = FontWeight(500),
                     color = EnColor.TextTitle,
                 )
                 Text(
-                    text = stringResource(R.string.no_permission_desc),
+                    text = stringResource(R.string.no_permission_alert_desc),
                     fontSize = 16.sp,
                     color = EnColor.TextTitle,
                 )
@@ -247,7 +248,7 @@ private fun NoPermissionAlert(
                             .clip(RoundedCornerShape(16.dp))
                             .clickable { onDismissRequest() }
                             .padding(horizontal = 8.dp, vertical = 4.dp),
-                        text = stringResource(R.string.cancel),
+                        text = stringResource(R.string.no_permission_alert_cancel_button),
                         color = EnColor.Blue,
                     )
                     Text(
@@ -262,7 +263,7 @@ private fun NoPermissionAlert(
                                 }
                             }
                             .padding(horizontal = 8.dp, vertical = 4.dp),
-                        text = stringResource(R.string.good),
+                        text = stringResource(R.string.no_permission_alert_good_button),
                         color = EnColor.Blue,
                     )
                 }

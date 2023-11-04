@@ -12,7 +12,7 @@ interface VibrationManager {
     fun vibrate(context: Context, effect: VibrationEffects)
 }
 
-internal class VibrationManagerImpl @Inject constructor() : VibrationManager {
+class VibrationManagerImpl @Inject constructor() : VibrationManager {
 
     @Suppress("DEPRECATION")
     override fun vibrate(context: Context, effect: VibrationEffects) {

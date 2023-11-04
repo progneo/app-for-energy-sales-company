@@ -8,7 +8,7 @@ interface PinManager {
 
     suspend fun save(newPin: String)
 
-    suspend fun get(): String?
+    suspend fun getPinManagerPref(): String?
 
     suspend fun equal(pin: String): Boolean
 
@@ -29,16 +29,16 @@ internal class PinManagerImpl @Inject constructor(
         }
     }
 
-    override suspend fun get(): String? {
+    override suspend fun getPinManagerPref(): String? {
         return encryptedSharedPreferences.getString(PIN_KEY, null)
     }
 
     override suspend fun equal(pin: String): Boolean {
-        return encryptedSharedPreferences.getString(PIN_KEY, null)?.let { it == pin } ?: false
+        return getPinManagerPref()?.let { it == pin } ?: false
     }
 
     override suspend fun checkIsSet(): Boolean {
-        return encryptedSharedPreferences.getString(PIN_KEY, null)?.let { true } ?: false
+        return getPinManagerPref()?.let { true } ?: false
     }
 
     override suspend fun remove() {
