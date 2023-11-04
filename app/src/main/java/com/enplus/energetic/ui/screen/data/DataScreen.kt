@@ -32,10 +32,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -52,6 +50,7 @@ import com.enplus.energetic.ui.components.data.DataScreenHeader
 import com.enplus.energetic.ui.components.data.MeterInformationCard
 import com.enplus.energetic.ui.entities.MeterUiModel
 import com.enplus.energetic.ui.icon.EnIcons
+import com.enplus.energetic.ui.icon.Flashlight
 import com.enplus.energetic.ui.icon.House
 import com.enplus.energetic.ui.icon.VisibilityOff
 import com.enplus.energetic.ui.theme.EnColor
@@ -119,7 +118,7 @@ fun DataScreen(
                             .padding(12.dp),
                     ) {
                         Icon(
-                            imageVector = ImageVector.vectorResource(id = R.drawable.flashlight),
+                            imageVector = EnIcons.Flashlight,
                             contentDescription = "Фонарик",
                             tint = if (isTorchActive) EnColor.TextOnDark else EnColor.Orange,
                         )
