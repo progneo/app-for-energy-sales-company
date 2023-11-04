@@ -22,6 +22,7 @@ fun TopBarWithReturn(
     onBackClick: () -> Unit,
     arrowColor: Color = EnColor.Orange,
     backgroundColor: Color = Color.White,
+    action: (@Composable () -> Unit)? = null,
 ) {
     TopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
@@ -40,6 +41,9 @@ fun TopBarWithReturn(
                     )
                 },
             )
+        },
+        actions = {
+            action?.invoke()
         },
     )
 }
