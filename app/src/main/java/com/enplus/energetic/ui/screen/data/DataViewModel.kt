@@ -8,13 +8,18 @@ import androidx.lifecycle.ViewModel
 import com.enplus.energetic.domain.entities.Meter
 import com.enplus.energetic.ui.entities.MeterUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
 class DataViewModel @Inject constructor() : ViewModel() {
 
-    //TODO move mock to repo
+    private val _isTorchActive = MutableStateFlow<Boolean>(false)
+    val isTorchActive = _isTorchActive.asStateFlow()
+
+    // TODO move mock to repo
     private val _metersLists = mutableStateListOf<MeterUiModel>().apply {
         addAll(
             listOf(
@@ -106,6 +111,11 @@ class DataViewModel @Inject constructor() : ViewModel() {
     }
     val filter: SnapshotStateMap<MeterUiModel.CategoryTypeUiModel, Boolean>
         get() = _filter
+
+    fun changeTorchState() {
+        val newTorchState = !_isTorchActive.value
+        _isTorchActive.tryEmit(newTorchState)
+    }
 
     fun applyFilter(сategoryTypeUiModel: MeterUiModel.CategoryTypeUiModel, state: Boolean) {
         _filter[сategoryTypeUiModel] = state
