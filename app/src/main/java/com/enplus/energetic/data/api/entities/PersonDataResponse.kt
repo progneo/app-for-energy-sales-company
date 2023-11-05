@@ -2,52 +2,52 @@ package com.enplus.energetic.data.api.entities
 
 import java.time.LocalDate
 
-//TODO remade when add retrofit
-//@Serializable
+// TODO remade when add retrofit
+// @Serializable
 data class PersonDataResponse(
 
-    //@SerialName("id")
-    val personAccountId: Long?,
-    //@SerialName("address")
-    val address: String?,
-    //@SerialName("metersList")
-    //@Contextual перед лист
+    // @SerialName("id")
+    val personAccountId: Long,
+    // @SerialName("address")
+    val address: String,
+    // @SerialName("metersList")
+    // @Contextual перед лист
     val metersList: List<MeterApi>?,
 )
 
-//@Serializable
+// @Serializable
 data class MeterApi(
 
-    //@SerialName("category")
+    // @SerialName("category")
     val category: CategoryTypeApi,
-    //@SerialName("type")
+    // @SerialName("type")
     val type: String,
-    //@SerialName("state")
+    // @SerialName("state")
     val state: Boolean,
-    //@SerialName("factoryNumber")
+    // @SerialName("factoryNumber")
     val factoryNumber: Long,
-    //@SerialName("address")
+    // @SerialName("address")
     val placing: String,
-    //@SerialName("checkDate")
+    // @SerialName("checkDate")
     val checkDate: LocalDate,
-    //@SerialName("lastCheckDate")
+    // @SerialName("lastCheckDate")
     val lastCheckDate: LocalDate,
-    //@SerialName("sealState")
+    // @SerialName("sealState")
     val sealState: Boolean,
-    //@SerialName("lastReadings")
-    //@Contextual перед лист
+    // @SerialName("lastReadings")
+    // @Contextual перед лист
     val lastReadings: List<ReadingApi>,
 )
 
-//@Serializable
+// @Serializable
 data class ReadingApi(
-    //@SerialName("date")
+    // @SerialName("date")
     val date: LocalDate,
-    //@SerialName("value")
+    // @SerialName("value")
     val value: Long,
 )
 
-//@Serializable with CustomEnumSerializer
+// @Serializable with CustomEnumSerializer
 enum class CategoryTypeApi {
     ELECTRICAL_ENERGY,
 

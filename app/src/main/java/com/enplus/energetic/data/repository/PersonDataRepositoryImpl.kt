@@ -11,8 +11,9 @@ internal class PersonDataRepositoryImpl @Inject constructor(
     private val apiToDomain: PersonDataApiToDomainMapper,
 ) : PersonDataRepository {
 
-    override suspend fun getPersonData(data: String): PersonData {
-
-       return apiToDomain(service.getPersonData(data))
+    override suspend fun getPersonData(data: String): PersonData? {
+        service.getPersonData(data)?.let { personDataApi ->
+            return apiToDomain(personDataApi)
+        } ?: run { return null }
     }
 }

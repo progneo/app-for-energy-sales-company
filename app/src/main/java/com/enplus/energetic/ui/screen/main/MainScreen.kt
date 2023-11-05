@@ -25,6 +25,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -41,6 +42,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.enplus.energetic.R
 import com.enplus.energetic.ui.components.base.MainButton
@@ -58,6 +60,8 @@ fun MainScreen(
     navController: NavController,
     viewModel: MainViewModel = hiltViewModel(),
 ) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
     val activity = LocalContext.current as Activity
 
     val openAlertDialog = remember { mutableStateOf(false) }
@@ -88,20 +92,31 @@ fun MainScreen(
         )
     }
 
-    //TODO add get name useCase
+    LaunchedEffect(uiState) {
+        when (uiState) {
+            is MainUiState.Success -> {
+                navController.navigate("${NavDestinations.DATA_SCREEN}/${(uiState as MainUiState.Success).personData}")
+                viewModel.resetState()
+            }
+
+            else -> {
+            }
+        }
+    }
+
+    // TODO add get name useCase
     MainScreen(
         username = "Ирина А.",
+        uiState = uiState,
         onScanClick = { cameraPermissionLauncher.launch(Manifest.permission.CAMERA) },
-        onSearchClick = { searchValue ->
-            val screenKey = viewModel.getDataScreenKey(searchValue)
-            screenKey?.let { navController.navigate(screenKey) }
-        },
+        onSearchClick = viewModel::getPersonData,
     )
 }
 
 @Composable
 fun MainScreen(
     username: String,
+    uiState: MainUiState,
     onScanClick: () -> Unit,
     onSearchClick: (searchValue: String) -> Unit,
 ) {
@@ -152,6 +167,8 @@ fun MainScreen(
                     onClick = {
                         onSearchClick(searchValue)
                     },
+                    isEnabled = searchValue.isNotBlank(),
+                    isLoading = uiState == MainUiState.Loading,
                 )
             }
             MainButton(
@@ -278,6 +295,7 @@ fun MainScreenPreview() {
     EnergeticTheme {
         MainScreen(
             username = "Ирина А.",
+            uiState = MainUiState.Waiting,
             onScanClick = {},
             onSearchClick = {},
         )

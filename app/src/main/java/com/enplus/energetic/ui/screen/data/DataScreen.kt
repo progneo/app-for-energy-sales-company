@@ -66,6 +66,7 @@ fun DataScreen(
 
     val isTorchActive by viewModel.isTorchActive.collectAsStateWithLifecycle()
 
+    val personData by viewModel.personData.collectAsState()
     val metersList = remember { viewModel.filteredMetersList }
     val filter = viewModel.filter
 
@@ -73,10 +74,10 @@ fun DataScreen(
         viewModel.flashlightManager.setFlashlightMode(context, isTorchActive)
     }
 
-    //TODO add logic from receive data in useCase
+    // TODO add logic from receive data in useCase
     DataScreen(
-        title = "ул. Южное шоссе д. 2, кв 53",
-        subtitle = "Лицевой счет 111209184",
+        title = personData.address,
+        subtitle = stringResource(R.string.data_screen_subtitle, personData.personAccountId),
         metersList = metersList,
         filter = filter,
         isTorchActive = isTorchActive,
@@ -86,7 +87,7 @@ fun DataScreen(
             viewModel.filterMetersList()
         },
         onBackClick = navController::popBackStack,
-        uiState = uiState
+        uiState = uiState,
     )
 }
 
@@ -161,7 +162,7 @@ fun DataScreen(
                         )
                     }
 
-                    if (uiState == DataUiState.Content) {
+                    if (uiState is DataUiState.Content) {
                         items(metersList) { meter ->
                             var expanded by rememberSaveable { mutableStateOf(false) }
 
@@ -178,14 +179,13 @@ fun DataScreen(
                                 Spacer(modifier = Modifier.height(64.dp))
                             }
                         }
-
                     } else if (uiState == DataUiState.Loading) {
                         item {
-                            //TODO add placeholder
+                            // TODO add placeholder
                             Column(
                                 modifier = Modifier
                                     .fillMaxWidth(),
-                                horizontalAlignment = Alignment.CenterHorizontally
+                                horizontalAlignment = Alignment.CenterHorizontally,
                             ) {
                                 CircularProgressIndicator(
                                     modifier = Modifier.size(50.dp),
@@ -197,7 +197,7 @@ fun DataScreen(
                     }
                 }
 
-                if (uiState == DataUiState.Content) {
+                if (uiState is DataUiState.Content) {
                     if (metersList.isEmpty()) {
                         Column(
                             modifier = Modifier
