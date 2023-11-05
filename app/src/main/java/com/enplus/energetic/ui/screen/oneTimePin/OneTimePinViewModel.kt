@@ -5,6 +5,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.enplus.energetic.data.preference.AuthStateManager
+import com.enplus.energetic.data.preference.PasswordManager
+import com.enplus.energetic.data.preference.PhoneNumberManager
 import com.enplus.energetic.data.preference.PinManager
 import com.enplus.energetic.ui.util.VibrationManager
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,6 +23,9 @@ import javax.inject.Inject
 @HiltViewModel
 class OneTimePinViewModel @Inject constructor(
     private val pinManager: PinManager,
+    private val authStateManager: AuthStateManager,
+    private val passwordManager: PasswordManager,
+    private val phoneNumberManager: PhoneNumberManager,
     val vibrationManager: VibrationManager,
 ) : ViewModel() {
 
@@ -104,6 +110,15 @@ class OneTimePinViewModel @Inject constructor(
 
                 _uiState.tryEmit(OneTimePinUiState.CreatePin)
             }
+        }
+    }
+
+    fun logout() {
+        CoroutineScope(Dispatchers.IO).launch {
+            authStateManager.remove()
+            phoneNumberManager.remove()
+            passwordManager.remove()
+            pinManager.remove()
         }
     }
 }

@@ -13,6 +13,8 @@ interface PinManager {
     suspend fun equal(pin: String): Boolean
 
     suspend fun checkIsSet(): Boolean
+
+    suspend fun remove()
 }
 
 @Singleton
@@ -37,6 +39,13 @@ internal class PinManagerImpl @Inject constructor(
 
     override suspend fun checkIsSet(): Boolean {
         return encryptedSharedPreferences.getString(PIN_KEY, null)?.let { true } ?: false
+    }
+
+    override suspend fun remove() {
+        with(encryptedSharedPreferences.edit()) {
+            remove(PIN_KEY)
+            apply()
+        }
     }
 
     companion object {

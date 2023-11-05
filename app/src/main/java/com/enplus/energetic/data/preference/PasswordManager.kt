@@ -9,6 +9,8 @@ interface PasswordManager {
     suspend fun save(newPassword: String)
 
     suspend fun get(): String?
+
+    suspend fun remove()
 }
 
 @Singleton
@@ -25,6 +27,13 @@ internal class PasswordManagerImpl @Inject constructor(
 
     override suspend fun get(): String? {
         return encryptedSharedPreferences.getString(PASSWORD_KEY, null)
+    }
+
+    override suspend fun remove() {
+        with(encryptedSharedPreferences.edit()) {
+            remove(PASSWORD_KEY)
+            apply()
+        }
     }
 
     companion object {
