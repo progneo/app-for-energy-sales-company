@@ -30,7 +30,6 @@ import com.enplus.energetic.R
 import com.enplus.energetic.ui.components.oneTimePin.InputOneTimePin
 import com.enplus.energetic.ui.components.oneTimePin.NumberPad
 import com.enplus.energetic.ui.entities.PinStateUiModel
-import com.enplus.energetic.ui.theme.EnColor
 import com.enplus.energetic.ui.theme.EnergeticTheme
 import com.enplus.energetic.ui.util.NavDestinations
 import com.enplus.energetic.ui.util.VibrationEffects
@@ -52,8 +51,8 @@ fun OneTimePinScreen(
         onSavePin = viewModel::savePin,
         onCompleted = { navController.navigate(NavDestinations.MAIN_SCREEN) { popUpTo(0) } },
         onLogoutButtonClick = {
+            viewModel.logout()
             navController.navigate(NavDestinations.LOGIN_SCREEN) { popUpTo(0) }
-            //TODO the logout method call from view model
         },
         onSuccessVibrate = { context ->
             viewModel.vibrationManager.vibrate(
@@ -167,7 +166,9 @@ fun OneTimePinScreen(
                         enabled = when (uiState) {
                             OneTimePinUiState.InputtingPin,
                             OneTimePinUiState.CreatePin,
-                            OneTimePinUiState.RepeatPin -> true
+                            OneTimePinUiState.RepeatPin,
+                            -> true
+
                             else -> false
                         },
                         isShowBackspaceButton = inputtedPin.isNotEmpty(),

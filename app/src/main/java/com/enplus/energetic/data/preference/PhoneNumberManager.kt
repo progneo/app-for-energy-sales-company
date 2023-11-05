@@ -9,6 +9,8 @@ interface PhoneNumberManager {
     suspend fun save(newPhoneNumber: String)
 
     suspend fun get(): String?
+
+    suspend fun remove()
 }
 
 @Singleton
@@ -25,6 +27,13 @@ internal class PhoneNumberManagerImpl @Inject constructor(
 
     override suspend fun get(): String? {
         return encryptedSharedPreferences.getString(PHONE_NUMBER_KEY, null)
+    }
+
+    override suspend fun remove() {
+        with(encryptedSharedPreferences.edit()) {
+            remove(PHONE_NUMBER_KEY)
+            apply()
+        }
     }
 
     companion object {

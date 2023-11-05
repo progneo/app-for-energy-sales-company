@@ -9,6 +9,8 @@ interface AuthStateManager {
     suspend fun save(newState: Boolean)
 
     suspend fun get(): Boolean
+
+    suspend fun remove()
 }
 
 @Singleton
@@ -25,6 +27,13 @@ internal class AuthStateManagerImpl @Inject constructor(
 
     override suspend fun get(): Boolean {
         return encryptedSharedPreferences.getBoolean(AUTH_STATE_KEY, false)
+    }
+
+    override suspend fun remove() {
+        with(encryptedSharedPreferences.edit()) {
+            remove(AUTH_STATE_KEY)
+            apply()
+        }
     }
 
     companion object {
