@@ -31,7 +31,7 @@ class LoginViewModel @Inject constructor(
             delay(1500L) // emulate connecting to server
 
             /* TODO: request to server */
-            if (phoneNumber == "9991231122" && password == "1234") {
+            if (phoneNumber == "9999999999" && password == "1234") {
                 saveLoginData(phoneNumber, password)
                 _uiState.tryEmit(LoginUiState.SignIn)
             } else {

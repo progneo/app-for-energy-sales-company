@@ -1,5 +1,6 @@
-package com.enplus.energetic.ui.entities
+package com.enplus.energetic.ui.entities.navigation
 
+import com.enplus.energetic.ui.entities.PersonDataUiModel
 import com.enplus.energetic.ui.util.JsonNavType
 import com.google.gson.Gson
 

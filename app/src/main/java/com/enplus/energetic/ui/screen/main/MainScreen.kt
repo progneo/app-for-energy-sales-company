@@ -101,8 +101,14 @@ fun MainScreen(
 
     LaunchedEffect(uiState) {
         when (uiState) {
-            is MainUiState.Success -> {
-                navController.navigate("${NavDestinations.DATA_SCREEN}/${(uiState as MainUiState.Success).personData}")
+            is MainUiState.SuccessGoToPersonData -> {
+                navController.navigate("${NavDestinations.DATA_SCREEN}/${(uiState as MainUiState.SuccessGoToPersonData).personData}")
+                viewModel.resetState()
+            }
+
+            is MainUiState.SuccessGoToAddressData -> {
+                //add data
+                navController.navigate("${NavDestinations.ADDRESS_DATA_SCREEN}/${(uiState as MainUiState.SuccessGoToAddressData).addressData}")
                 viewModel.resetState()
             }
 

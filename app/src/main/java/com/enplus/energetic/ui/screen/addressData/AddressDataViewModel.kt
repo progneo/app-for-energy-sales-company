@@ -1,10 +1,15 @@
 package com.enplus.energetic.ui.screen.addressData
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.enplus.energetic.domain.usecase.GetAddressDataUseCase
+import com.enplus.energetic.domain.usecase.GetPersonDataUseCase
+import com.enplus.energetic.ui.entities.AddressUiModel
+import com.enplus.energetic.ui.mappers.PersonDataDomainToUiMapper
+import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -14,22 +19,43 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AddressDataViewModel @Inject constructor(
-    private val getAddressDataUseCase: GetAddressDataUseCase
+    savedStateHandle: SavedStateHandle,
+    private val getPersonDataUseCase: GetPersonDataUseCase,
+    private val personDataDomainToUiMapper: PersonDataDomainToUiMapper,
 ) : ViewModel() {
+
+    private val _addressDataString: String = checkNotNull(savedStateHandle["addressData"])
+    private val _addressData =
+        MutableStateFlow(Gson().fromJson(_addressDataString, AddressUiModel::class.java))
+    val addressData = _addressData.asStateFlow()
 
     private val _state: MutableStateFlow<AddressDataState> = MutableStateFlow(AddressDataState.Loading)
     val state: StateFlow<AddressDataState> = _state.asStateFlow()
 
     init {
-        //TODO pass address from input field
-        loadData("")
+        loadData()
     }
 
-    private fun loadData(address: String) {
+    fun loadPersonData(data: String) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                val data = getAddressDataUseCase(address)
-                _state.emit(AddressDataState.Content(data))
+                getPersonDataUseCase(data).let { personData ->
+                    if (personData != null) {
+                        val mappedPersonData = personDataDomainToUiMapper(personData)
+                        delay(300)
+                        _state.tryEmit(AddressDataState.OnCardClicked(mappedPersonData))
+                    } else {
+                       //TODO add ERROR call back
+                    }
+                }
+            }
+        }
+    }
+
+    private fun loadData() {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                _state.emit(AddressDataState.Content(_addressData.value))
             }
         }
     }
