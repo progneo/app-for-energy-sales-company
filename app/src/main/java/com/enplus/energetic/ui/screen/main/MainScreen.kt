@@ -42,6 +42,7 @@ import androidx.navigation.NavController
 import com.enplus.energetic.R
 import com.enplus.energetic.ui.components.base.AlertDialog
 import com.enplus.energetic.ui.components.base.MainButton
+import com.enplus.energetic.ui.components.base.NotFoundAlert
 import com.enplus.energetic.ui.components.base.TextField
 import com.enplus.energetic.ui.icon.EnIcons
 import com.enplus.energetic.ui.icon.Logout
@@ -268,28 +269,6 @@ private fun NoPermissionAlert(
                     .clickable { onDismissRequest() }
                     .padding(horizontal = 8.dp, vertical = 4.dp),
                 text = stringResource(R.string.no_permission_alert_cancel_button),
-                color = EnColor.Blue,
-            )
-        },
-    )
-}
-
-@Composable
-private fun NotFoundAlert(
-    onDismissRequest: () -> Unit,
-) {
-    AlertDialog(
-        title = stringResource(R.string.not_found_alert_title),
-        description = stringResource(R.string.not_found_alert_desc),
-        onDismissRequest = onDismissRequest,
-        confirmButton = {
-            Text(
-                modifier = Modifier
-                    .offset(x = 8.dp, y = 4.dp)
-                    .clip(RoundedCornerShape(16.dp))
-                    .clickable { onDismissRequest() }
-                    .padding(horizontal = 8.dp, vertical = 4.dp),
-                text = stringResource(R.string.not_found_alert_button),
                 color = EnColor.Blue,
             )
         },

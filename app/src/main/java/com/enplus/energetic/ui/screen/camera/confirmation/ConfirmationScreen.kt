@@ -3,12 +3,18 @@ package com.enplus.energetic.ui.screen.camera.confirmation
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -19,10 +25,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.enplus.energetic.R
 import com.enplus.energetic.ui.components.base.MainButton
+import com.enplus.energetic.ui.components.base.NotFoundAlert
 import com.enplus.energetic.ui.components.base.TextField
 import com.enplus.energetic.ui.components.base.TopBarWithReturn
 import com.enplus.energetic.ui.theme.EnColor
 import com.enplus.energetic.ui.theme.EnergeticTheme
+import com.enplus.energetic.ui.util.NavDestinations
 
 @Composable
 fun ConfirmationScreen(
@@ -30,8 +38,40 @@ fun ConfirmationScreen(
     accountNumber: String,
     viewModel: ConfirmationViewModel = hiltViewModel(),
 ) {
+    val uiState by viewModel.uiState.collectAsState()
+
+    val openErrorAlertDialog = remember { mutableStateOf(false) }
+
+    LaunchedEffect(uiState) {
+        when (uiState) {
+            is ConfirmationUiState.Error -> {
+                openErrorAlertDialog.value = true
+            }
+
+            is ConfirmationUiState.Success -> {
+                navController.navigate("${NavDestinations.DATA_SCREEN}/${(uiState as ConfirmationUiState.Success).personData}") {
+                    popUpTo(NavDestinations.MAIN_SCREEN)
+                }
+            }
+
+            else -> {
+            }
+        }
+    }
+
+    if (openErrorAlertDialog.value) {
+        NotFoundAlert(
+            onDismissRequest = {
+                openErrorAlertDialog.value = false
+                viewModel.resetState()
+            },
+        )
+    }
+
     ConfirmationScreen(
         accountNumber = accountNumber,
+        isLoading = uiState is ConfirmationUiState.Loading,
+        onSearchClick = viewModel::getPersonData,
         onBackClick = { navController.popBackStack() },
     )
 }
@@ -39,9 +79,11 @@ fun ConfirmationScreen(
 @Composable
 fun ConfirmationScreen(
     accountNumber: String,
+    isLoading: Boolean,
+    onSearchClick: (String) -> Unit,
     onBackClick: () -> Unit,
 ) {
-    val number = rememberSaveable { mutableStateOf(accountNumber) }
+    var number by rememberSaveable { mutableStateOf(accountNumber) }
     Scaffold(
         topBar = {
             TopBarWithReturn(onBackClick = onBackClick)
@@ -58,18 +100,25 @@ fun ConfirmationScreen(
                 color = EnColor.TextTitle,
             )
             TextField(
-                value = number.value,
+                value = number,
                 onValueChange = { value ->
-                    number.value = value
+                    number = value
                 },
                 placeholder = stringResource(R.string.enter_account_number_hint),
+                keyboardActions = KeyboardActions(onDone = {
+                    if (number.isNotBlank()) {
+                        onSearchClick(number)
+                    }
+                }),
             )
             Column(
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
                 MainButton(
                     text = stringResource(R.string.main_page_find_button_text),
-                    onClick = { /*TODO*/ },
+                    onClick = { onSearchClick(number) },
+                    isEnabled = number.isNotBlank(),
+                    isLoading = isLoading,
                 )
                 MainButton(
                     text = stringResource(R.string.scan_again),
@@ -88,6 +137,11 @@ fun ConfirmationScreen(
 @Composable
 fun ConfirmationScreenPreview() {
     EnergeticTheme {
-        ConfirmationScreen(accountNumber = "272819", onBackClick = {})
+        ConfirmationScreen(
+            accountNumber = "272819",
+            isLoading = true,
+            onBackClick = {},
+            onSearchClick = {},
+        )
     }
 }
