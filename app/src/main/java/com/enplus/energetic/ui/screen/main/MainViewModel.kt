@@ -5,9 +5,11 @@ import androidx.lifecycle.viewModelScope
 import com.enplus.energetic.domain.usecase.GetPersonDataUseCase
 import com.enplus.energetic.ui.mappers.PersonDataDomainToUiMapper
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -21,14 +23,16 @@ class MainViewModel @Inject constructor(
 
     fun getPersonData(searchValue: String) {
         viewModelScope.launch {
-            _uiState.tryEmit(MainUiState.Loading)
+            withContext(Dispatchers.IO) {
+                _uiState.tryEmit(MainUiState.Loading)
 
-            getPersonDataUseCase(searchValue).let { personData ->
-                if (personData != null) {
-                    val personDataUiModel = mapper(personData)
-                    _uiState.tryEmit(MainUiState.Success(personDataUiModel))
-                } else {
-                    _uiState.tryEmit(MainUiState.Error)
+                getPersonDataUseCase(searchValue).let { personData ->
+                    if (personData != null) {
+                        val personDataUiModel = mapper(personData)
+                        _uiState.tryEmit(MainUiState.Success(personDataUiModel))
+                    } else {
+                        _uiState.tryEmit(MainUiState.Error)
+                    }
                 }
             }
         }
