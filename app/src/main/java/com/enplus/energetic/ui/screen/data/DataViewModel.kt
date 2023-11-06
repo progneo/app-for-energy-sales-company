@@ -39,11 +39,22 @@ class DataViewModel @Inject constructor(
     }
     val filteredMetersList: SnapshotStateList<MeterUiModel>
         get() = _filteredMetersList
-
-    // TODO add logic for adding filter items
+    
     private val _filter = mutableStateMapOf<MeterUiModel.CategoryTypeUiModel, Boolean>().apply {
-        set(MeterUiModel.CategoryTypeUiModel.ELECTRICAL_ENERGY, true)
-        set(MeterUiModel.CategoryTypeUiModel.HOT_WATER_SUPPLY, true)
+        _personData.value.metersList?.let { meterList ->
+            meterList
+                .distinctBy {
+                    it.category
+                }.map {
+                    it.category
+                }.also {
+                    if (it.isEmpty()) {
+                        _uiState.tryEmit(DataUiState.ContentWithoutMeters)
+                    }
+                }.forEach {
+                    set(it, true)
+                }
+        }
     }
     val filter: SnapshotStateMap<MeterUiModel.CategoryTypeUiModel, Boolean>
         get() = _filter

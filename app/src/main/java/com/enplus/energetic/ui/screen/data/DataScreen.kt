@@ -33,11 +33,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -49,12 +51,15 @@ import com.enplus.energetic.ui.components.base.TopBarWithReturn
 import com.enplus.energetic.ui.components.data.DataScreenHeader
 import com.enplus.energetic.ui.components.data.MeterInformationCard
 import com.enplus.energetic.ui.entities.MeterUiModel
+import com.enplus.energetic.ui.icon.DataNotFoundIcon
 import com.enplus.energetic.ui.icon.EnIcons
 import com.enplus.energetic.ui.icon.Flashlight
 import com.enplus.energetic.ui.icon.House
 import com.enplus.energetic.ui.icon.VisibilityOff
 import com.enplus.energetic.ui.theme.EnColor
 import com.enplus.energetic.ui.theme.EnergeticTheme
+import com.enplus.energetic.ui.util.previewParameterProvider.DataScreenPreviewParameter
+import com.enplus.energetic.ui.util.previewParameterProvider.DataScreenPreviewParameterProvider
 
 @Composable
 fun DataScreen(
@@ -74,7 +79,6 @@ fun DataScreen(
         viewModel.flashlightManager.setFlashlightMode(context, isTorchActive)
     }
 
-    // TODO add logic from receive data in useCase
     DataScreen(
         title = personData.address,
         subtitle = stringResource(R.string.data_screen_subtitle, personData.personAccountId),
@@ -153,16 +157,16 @@ fun DataScreen(
                         )
                     }
 
-                    item {
-                        FilterMeterType(
-                            filter = filter,
-                            onFilterChange = { meterType, isSelected ->
-                                onChipClick(meterType, isSelected)
-                            },
-                        )
-                    }
-
                     if (uiState is DataUiState.Content) {
+                        item {
+                            FilterMeterType(
+                                filter = filter,
+                                onFilterChange = { meterType, isSelected ->
+                                    onChipClick(meterType, isSelected)
+                                },
+                            )
+                        }
+
                         items(metersList) { meter ->
                             var expanded by rememberSaveable { mutableStateOf(false) }
 
@@ -181,7 +185,7 @@ fun DataScreen(
                         }
                     } else if (uiState == DataUiState.Loading) {
                         item {
-                            // TODO add placeholder
+                            // TODO: add filter and card placeholder
                             Column(
                                 modifier = Modifier
                                     .fillMaxWidth(),
@@ -194,6 +198,10 @@ fun DataScreen(
                                 )
                             }
                         }
+
+                        item {
+                            Spacer(modifier = Modifier.height(64.dp))
+                        }
                     }
                 }
 
@@ -204,8 +212,23 @@ fun DataScreen(
                                 .weight(1f)
                                 .wrapContentHeight(Alignment.CenterVertically),
                         ) {
-                            ContentNotFound()
+                            ContentBanner(
+                                imageVector = EnIcons.VisibilityOff,
+                                text = stringResource(id = R.string.data_screen_meters_list_by_filter_not_found),
+                            )
                         }
+                    }
+                }
+                if (uiState is DataUiState.ContentWithoutMeters) {
+                    Column(
+                        modifier = Modifier
+                            .weight(1f)
+                            .wrapContentHeight(Alignment.CenterVertically),
+                    ) {
+                        ContentBanner(
+                            imageVector = EnIcons.DataNotFoundIcon,
+                            text = stringResource(id = R.string.data_screen_meters_list_not_found),
+                        )
                     }
                 }
             }
@@ -234,8 +257,10 @@ private fun FilterMeterType(
 }
 
 @Composable
-private fun ContentNotFound(
+private fun ContentBanner(
     modifier: Modifier = Modifier,
+    imageVector: ImageVector,
+    text: String,
 ) {
     Column(
         modifier = modifier
@@ -245,14 +270,14 @@ private fun ContentNotFound(
     ) {
         Icon(
             modifier = Modifier.size(24.dp),
-            imageVector = EnIcons.VisibilityOff,
-            contentDescription = stringResource(id = R.string.not_found),
+            imageVector = imageVector,
+            contentDescription = stringResource(id = R.string.logo),
             tint = EnColor.Orange,
         )
 
         Text(
             textAlign = TextAlign.Center,
-            text = stringResource(id = R.string.data_screen_meters_list_not_found),
+            text = text,
             style = TextStyle(
                 fontSize = 15.sp,
                 color = EnColor.LightBlack,
@@ -263,75 +288,15 @@ private fun ContentNotFound(
 
 @Preview(showSystemUi = true, showBackground = true, name = "Data screen")
 @Composable
-fun DataScreenPreview() {
+fun DataScreenPreview(
+    @PreviewParameter(DataScreenPreviewParameterProvider::class) parameter: DataScreenPreviewParameter,
+) {
     EnergeticTheme {
         DataScreen(
             title = "ул. Южное шоссе д. 2, кв 53",
             subtitle = "Лицевой счет 111209184",
-            metersList = listOf(
-                MeterUiModel(
-                    category = MeterUiModel.CategoryTypeUiModel.ELECTRICAL_ENERGY,
-                    typeLabelId = R.string.meter_type_label,
-                    typeValue = "SKAT 101M",
-                    stateLabelId = R.string.meter_service_status_label,
-                    stateValue = R.string.meter_service_status_turned_on,
-                    factoryNumberLabelId = R.string.meter_factory_number_label,
-                    factoryNumberValue = "1321312",
-                    placingLabelId = R.string.meter_installation_location_label,
-                    placingValue = "Ломоносова",
-                    checkDateLabelId = R.string.meter_check_date_label,
-                    checkDateValue = "12.12.2000",
-                    lastCheckDateLabelId = R.string.meter_next_check_date_label,
-                    lastCheckDateValue = "12.12.2000",
-                    sealLabelId = R.string.meter_seal_label,
-                    sealStateValue = R.string.meter_seal_exist_status,
-                    lastReadingsLabelId = R.string.meter_last_readings_label,
-                    lastReadingsValue = listOf(
-                        MeterUiModel.ReadingUiModel(
-                            value = "123123",
-                        ),
-                        MeterUiModel.ReadingUiModel(
-                            value = "123123",
-                        ),
-                        MeterUiModel.ReadingUiModel(
-                            value = "123123",
-                        ),
-                    ),
-                ),
-                MeterUiModel(
-                    category = MeterUiModel.CategoryTypeUiModel.ELECTRICAL_ENERGY,
-                    typeLabelId = R.string.meter_type_label,
-                    typeValue = "SKAT 101M",
-                    stateLabelId = R.string.meter_service_status_label,
-                    stateValue = R.string.meter_service_status_turned_on,
-                    factoryNumberLabelId = R.string.meter_factory_number_label,
-                    factoryNumberValue = "1321312",
-                    placingLabelId = R.string.meter_installation_location_label,
-                    placingValue = "Ломоносова",
-                    checkDateLabelId = R.string.meter_check_date_label,
-                    checkDateValue = "12.12.2000",
-                    lastCheckDateLabelId = R.string.meter_next_check_date_label,
-                    lastCheckDateValue = "12.12.2000",
-                    sealLabelId = R.string.meter_seal_label,
-                    sealStateValue = R.string.meter_seal_exist_status,
-                    lastReadingsLabelId = R.string.meter_last_readings_label,
-                    lastReadingsValue = listOf(
-                        MeterUiModel.ReadingUiModel(
-                            value = "123123",
-                        ),
-                        MeterUiModel.ReadingUiModel(
-                            value = "123123",
-                        ),
-                        MeterUiModel.ReadingUiModel(
-                            value = "123123",
-                        ),
-                    ),
-                ),
-            ),
-            filter = mapOf(
-                MeterUiModel.CategoryTypeUiModel.ELECTRICAL_ENERGY to true,
-                MeterUiModel.CategoryTypeUiModel.HOT_WATER_SUPPLY to true,
-            ),
+            metersList = parameter.metersList,
+            filter = parameter.filter,
             isTorchActive = false,
             onTorchClick = { },
             onChipClick = { _, _ -> },
@@ -341,7 +306,7 @@ fun DataScreenPreview() {
     }
 }
 
-@Preview(showBackground = true, name = "Data screen with not found")
+@Preview(showBackground = true, name = "Data screen meters list not found")
 @Composable
 fun DataScreenNotFoundPreview() {
     EnergeticTheme {
@@ -349,15 +314,12 @@ fun DataScreenNotFoundPreview() {
             title = "ул. Южное шоссе д. 2, кв 53",
             subtitle = "Лицевой счет 111209184",
             metersList = emptyList(),
-            filter = mapOf(
-                MeterUiModel.CategoryTypeUiModel.ELECTRICAL_ENERGY to false,
-                MeterUiModel.CategoryTypeUiModel.HOT_WATER_SUPPLY to false,
-            ),
+            filter = emptyMap(),
             isTorchActive = true,
             onTorchClick = { },
             onChipClick = { _, _ -> },
             onBackClick = { },
-            uiState = DataUiState.Content,
+            uiState = DataUiState.ContentWithoutMeters,
         )
     }
 }

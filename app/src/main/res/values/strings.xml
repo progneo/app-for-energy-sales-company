@@ -29,7 +29,8 @@
 
     <!-- DataScreen strings -->
     <string name="data_screen_subtitle">Лицевой счет %1$s</string>
-    <string name="data_screen_meters_list_not_found">Данные о счетчиках по вашим фильтрам не найдены. Попробуйте выбрать другие параметры фильтрации.</string>
+    <string name="data_screen_meters_list_by_filter_not_found">Данные о счетчиках по вашим фильтрам не найдены. Попробуйте выбрать другие параметры фильтрации.</string>
+    <string name="data_screen_meters_list_not_found">У данного потребителя не найдено ни одного  прибора учета.</string>
     <string name="not_found">not found</string>
 
     <!-- LoginScreen strings -->
