@@ -4,7 +4,8 @@ import com.enplus.energetic.domain.entities.AddressData
 import com.enplus.energetic.domain.repository.AddressDataRepository
 import javax.inject.Inject
 
-internal class AddressDataRepositoryImpl @Inject constructor() : AddressDataRepository {
+//TODO remove when add mock logic
+class AddressDataRepositoryImpl @Inject constructor() : AddressDataRepository {
 
     override suspend fun getAddressData(address: String): AddressData {
         val flats = mutableListOf<AddressData.FlatData>()

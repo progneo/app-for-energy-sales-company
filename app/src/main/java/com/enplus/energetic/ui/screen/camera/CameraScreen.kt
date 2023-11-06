@@ -166,7 +166,7 @@ fun BottomBar(
         )
 
         MainButton(
-            text = stringResource(R.string.scan),
+            text = stringResource(R.string.main_page_scan_button_text),
             icon = EnIcons.Scan,
             isLoading = isLoading,
             onClick = onClick,

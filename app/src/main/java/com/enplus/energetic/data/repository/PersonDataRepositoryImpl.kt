@@ -14,11 +14,5 @@ internal class PersonDataRepositoryImpl @Inject constructor(
     override suspend fun getPersonData(data: String): PersonData {
 
        return apiToDomain(service.getPersonData(data))
-
-//        return PersonData(
-//            personAccountId = 0,
-//            address = "Address",
-//            metersList = listOf(),
-//        )
     }
 }

@@ -23,6 +23,7 @@ import com.enplus.energetic.domain.entities.AddressData
 import com.enplus.energetic.ui.components.base.TopBarWithReturn
 import com.enplus.energetic.ui.components.data.AddressDataCard
 import com.enplus.energetic.ui.components.data.DataScreenHeader
+import com.enplus.energetic.ui.entities.AddressUiModel
 import com.enplus.energetic.ui.icon.EnIcons
 import com.enplus.energetic.ui.icon.Flat
 import com.enplus.energetic.ui.theme.EnergeticTheme
@@ -84,10 +85,12 @@ fun AddressDataScreen(
                 //TODO add onClick event
                 items(addressData.flatDataList) { addressData ->
                     AddressDataCard(
-                        flatNumber = addressData.flatNumber,
-                        personNumber = addressData.personId,
-                        metersCounter = addressData.metersCount,
                         onClick = {},
+                        addressUiModel = AddressUiModel(
+                            flatNumber = addressData.flatNumber,
+                            personNumber = addressData.personId,
+                            metersCounter = addressData.metersCount,
+                        )
                     )
                 }
 

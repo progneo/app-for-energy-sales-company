@@ -4,11 +4,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.enplus.energetic.data.preference.AuthStateManager
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.async
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -24,8 +25,9 @@ class MainViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            val isAuthorized = async { authStateManager.get() }
-            _isAuthorized.tryEmit(isAuthorized.await())
+            withContext(Dispatchers.IO) {
+                _isAuthorized.tryEmit(authStateManager.get())
+            }
             delay(SPLASH_DELAY)
             _loading.value = false
         }

@@ -11,13 +11,13 @@ import com.enplus.energetic.data.preference.PhoneNumberManager
 import com.enplus.energetic.data.preference.PinManager
 import com.enplus.energetic.ui.util.VibrationManager
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -33,25 +33,13 @@ class OneTimePinViewModel @Inject constructor(
     val uiState: StateFlow<OneTimePinUiState>
         get() = _uiState.asStateFlow()
 
-    private var _createdPin by mutableStateOf("")
+    private var _createdPin by mutableStateOf(EMPTY_PIN)
 
-    var inputtedPin by mutableStateOf("")
+    var inputtedPin by mutableStateOf(EMPTY_PIN)
         private set
 
     init {
         checkIsPinSet()
-    }
-
-    private fun checkIsPinSet() {
-        _uiState.tryEmit(OneTimePinUiState.InProcessing)
-
-        viewModelScope.launch {
-            if (pinManager.checkIsSet()) {
-                _uiState.tryEmit(OneTimePinUiState.InputtingPin)
-            } else {
-                _uiState.tryEmit(OneTimePinUiState.CreatePin)
-            }
-        }
     }
 
     fun inputtingPin(value: String) {
@@ -60,7 +48,7 @@ class OneTimePinViewModel @Inject constructor(
 
     fun createPin() {
         _createdPin = inputtedPin
-        inputtedPin = ""
+        inputtedPin = EMPTY_PIN
 
         _uiState.tryEmit(OneTimePinUiState.RepeatPin)
     }
@@ -69,44 +57,46 @@ class OneTimePinViewModel @Inject constructor(
         _uiState.tryEmit(OneTimePinUiState.InProcessing)
 
         viewModelScope.launch {
-            if (pinManager.equal(inputtedPin)) {
-                _uiState.tryEmit(OneTimePinUiState.Success(OneTimePinUiState.InputtingPin))
+            withContext(Dispatchers.IO) {
+                if (pinManager.equal(inputtedPin)) {
+                    _uiState.tryEmit(OneTimePinUiState.Success(OneTimePinUiState.InputtingPin))
 
-                delay(1000L)
-                inputtedPin = ""
+                    delay(1000L)
+                    inputtedPin = EMPTY_PIN
 
-                _uiState.tryEmit(OneTimePinUiState.Completed)
-            } else {
-                _uiState.tryEmit(OneTimePinUiState.Error(OneTimePinUiState.InputtingPin))
+                    _uiState.tryEmit(OneTimePinUiState.Completed)
+                } else {
+                    _uiState.tryEmit(OneTimePinUiState.Error(OneTimePinUiState.InputtingPin))
 
-                delay(1000L)
-                inputtedPin = ""
+                    delay(1000L)
+                    inputtedPin = EMPTY_PIN
 
-                _uiState.tryEmit(OneTimePinUiState.InputtingPin)
+                    _uiState.tryEmit(OneTimePinUiState.InputtingPin)
+                }
             }
         }
     }
 
     fun savePin() {
-        if (_createdPin == inputtedPin) {
-            viewModelScope.launch {
+        viewModelScope.launch {
+            if (_createdPin == inputtedPin) {
+
                 _uiState.tryEmit(OneTimePinUiState.Success(OneTimePinUiState.RepeatPin))
 
                 delay(1000L)
-                inputtedPin = ""
+                inputtedPin = EMPTY_PIN
 
                 _uiState.tryEmit(OneTimePinUiState.Completed)
-            }
 
-            CoroutineScope(Dispatchers.IO).launch {
-                pinManager.save(_createdPin)
-            }
-        } else {
-            viewModelScope.launch {
+                withContext(Dispatchers.IO) {
+                    pinManager.save(_createdPin)
+                }
+            } else {
+
                 _uiState.tryEmit(OneTimePinUiState.Error(OneTimePinUiState.RepeatPin))
 
                 delay(1000L)
-                inputtedPin = ""
+                inputtedPin = EMPTY_PIN
 
                 _uiState.tryEmit(OneTimePinUiState.CreatePin)
             }
@@ -114,11 +104,31 @@ class OneTimePinViewModel @Inject constructor(
     }
 
     fun logout() {
-        CoroutineScope(Dispatchers.IO).launch {
-            authStateManager.remove()
-            phoneNumberManager.remove()
-            passwordManager.remove()
-            pinManager.remove()
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                authStateManager.remove()
+                phoneNumberManager.remove()
+                passwordManager.remove()
+                pinManager.remove()
+            }
         }
+    }
+
+    private fun checkIsPinSet() {
+        _uiState.tryEmit(OneTimePinUiState.InProcessing)
+
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                if (pinManager.checkIsSet()) {
+                    _uiState.tryEmit(OneTimePinUiState.InputtingPin)
+                } else {
+                    _uiState.tryEmit(OneTimePinUiState.CreatePin)
+                }
+            }
+        }
+    }
+
+    companion object {
+        private const val EMPTY_PIN = ""
     }
 }

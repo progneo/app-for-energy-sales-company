@@ -142,12 +142,12 @@ fun LoginScreen(
                             )
                         }),
                         visualTransformation = PhoneVisualTransformation("+7 000 000-00-00", '0'),
-                        placeholder = stringResource(R.string.phone_number_hint),
+                        placeholder = stringResource(R.string.login_page_phone_number_hint),
                     )
                     TextField(
                         value = password,
                         onValueChange = { password = it },
-                        placeholder = stringResource(R.string.password_hint),
+                        placeholder = stringResource(R.string.login_page_password_hint),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                         keyboardActions = KeyboardActions(onDone = {
                             onAuthorizeClick(phoneNumber, password)
@@ -167,9 +167,9 @@ fun LoginScreen(
 
                                 val description =
                                     if (isPasswordVisible) {
-                                        stringResource(R.string.hide_password_desc)
+                                        stringResource(R.string.login_page_hide_password_desc)
                                     } else {
-                                        stringResource(R.string.show_password_desc)
+                                        stringResource(R.string.login_page_show_password_desc)
                                     }
 
                                 IconButton(
@@ -183,7 +183,7 @@ fun LoginScreen(
                     )
                     if (uiState == LoginUiState.Error) {
                         Text(
-                            text = stringResource(R.string.wrong_login_credentials),
+                            text = stringResource(R.string.login_page_wrong_login_credentials),
                             style = TextStyle(
                                 fontSize = 15.sp,
                                 color = EnColor.Red,
@@ -193,7 +193,7 @@ fun LoginScreen(
                 }
             }
             MainButton(
-                text = stringResource(R.string.login),
+                text = stringResource(R.string.login_button_text),
                 onClick = { onAuthorizeClick(phoneNumber, password) },
                 isEnabled = phoneNumber.length == 10 && password.isNotEmpty(),
                 isLoading = uiState == LoginUiState.InProgress,

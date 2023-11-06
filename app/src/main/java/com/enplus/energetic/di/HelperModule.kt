@@ -1,5 +1,7 @@
 package com.enplus.energetic.di
 
+import com.enplus.energetic.ui.util.FlashlightManager
+import com.enplus.energetic.ui.util.FlashlightManagerImpl
 import com.enplus.energetic.ui.util.VibrationManager
 import com.enplus.energetic.ui.util.VibrationManagerImpl
 import dagger.Binds
@@ -14,7 +16,13 @@ abstract class HelperModule {
 
     @Binds
     @Singleton
-    internal abstract fun bindVibrationManager(
+    abstract fun bindVibrationManager(
         vibrationManagerImpl: VibrationManagerImpl,
     ): VibrationManager
+
+    @Binds
+    @Singleton
+    abstract fun bindFlashlightManager(
+        flashlightManagerImpl: FlashlightManagerImpl,
+    ): FlashlightManager
 }

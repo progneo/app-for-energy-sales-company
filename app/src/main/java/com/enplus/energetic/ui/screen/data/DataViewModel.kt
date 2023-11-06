@@ -5,106 +5,44 @@ import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.lifecycle.ViewModel
-import com.enplus.energetic.domain.entities.Meter
+import androidx.lifecycle.viewModelScope
+import com.enplus.energetic.domain.usecase.GetPersonDataUseCase
 import com.enplus.energetic.ui.entities.MeterUiModel
+import com.enplus.energetic.ui.mappers.PersonDataDomainToUiMapper
+import com.enplus.energetic.ui.util.FlashlightManager
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import java.time.LocalDate
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
-class DataViewModel @Inject constructor() : ViewModel() {
+class DataViewModel @Inject constructor(
+    val flashlightManager: FlashlightManager,
+    private val getPersonDataUseCase: GetPersonDataUseCase,
+    private val mapper: PersonDataDomainToUiMapper,
+) : ViewModel() {
 
-    private val _isTorchActive = MutableStateFlow<Boolean>(false)
+    private val _uiState = MutableStateFlow<DataUiState>(DataUiState.Loading)
+    val uiState: StateFlow<DataUiState> = _uiState.asStateFlow()
+
+    private val _isTorchActive = MutableStateFlow(false)
     val isTorchActive = _isTorchActive.asStateFlow()
 
-    // TODO move mock to repo
-    private val _metersLists = mutableStateListOf<MeterUiModel>().apply {
-        addAll(
-            listOf(
-                MeterUiModel(
-                    category = MeterUiModel.CategoryTypeUiModel.ELECTRICAL_ENERGY,
-                    type = "FBU 11205",
-                    state = true,
-                    factoryNumber = 112280081,
-                    address = "КРУ",
-                    checkDate = LocalDate.of(2023, 9, 19),
-                    lastCheckDate = LocalDate.of(2023, 9, 21),
-                    sealState = true,
-                    lastReadings = listOf(
-                        Meter.Reading(
-                            date = LocalDate.of(2023, 9, 20),
-                            value = 123123,
-                        ),
-                        Meter.Reading(
-                            date = LocalDate.of(2023, 10, 20),
-                            value = 123123,
-                        ),
-                        Meter.Reading(
-                            date = LocalDate.of(2023, 11, 20),
-                            value = 123123,
-                        ),
-                    ),
-                ),
-                MeterUiModel(
-                    category = MeterUiModel.CategoryTypeUiModel.HOT_WATER_SUPPLY,
-                    type = "DBB 13201",
-                    state = true,
-                    factoryNumber = 112280081,
-                    address = "КРУ",
-                    checkDate = LocalDate.of(2023, 9, 19),
-                    lastCheckDate = LocalDate.of(2023, 9, 21),
-                    sealState = true,
-                    lastReadings = listOf(
-                        Meter.Reading(
-                            date = LocalDate.of(2023, 9, 20),
-                            value = 123123,
-                        ),
-                        Meter.Reading(
-                            date = LocalDate.of(2023, 10, 20),
-                            value = 123123,
-                        ),
-                        Meter.Reading(
-                            date = LocalDate.of(2023, 11, 20),
-                            value = 123123,
-                        ),
-                    ),
-                ),
-                MeterUiModel(
-                    category = MeterUiModel.CategoryTypeUiModel.HOT_WATER_SUPPLY,
-                    type = "АГАТ 1-1",
-                    state = true,
-                    factoryNumber = 112280081,
-                    address = "КРУ",
-                    checkDate = LocalDate.of(2023, 9, 19),
-                    lastCheckDate = LocalDate.of(2023, 9, 21),
-                    sealState = true,
-                    lastReadings = listOf(
-                        Meter.Reading(
-                            date = LocalDate.of(2023, 9, 20),
-                            value = 123123,
-                        ),
-                        Meter.Reading(
-                            date = LocalDate.of(2023, 10, 20),
-                            value = 123123,
-                        ),
-                        Meter.Reading(
-                            date = LocalDate.of(2023, 11, 20),
-                            value = 123123,
-                        ),
-                    ),
-                ),
-            ),
-        )
-    }
+    private val _metersLists = MutableStateFlow<List<MeterUiModel>>(listOf())
 
     private val _filteredMetersList = mutableStateListOf<MeterUiModel>().apply {
-        addAll(_metersLists)
+        addAll(_metersLists.value)
     }
     val filteredMetersList: SnapshotStateList<MeterUiModel>
         get() = _filteredMetersList
 
+
+    //TODO add logic for adding filter items
     private val _filter = mutableStateMapOf<MeterUiModel.CategoryTypeUiModel, Boolean>().apply {
         set(MeterUiModel.CategoryTypeUiModel.ELECTRICAL_ENERGY, true)
         set(MeterUiModel.CategoryTypeUiModel.HOT_WATER_SUPPLY, true)
@@ -112,17 +50,31 @@ class DataViewModel @Inject constructor() : ViewModel() {
     val filter: SnapshotStateMap<MeterUiModel.CategoryTypeUiModel, Boolean>
         get() = _filter
 
+    init {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                //mock server request delay
+                delay(3000)
+                val person = mapper(getPersonDataUseCase(""))
+                val metersList = person.metersList ?: emptyList()
+                _metersLists.tryEmit(metersList)
+                _filteredMetersList.addAll(_metersLists.value)
+                _uiState.tryEmit(DataUiState.Content)
+            }
+        }
+    }
+
     fun changeTorchState() {
         val newTorchState = !_isTorchActive.value
         _isTorchActive.tryEmit(newTorchState)
     }
 
-    fun applyFilter(сategoryTypeUiModel: MeterUiModel.CategoryTypeUiModel, state: Boolean) {
-        _filter[сategoryTypeUiModel] = state
+    fun applyFilter(categoryTypeUiModel: MeterUiModel.CategoryTypeUiModel, state: Boolean) {
+        _filter[categoryTypeUiModel] = state
     }
 
     fun filterMetersList() {
         _filteredMetersList.clear()
-        _filteredMetersList.addAll(_metersLists.filter { _filter[it.category] == true })
+        _filteredMetersList.addAll(_metersLists.value.filter { _filter[it.category] == true })
     }
 }

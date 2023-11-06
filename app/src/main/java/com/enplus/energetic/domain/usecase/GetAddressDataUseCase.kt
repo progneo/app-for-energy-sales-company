@@ -4,12 +4,14 @@ import com.enplus.energetic.domain.entities.AddressData
 import com.enplus.energetic.domain.repository.AddressDataRepository
 import javax.inject.Inject
 
+//TODO remove when add mock logic
 interface GetAddressDataUseCase {
 
     suspend operator fun invoke(address: String): AddressData
 }
 
-internal class GetAddressDataUseCaseImpl @Inject constructor(
+//TODO remove when add mock logic
+class GetAddressDataUseCaseImpl @Inject constructor(
     private val addressDataRepository: AddressDataRepository,
 ) : GetAddressDataUseCase {
 

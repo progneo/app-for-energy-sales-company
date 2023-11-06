@@ -110,22 +110,22 @@ fun OneTimePinScreen(
 
                 when (uiState) {
                     OneTimePinUiState.InputtingPin -> {
-                        title = stringResource(id = R.string.input_pin)
+                        title = stringResource(id = R.string.pin_screen_input_pin_title)
                         state = PinStateUiModel.INPUT_PROCESS
                     }
                     OneTimePinUiState.CreatePin -> {
-                        title = stringResource(id = R.string.create_pin)
+                        title = stringResource(id = R.string.pin_screen_create_pin_title)
                         state = PinStateUiModel.INPUT_PROCESS
                     }
                     OneTimePinUiState.RepeatPin -> {
-                        title = stringResource(id = R.string.repeat_pin)
+                        title = stringResource(id = R.string.pin_screen_repeat_pin_title)
                         state = PinStateUiModel.INPUT_PROCESS
                     }
                     OneTimePinUiState.InProcessing -> { /*TODO processing state*/ }
                     is OneTimePinUiState.Success -> {
                         title = when (uiState.previousState) {
-                            OneTimePinUiState.InputtingPin -> stringResource(id = R.string.input_pin)
-                            OneTimePinUiState.RepeatPin -> stringResource(id = R.string.repeat_pin)
+                            OneTimePinUiState.InputtingPin -> stringResource(id = R.string.pin_screen_input_pin_title)
+                            OneTimePinUiState.RepeatPin -> stringResource(id = R.string.pin_screen_repeat_pin_title)
                             else -> null
                         }
                         state = PinStateUiModel.SUCCESS
@@ -134,8 +134,8 @@ fun OneTimePinScreen(
                     }
                     is OneTimePinUiState.Error -> {
                         title = when (uiState.previousState) {
-                            OneTimePinUiState.InputtingPin -> stringResource(id = R.string.input_pin)
-                            OneTimePinUiState.RepeatPin -> stringResource(id = R.string.repeat_pin)
+                            OneTimePinUiState.InputtingPin -> stringResource(id = R.string.pin_screen_input_pin_title)
+                            OneTimePinUiState.RepeatPin -> stringResource(id = R.string.pin_screen_repeat_pin_title)
                             else -> null
                         }
                         state = PinStateUiModel.ERROR

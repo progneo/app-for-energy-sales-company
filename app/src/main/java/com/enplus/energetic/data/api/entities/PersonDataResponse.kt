@@ -2,6 +2,7 @@ package com.enplus.energetic.data.api.entities
 
 import java.time.LocalDate
 
+//TODO remade when add retrofit
 //@Serializable
 data class PersonDataResponse(
 
@@ -26,7 +27,7 @@ data class MeterApi(
     //@SerialName("factoryNumber")
     val factoryNumber: Long,
     //@SerialName("address")
-    val address: String,
+    val placing: String,
     //@SerialName("checkDate")
     val checkDate: LocalDate,
     //@SerialName("lastCheckDate")
