@@ -8,15 +8,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -31,7 +28,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
@@ -40,11 +36,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.enplus.energetic.R
+import com.enplus.energetic.ui.components.base.AlertDialog
 import com.enplus.energetic.ui.components.base.MainButton
 import com.enplus.energetic.ui.components.base.TextField
 import com.enplus.energetic.ui.icon.EnIcons
@@ -64,29 +60,39 @@ fun MainScreen(
 
     val activity = LocalContext.current as Activity
 
-    val openAlertDialog = remember { mutableStateOf(false) }
+    val openPermissionAlertDialog = remember { mutableStateOf(false) }
+    val openErrorAlertDialog = remember { mutableStateOf(false) }
 
     val cameraPermissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),
         onResult = { isGranted ->
             if (!isGranted) {
-                openAlertDialog.value = true
+                openPermissionAlertDialog.value = true
             } else {
                 navController.navigate(NavDestinations.CAMERA_SCREEN)
             }
         },
     )
 
-    if (openAlertDialog.value) {
+    if (openErrorAlertDialog.value) {
+        NotFoundAlert(
+            onDismissRequest = {
+                openErrorAlertDialog.value = false
+                viewModel.resetState()
+            },
+        )
+    }
+
+    if (openPermissionAlertDialog.value) {
         NoPermissionAlert(
             isPermissionDeclined = !activity.shouldShowRequestPermissionRationale(Manifest.permission.CAMERA),
-            onDismissRequest = { openAlertDialog.value = false },
+            onDismissRequest = { openPermissionAlertDialog.value = false },
             onConfirmation = {
-                openAlertDialog.value = false
+                openPermissionAlertDialog.value = false
                 cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
             },
             onGoToAppSettingsClick = {
-                openAlertDialog.value = false
+                openPermissionAlertDialog.value = false
                 activity.goToAppSetting()
             },
         )
@@ -97,6 +103,10 @@ fun MainScreen(
             is MainUiState.Success -> {
                 navController.navigate("${NavDestinations.DATA_SCREEN}/${(uiState as MainUiState.Success).personData}")
                 viewModel.resetState()
+            }
+
+            is MainUiState.Error -> {
+                openErrorAlertDialog.value = true
             }
 
             else -> {
@@ -110,6 +120,7 @@ fun MainScreen(
         uiState = uiState,
         onScanClick = { cameraPermissionLauncher.launch(Manifest.permission.CAMERA) },
         onSearchClick = viewModel::getPersonData,
+        onLogoutClick = { navController.navigate(NavDestinations.ONE_TIME_PIN_SCREEN) { popUpTo(0) } },
     )
 }
 
@@ -119,6 +130,7 @@ fun MainScreen(
     uiState: MainUiState,
     onScanClick: () -> Unit,
     onSearchClick: (searchValue: String) -> Unit,
+    onLogoutClick: () -> Unit,
 ) {
     var searchValue by rememberSaveable { mutableStateOf("") }
 
@@ -128,7 +140,7 @@ fun MainScreen(
         topBar = {
             AppBar(
                 title = username,
-                onLogoutClick = {},
+                onLogoutClick = onLogoutClick,
             )
         },
     ) { scaffoldPadding ->
@@ -161,6 +173,11 @@ fun MainScreen(
                     value = searchValue,
                     onValueChange = { searchValue = it },
                     placeholder = stringResource(R.string.main_page_search_placeholder),
+                    keyboardActions = KeyboardActions(onDone = {
+                        if (searchValue.isNotBlank()) {
+                            onSearchClick(searchValue)
+                        }
+                    }),
                 )
                 MainButton(
                     text = stringResource(R.string.main_page_find_button_text),
@@ -222,71 +239,61 @@ private fun NoPermissionAlert(
     onDismissRequest: () -> Unit,
     onGoToAppSettingsClick: () -> Unit,
 ) {
-    Dialog(onDismissRequest = onDismissRequest) {
-        Card(
-            colors = CardDefaults.cardColors(
-                containerColor = EnColor.Background,
-            ),
-            elevation = CardDefaults.cardElevation(
-                defaultElevation = 4.dp,
-            ),
-            shape = RoundedCornerShape(size = 8.dp),
-        ) {
-            Column(
-                modifier = Modifier.padding(
-                    top = 16.dp,
-                    end = 20.dp,
-                    bottom = 20.dp,
-                    start = 20.dp,
-                ),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-            ) {
-                Text(
-                    text = stringResource(R.string.no_permission_alert_title),
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight(500),
-                    color = EnColor.TextTitle,
-                )
-                Text(
-                    text = stringResource(R.string.no_permission_alert_desc),
-                    fontSize = 16.sp,
-                    color = EnColor.TextTitle,
-                )
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(
-                        space = 8.dp,
-                        alignment = Alignment.End,
-                    ),
-                    modifier = Modifier.fillMaxWidth(),
-                ) {
-                    Text(
-                        modifier = Modifier
-                            .offset(x = 8.dp, y = 4.dp)
-                            .clip(RoundedCornerShape(16.dp))
-                            .clickable { onDismissRequest() }
-                            .padding(horizontal = 8.dp, vertical = 4.dp),
-                        text = stringResource(R.string.no_permission_alert_cancel_button),
-                        color = EnColor.Blue,
-                    )
-                    Text(
-                        modifier = Modifier
-                            .offset(x = 8.dp, y = 4.dp)
-                            .clip(RoundedCornerShape(16.dp))
-                            .clickable {
-                                if (isPermissionDeclined) {
-                                    onGoToAppSettingsClick()
-                                } else {
-                                    onConfirmation()
-                                }
-                            }
-                            .padding(horizontal = 8.dp, vertical = 4.dp),
-                        text = stringResource(R.string.no_permission_alert_good_button),
-                        color = EnColor.Blue,
-                    )
-                }
-            }
-        }
-    }
+    AlertDialog(
+        title = stringResource(R.string.no_permission_alert_title),
+        description = stringResource(R.string.no_permission_alert_desc),
+        onDismissRequest = onDismissRequest,
+        confirmButton = {
+            Text(
+                modifier = Modifier
+                    .offset(x = 8.dp, y = 4.dp)
+                    .clip(RoundedCornerShape(16.dp))
+                    .clickable {
+                        if (isPermissionDeclined) {
+                            onGoToAppSettingsClick()
+                        } else {
+                            onConfirmation()
+                        }
+                    }
+                    .padding(horizontal = 8.dp, vertical = 4.dp),
+                text = stringResource(R.string.no_permission_alert_good_button),
+                color = EnColor.Blue,
+            )
+        },
+        dismissButton = {
+            Text(
+                modifier = Modifier
+                    .offset(x = 8.dp, y = 4.dp)
+                    .clip(RoundedCornerShape(16.dp))
+                    .clickable { onDismissRequest() }
+                    .padding(horizontal = 8.dp, vertical = 4.dp),
+                text = stringResource(R.string.no_permission_alert_cancel_button),
+                color = EnColor.Blue,
+            )
+        },
+    )
+}
+
+@Composable
+private fun NotFoundAlert(
+    onDismissRequest: () -> Unit,
+) {
+    AlertDialog(
+        title = stringResource(R.string.not_found_alert_title),
+        description = stringResource(R.string.not_found_alert_desc),
+        onDismissRequest = onDismissRequest,
+        confirmButton = {
+            Text(
+                modifier = Modifier
+                    .offset(x = 8.dp, y = 4.dp)
+                    .clip(RoundedCornerShape(16.dp))
+                    .clickable { onDismissRequest() }
+                    .padding(horizontal = 8.dp, vertical = 4.dp),
+                text = stringResource(R.string.not_found_alert_button),
+                color = EnColor.Blue,
+            )
+        },
+    )
 }
 
 @Preview(name = "Main screen")
@@ -298,6 +305,7 @@ fun MainScreenPreview() {
             uiState = MainUiState.Waiting,
             onScanClick = {},
             onSearchClick = {},
+            onLogoutClick = {},
         )
     }
 }

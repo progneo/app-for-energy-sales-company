@@ -60,6 +60,11 @@
     <string name="no_permission_alert_cancel_button">Отменить</string>
     <string name="no_permission_alert_good_button">Хорошо</string>
 
+    <!-- Not Found Alert -->
+    <string name="not_found_alert_title">Ничего не найдено</string>
+    <string name="not_found_alert_desc">Проверьте введённые данные</string>
+    <string name="not_found_alert_button">Хорошо</string>
+
     <!-- MeterInfoCard strings -->
     <string name="meter_service_status_label">Состояние услуги</string>
     <string name="meter_service_status_turned_off">Выключена</string>
