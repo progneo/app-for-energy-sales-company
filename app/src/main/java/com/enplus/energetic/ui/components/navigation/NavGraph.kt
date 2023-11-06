@@ -4,6 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
+import com.enplus.energetic.ui.entities.PersonDataArgType
 import com.enplus.energetic.ui.screen.addressData.AddressDataScreen
 import com.enplus.energetic.ui.screen.camera.CameraScreen
 import com.enplus.energetic.ui.screen.camera.confirmation.ConfirmationScreen
@@ -35,7 +37,14 @@ fun NavGraph(
         composable(route = NavDestinations.MAIN_SCREEN) {
             MainScreen(navController = navController)
         }
-        composable(route = NavDestinations.DATA_SCREEN) {
+        composable(
+            route = "${NavDestinations.DATA_SCREEN}/{personData}",
+            arguments = listOf(
+                navArgument("personData") {
+                    type = PersonDataArgType()
+                },
+            ),
+        ) {
             DataScreen(navController = navController)
         }
         composable(route = NavDestinations.CAMERA_SCREEN) {

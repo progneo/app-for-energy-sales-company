@@ -4,5 +4,5 @@ import com.enplus.energetic.domain.entities.PersonData
 
 interface PersonDataRepository {
 
-    suspend fun getPersonData(data: String): PersonData
+    suspend fun getPersonData(data: String): PersonData?
 }

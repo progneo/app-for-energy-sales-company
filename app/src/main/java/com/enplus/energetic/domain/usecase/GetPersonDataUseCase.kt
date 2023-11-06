@@ -6,14 +6,14 @@ import javax.inject.Inject
 
 interface GetPersonDataUseCase {
 
-    suspend operator fun invoke(string: String): PersonData
+    suspend operator fun invoke(string: String): PersonData?
 }
 
 internal class GetPersonDataUseCaseImpl @Inject constructor(
     private val personDataRepository: PersonDataRepository,
 ) : GetPersonDataUseCase {
 
-    override suspend operator fun invoke(string: String): PersonData {
+    override suspend operator fun invoke(string: String): PersonData? {
         return personDataRepository.getPersonData(string)
     }
 }

@@ -6,13 +6,13 @@ import javax.inject.Inject
 
 interface PersonDataService {
 
-    //retrofit GET()
-    fun getPersonData(data: String): PersonDataResponse
+    // retrofit GET()
+    fun getPersonData(data: String): PersonDataResponse?
 }
 
-//TODO remove when add retrofit
-//mock retrofit
-class PersonDataServiceImpl @Inject constructor()  : PersonDataService {
+// TODO remove when add retrofit
+// mock retrofit
+class PersonDataServiceImpl @Inject constructor() : PersonDataService {
 
-    override fun getPersonData(data: String): PersonDataResponse = getMockPersonDataResponse()
+    override fun getPersonData(data: String): PersonDataResponse? = getMockPersonDataResponse(data)
 }
