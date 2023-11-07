@@ -50,7 +50,7 @@
 
     <!-- MainScreen strings -->
     <string name="main_page_search_title">Поиск данных</string>
-    <string name="main_page_search_description">Чтобы получить данные счетчиков, введите информацию вручную или отсканируйте квитанцию</string>
+    <string name="main_page_search_description">Чтобы получить данные счетчиков, введите информацию вручную или отсканируйте лицевой счет на\nмаршрутном листе</string>
     <string name="main_page_search_placeholder">Лицевой счет, адрес или номер счетчика</string>
     <string name="main_page_find_button_text">Найти</string>
     <string name="main_page_scan_button_text">Отсканировать</string>
