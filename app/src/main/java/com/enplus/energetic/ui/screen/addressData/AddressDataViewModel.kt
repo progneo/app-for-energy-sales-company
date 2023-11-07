@@ -37,19 +37,29 @@ class AddressDataViewModel @Inject constructor(
     }
 
     fun loadPersonData(data: String) {
+        if (_state.value is AddressDataState.ProcessingCardClick) {
+            return
+        }
+
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
+                _state.tryEmit(AddressDataState.ProcessingCardClick(_addressData.value))
+
                 getPersonDataUseCase(data).let { personData ->
                     if (personData != null) {
                         val mappedPersonData = personDataDomainToUiMapper(personData)
                         delay(300)
-                        _state.tryEmit(AddressDataState.OnCardClicked(mappedPersonData))
+                        _state.tryEmit(AddressDataState.SuccessGoToPersonData(mappedPersonData))
                     } else {
-                       //TODO add ERROR call back
+                        _state.tryEmit(AddressDataState.Error(_addressData.value))
                     }
                 }
             }
         }
+    }
+
+    fun resetState() {
+        loadData()
     }
 
     private fun loadData() {

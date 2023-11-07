@@ -40,41 +40,34 @@ fun AddressDataScreen(
     val state by viewModel.state.collectAsState()
     val context = LocalContext.current
 
-    //TODO add loading state
-    when (state) {
-        is AddressDataState.Content -> {
-            AddressDataScreen(
-                onBackClick = { navController.popBackStack() },
-                onCardClick = viewModel::loadPersonData,
-                addressData = (state as AddressDataState.Content).content,
-            )
-        }
-
-        is AddressDataState.Error -> {
-            LaunchedEffect(state) {
+    // TODO: add loading state
+    LaunchedEffect(state) {
+        when (state) {
+            is AddressDataState.Error -> {
                 Toast.makeText(context, "Тестовые данные еще не добавлены", Toast.LENGTH_SHORT)
                     .show()
+                viewModel.resetState()
             }
-        }
-
-        is AddressDataState.OnCardClicked -> {
-            navController.navigate("${NavDestinations.DATA_SCREEN}/${(state as AddressDataState.OnCardClicked).data}") {
-                //TODO add return to ADDRESS_DATA_SCREEN screen
-                popUpTo(
-                    NavDestinations.MAIN_SCREEN
-                )
+            is AddressDataState.SuccessGoToPersonData -> {
+                navController.navigate("${NavDestinations.DATA_SCREEN}/${(state as AddressDataState.SuccessGoToPersonData).data}")
+                viewModel.resetState()
             }
+            else -> Unit
         }
-
-        else -> {}
     }
+
+    AddressDataScreen(
+        onBackClick = { navController.popBackStack() },
+        onCardClick = viewModel::loadPersonData,
+        state = state,
+    )
 }
 
 @Composable
 fun AddressDataScreen(
     onBackClick: () -> Unit,
     onCardClick: (String) -> Unit,
-    addressData: AddressUiModel,
+    state: AddressDataState,
 ) {
 
     Scaffold(
@@ -94,30 +87,38 @@ fun AddressDataScreen(
                 ),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
-                item {
-                    DataScreenHeader(
-                        modifier = Modifier.padding(bottom = 8.dp),
-                        title = addressData.address,
-                        subtitle = stringResource(
-                            id = R.string.personal_accounts_counter,
-                            addressData.flatDataList.size
-                        ),
-                        icon = EnIcons.Flat,
-                    )
+                val addressUiModel = when (state) {
+                    is AddressDataState.Content -> state.content
+                    is AddressDataState.ProcessingCardClick -> state.content
+                    is AddressDataState.Error -> state.content
+                    else -> null
                 }
 
-                //TODO fix click animation
-                items(addressData.flatDataList) { addressData ->
-                    AddressDataCard(
-                        onClick = {
-                            onCardClick(addressData.personId.toString())
-                        },
-                        addressUiModel = AddressUiModel.FlatData(
-                            flatNumber = addressData.flatNumber,
-                            personId = addressData.personId,
-                            metersCount = addressData.metersCount,
+                addressUiModel?.let {
+                    item {
+                        DataScreenHeader(
+                            modifier = Modifier.padding(bottom = 8.dp),
+                            title = addressUiModel.address,
+                            subtitle = stringResource(
+                                id = R.string.personal_accounts_counter,
+                                addressUiModel.flatDataList.size
+                            ),
+                            icon = EnIcons.Flat,
                         )
-                    )
+                    }
+
+                    items(addressUiModel.flatDataList) { addressData ->
+                        AddressDataCard(
+                            onClick = {
+                                onCardClick(addressData.personId.toString())
+                            },
+                            addressUiModel = AddressUiModel.FlatData(
+                                flatNumber = addressData.flatNumber,
+                                personId = addressData.personId,
+                                metersCount = addressData.metersCount,
+                            )
+                        )
+                    }
                 }
 
                 item {
@@ -135,13 +136,15 @@ fun AddressDataScreenPreview() {
         AddressDataScreen(
             onBackClick = { },
             onCardClick = { },
-            addressData = AddressUiModel(
-                address = "ул. Южное шоссе д. 2",
-                flatDataList = listOf(
-                    AddressUiModel.FlatData(
-                        personId = 111209184,
-                        flatNumber = 53,
-                        metersCount = 3,
+            state = AddressDataState.Content(
+                content = AddressUiModel(
+                    address = "ул. Южное шоссе д. 2",
+                    flatDataList = listOf(
+                        AddressUiModel.FlatData(
+                            personId = 111209184,
+                            flatNumber = 53,
+                            metersCount = 3,
+                        ),
                     ),
                 ),
             ),

@@ -11,9 +11,15 @@ sealed class AddressDataState {
         val content: AddressUiModel,
     ) : AddressDataState()
 
-    data class OnCardClicked(
+    data class ProcessingCardClick(
+        val content: AddressUiModel,
+    ) : AddressDataState()
+
+    data class SuccessGoToPersonData(
         val data: PersonDataUiModel,
     ) : AddressDataState()
 
-    data object Error : AddressDataState()
+    data class Error(
+        val content: AddressUiModel,
+    ) : AddressDataState()
 }
