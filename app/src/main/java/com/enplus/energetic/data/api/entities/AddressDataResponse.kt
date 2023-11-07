@@ -8,5 +8,5 @@ data class AddressDataResponse(
 data class FlatDataApi(
     val personId: Long,
     val flatNumber: Int,
-    val metersCount: Int,
+    val metersCount: Int, //TODO change to PersonData
 )

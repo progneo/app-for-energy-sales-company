@@ -107,7 +107,6 @@ fun MainScreen(
             }
 
             is MainUiState.SuccessGoToAddressData -> {
-                //add data
                 navController.navigate("${NavDestinations.ADDRESS_DATA_SCREEN}/${(uiState as MainUiState.SuccessGoToAddressData).addressData}")
                 viewModel.resetState()
             }
@@ -116,8 +115,7 @@ fun MainScreen(
                 openErrorAlertDialog.value = true
             }
 
-            else -> {
-            }
+            else -> {}
         }
     }
 

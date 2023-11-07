@@ -45,7 +45,7 @@ class CameraViewModel @Inject constructor() : ViewModel() {
                 for (block in visionText.textBlocks) {
                     for (line in block.lines) {
                         for (element in line.elements) {
-                            if (element.text.length == 6 && element.text.isDigitsOnly()) {
+                            if (element.text.length == 9 && element.text.isDigitsOnly()) {
                                 _uiState.tryEmit(CameraUiState.Success(element.text))
                                 return@addOnSuccessListener
                             }
