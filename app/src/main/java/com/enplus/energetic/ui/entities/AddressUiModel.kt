@@ -1,7 +1,17 @@
 package com.enplus.energetic.ui.entities
 
-data class AddressUiModel (
-    val flatNumber: Int,
-    val personNumber: Long,
-    val metersCounter: Int,
-)
+import android.net.Uri
+import com.google.gson.Gson
+
+data class AddressUiModel(
+    val address: String,
+    val flatDataList: List<FlatData>,
+) {
+    data class FlatData(
+        val personId: Long,
+        val flatNumber: Int,
+        val metersCount: Int, //TODO возможно заменить на лист счетчиков
+    )
+
+    override fun toString(): String = Uri.encode(Gson().toJson(this))
+}

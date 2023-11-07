@@ -27,7 +27,7 @@ import com.enplus.energetic.ui.theme.EnColor.Orange
 fun AddressDataCard(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    addressUiModel: AddressUiModel,
+    addressUiModel: AddressUiModel.FlatData,
 ) {
     Card(
         onClick = onClick,
@@ -49,7 +49,7 @@ fun AddressDataCard(
                     text = stringResource(
                         id = R.string.address_data_card_title,
                         addressUiModel.flatNumber,
-                        addressUiModel.personNumber,
+                        addressUiModel.personId,
                     ),
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
@@ -63,7 +63,7 @@ fun AddressDataCard(
             Text(
                 text = stringResource(
                     id = R.string.address_meters_count,
-                    addressUiModel.metersCounter.toString()
+                    addressUiModel.metersCount.toString()
                 ),
                 color = CharacteristicTitle,
                 fontSize = 13.sp,
@@ -78,10 +78,10 @@ fun AddressDataCard(
 fun AddressDataCardPreview() {
     AddressDataCard(
         onClick = {},
-        addressUiModel = AddressUiModel(
+        addressUiModel = AddressUiModel.FlatData(
             flatNumber = 34,
-            personNumber = 111209184,
-            metersCounter = 3,
+            personId = 111209184,
+            metersCount = 3,
         ),
     )
 }

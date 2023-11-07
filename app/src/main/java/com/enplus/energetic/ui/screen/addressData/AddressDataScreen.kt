@@ -1,5 +1,6 @@
 package com.enplus.energetic.ui.screen.addressData
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -10,16 +11,17 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.enplus.energetic.R
-import com.enplus.energetic.domain.entities.AddressData
 import com.enplus.energetic.ui.components.base.TopBarWithReturn
 import com.enplus.energetic.ui.components.data.AddressDataCard
 import com.enplus.energetic.ui.components.data.DataScreenHeader
@@ -27,6 +29,7 @@ import com.enplus.energetic.ui.entities.AddressUiModel
 import com.enplus.energetic.ui.icon.EnIcons
 import com.enplus.energetic.ui.icon.Flat
 import com.enplus.energetic.ui.theme.EnergeticTheme
+import com.enplus.energetic.ui.util.NavDestinations
 
 @Composable
 fun AddressDataScreen(
@@ -35,22 +38,36 @@ fun AddressDataScreen(
 ) {
 
     val state by viewModel.state.collectAsState()
+    val context = LocalContext.current
 
-    //TODO add loading state
-    when (state) {
-        is AddressDataState.Content -> AddressDataScreen(
-            onBackClick = { navController.popBackStack() },
-            addressData = (state as AddressDataState.Content).content,
-        )
-
-        else -> {}
+    // TODO: add loading state
+    LaunchedEffect(state) {
+        when (state) {
+            is AddressDataState.Error -> {
+                Toast.makeText(context, "Тестовые данные еще не добавлены", Toast.LENGTH_SHORT)
+                    .show()
+                viewModel.resetState()
+            }
+            is AddressDataState.SuccessGoToPersonData -> {
+                navController.navigate("${NavDestinations.DATA_SCREEN}/${(state as AddressDataState.SuccessGoToPersonData).data}")
+                viewModel.resetState()
+            }
+            else -> Unit
+        }
     }
+
+    AddressDataScreen(
+        onBackClick = { navController.popBackStack() },
+        onCardClick = viewModel::loadPersonData,
+        state = state,
+    )
 }
 
 @Composable
 fun AddressDataScreen(
     onBackClick: () -> Unit,
-    addressData: AddressData,
+    onCardClick: (String) -> Unit,
+    state: AddressDataState,
 ) {
 
     Scaffold(
@@ -70,28 +87,38 @@ fun AddressDataScreen(
                 ),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
-                item {
-                    DataScreenHeader(
-                        modifier = Modifier.padding(bottom = 8.dp),
-                        title = addressData.address,
-                        subtitle = stringResource(
-                            id = R.string.personal_accounts_counter,
-                            addressData.flatDataList.size
-                        ),
-                        icon = EnIcons.Flat,
-                    )
+                val addressUiModel = when (state) {
+                    is AddressDataState.Content -> state.content
+                    is AddressDataState.ProcessingCardClick -> state.content
+                    is AddressDataState.Error -> state.content
+                    else -> null
                 }
 
-                //TODO add onClick event
-                items(addressData.flatDataList) { addressData ->
-                    AddressDataCard(
-                        onClick = {},
-                        addressUiModel = AddressUiModel(
-                            flatNumber = addressData.flatNumber,
-                            personNumber = addressData.personId,
-                            metersCounter = addressData.metersCount,
+                addressUiModel?.let {
+                    item {
+                        DataScreenHeader(
+                            modifier = Modifier.padding(bottom = 8.dp),
+                            title = addressUiModel.address,
+                            subtitle = stringResource(
+                                id = R.string.personal_accounts_counter,
+                                addressUiModel.flatDataList.size
+                            ),
+                            icon = EnIcons.Flat,
                         )
-                    )
+                    }
+
+                    items(addressUiModel.flatDataList) { addressData ->
+                        AddressDataCard(
+                            onClick = {
+                                onCardClick(addressData.personId.toString())
+                            },
+                            addressUiModel = AddressUiModel.FlatData(
+                                flatNumber = addressData.flatNumber,
+                                personId = addressData.personId,
+                                metersCount = addressData.metersCount,
+                            )
+                        )
+                    }
                 }
 
                 item {
@@ -108,13 +135,16 @@ fun AddressDataScreenPreview() {
     EnergeticTheme {
         AddressDataScreen(
             onBackClick = { },
-            addressData = AddressData(
-                address = "ул. Южное шоссе д. 2",
-                flatDataList = listOf(
-                    AddressData.FlatData(
-                        personId = 111209184,
-                        flatNumber = 53,
-                        metersCount = 3,
+            onCardClick = { },
+            state = AddressDataState.Content(
+                content = AddressUiModel(
+                    address = "ул. Южное шоссе д. 2",
+                    flatDataList = listOf(
+                        AddressUiModel.FlatData(
+                            personId = 111209184,
+                            flatNumber = 53,
+                            metersCount = 3,
+                        ),
                     ),
                 ),
             ),

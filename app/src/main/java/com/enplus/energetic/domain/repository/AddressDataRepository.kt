@@ -4,5 +4,5 @@ import com.enplus.energetic.domain.entities.AddressData
 
 interface AddressDataRepository {
 
-    suspend fun getAddressData(address: String): AddressData
+    suspend fun getAddressData(address: String): AddressData?
 }
